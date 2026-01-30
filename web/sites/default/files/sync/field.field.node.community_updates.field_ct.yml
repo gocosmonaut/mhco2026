@@ -1,0 +1,29 @@
+uuid: ed0fc961-953e-42ae-ac9b-4a260ae7190a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ct
+    - node.type.community_updates
+    - taxonomy.vocabulary.column_topics
+id: node.community_updates.field_ct
+field_name: field_ct
+entity_type: node
+bundle: community_updates
+label: 'Column Topics'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      column_topics: column_topics
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

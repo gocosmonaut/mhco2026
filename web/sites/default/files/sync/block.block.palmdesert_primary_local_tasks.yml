@@ -1,0 +1,22 @@
+uuid: 8087bbca-ce5a-4865-ab42-d7c8a264f7c0
+langcode: en
+status: true
+dependencies:
+  theme:
+    - palmdesert
+_core:
+  default_config_hash: K8Qio7MftbYTTqTyL9xMK0lJ9zrnhRjsHs5iuWhVchE
+id: palmdesert_primary_local_tasks
+theme: palmdesert
+region: content
+weight: -13
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: 'Primary tabs'
+  label_display: '0'
+  provider: core
+  primary: true
+  secondary: false
+visibility: {  }

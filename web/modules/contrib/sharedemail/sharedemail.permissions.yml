@@ -1,0 +1,6 @@
+administer shared email:
+  title: 'Administer Shared Email settings'
+access shared email message:
+  title: 'Show Shared Email warning'
+create shared email account:
+  title: 'Create Shared Email user'

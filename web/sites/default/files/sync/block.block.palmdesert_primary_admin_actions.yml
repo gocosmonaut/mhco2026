@@ -1,0 +1,20 @@
+uuid: f81c7334-5488-48b5-908b-2e221411a43d
+langcode: en
+status: true
+dependencies:
+  theme:
+    - palmdesert
+_core:
+  default_config_hash: on6mV9S-7XjSi3YpLfDIK3R962X3ofDXFbGbanlOpcI
+id: palmdesert_primary_admin_actions
+theme: palmdesert
+region: content
+weight: -12
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  label_display: '0'
+  provider: core
+visibility: {  }

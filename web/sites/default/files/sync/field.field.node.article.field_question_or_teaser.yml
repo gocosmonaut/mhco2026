@@ -1,0 +1,21 @@
+uuid: 58873d9a-8123-443f-8dd4-dba6acb6f927
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_question_or_teaser
+    - node.type.article
+  module:
+    - text
+id: node.article.field_question_or_teaser
+field_name: field_question_or_teaser
+entity_type: node
+bundle: article
+label: 'Question or Teaser'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

@@ -1,0 +1,20 @@
+uuid: ddb40a01-646e-4931-b6d2-7a71849b7c75
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - menu-columns
+    parent: 'menu-columns:0:'
+_core:
+  default_config_hash: 9ztVdl5Nm7mZH_1NNZ_B_0wWRBpuLL4JPWCYOVz5woU
+name: Column
+type: column
+description: 'This is the content type of Phil Querin, Mark Busch or guest columnists.'
+help: null
+new_revision: false
+preview_mode: 1
+display_submitted: false

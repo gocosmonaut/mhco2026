@@ -1,0 +1,29 @@
+uuid: 2a7bfde4-1e87-406c-a883-a6a6b696bbf5
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.advertisements
+  module:
+    - system
+    - views
+  theme:
+    - salem
+id: views_block__advertisements_block_3
+theme: salem
+region: footer_first
+weight: 0
+provider: null
+plugin: 'views_block:advertisements-block_3'
+settings:
+  id: 'views_block:advertisements-block_3'
+  label: ''
+  label_display: '0'
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

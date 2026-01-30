@@ -1,0 +1,24 @@
+uuid: 2a736e0a-c3b8-4ac8-bebe-555acbea6af1
+langcode: en
+status: false
+dependencies:
+  config:
+    - views.view.search
+  module:
+    - views
+  theme:
+    - palmdesert
+id: palmdesert_views_block__search_block_1
+theme: palmdesert
+region: sidebar_second
+weight: 0
+provider: null
+plugin: 'views_block:search-block_1'
+settings:
+  id: 'views_block:search-block_1'
+  label: Search
+  label_display: visible
+  provider: views
+  views_label: Search
+  items_per_page: none
+visibility: {  }

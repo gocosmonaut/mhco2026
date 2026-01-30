@@ -1,0 +1,10 @@
+sort_order: 'count,desc'
+display_type: count
+display_node_link: false
+display_more_link: false
+page_amount: '60'
+levels: 5
+language_separation: 0
+language_separation_radios: 0
+_core:
+  default_config_hash: u9ZvMNN2b__9QfdrHwXKE4we9BSArobaJgMm4WSVU-U

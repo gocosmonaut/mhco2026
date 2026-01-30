@@ -1,0 +1,29 @@
+uuid: e9dae0b2-3f38-4277-b74b-29b418a287fe
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.associate_members
+  module:
+    - system
+    - views
+  theme:
+    - salem
+id: views_block__associate_members_associate_members_home
+theme: salem
+region: sidebar_second
+weight: -16
+provider: null
+plugin: 'views_block:associate_members-associate_members_home'
+settings:
+  id: 'views_block:associate_members-associate_members_home'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

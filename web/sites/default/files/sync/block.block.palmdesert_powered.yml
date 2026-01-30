@@ -1,0 +1,22 @@
+uuid: a921e4ba-af88-4c97-8f0b-b248de66d6f0
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - palmdesert
+_core:
+  default_config_hash: IE4oG6AjcQW8NDTJwalgQDCW5RRkz6toFtIFUIpKrgY
+id: palmdesert_powered
+theme: palmdesert
+region: none
+weight: -8
+provider: null
+plugin: system_powered_by_block
+settings:
+  id: system_powered_by_block
+  label: 'Powered by Drupal'
+  label_display: '0'
+  provider: system
+visibility: {  }

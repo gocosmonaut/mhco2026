@@ -1,0 +1,35 @@
+uuid: a535d560-a121-4eea-82d5-8e94c63df2b1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_column_icon
+    - node.type.column
+    - taxonomy.vocabulary.column_icons
+  content:
+    - 'taxonomy_term:column_icons:1ad05345-6a60-4b48-ab22-731fb283967a'
+_core:
+  default_config_hash: 4_MWHH-yKcoK4Z8ZQbHtKldNsZ3ojoPNan2Ihw6IBHc
+id: node.column.field_column_icon
+field_name: field_column_icon
+entity_type: node
+bundle: column
+label: 'Column Icon'
+description: 'This icon will accompany the teaser on the home page. The courthouse icon will appear as the default unless a different icon is chosen.'
+required: false
+translatable: false
+default_value:
+  -
+    target_uuid: 1ad05345-6a60-4b48-ab22-731fb283967a
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      column_icons: column_icons
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

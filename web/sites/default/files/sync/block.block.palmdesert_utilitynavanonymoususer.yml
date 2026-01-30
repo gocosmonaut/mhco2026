@@ -1,0 +1,33 @@
+uuid: 1c6741c5-406e-4765-b8f2-ba9d74d050fc
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:57aa7225-10e7-4932-8e99-6322dc599c63'
+  module:
+    - block_content
+    - user
+  theme:
+    - palmdesert
+id: palmdesert_utilitynavanonymoususer
+theme: palmdesert
+region: top_header_form
+weight: -14
+provider: null
+plugin: 'block_content:57aa7225-10e7-4932-8e99-6322dc599c63'
+settings:
+  id: 'block_content:57aa7225-10e7-4932-8e99-6322dc599c63'
+  label: 'Utility Nav - Anonymous User'
+  label_display: '0'
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      anonymous: anonymous

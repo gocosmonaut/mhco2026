@@ -1,0 +1,39 @@
+uuid: 3b56b058-0e6b-4c0c-ad68-3117bd81e0fc
+langcode: en
+status: true
+dependencies:
+  module:
+    - comment
+    - contact
+    - field_permissions
+    - sharedemail
+    - system
+_core:
+  default_config_hash: 6WavjUYXIegP9AAg2zXGx54MWIVoomC3SZhNiqe-Dyk
+id: anonymous
+label: 'Anonymous user'
+weight: 0
+is_admin: false
+permissions:
+  - 'access comments'
+  - 'access content'
+  - 'access site-wide contact form'
+  - 'create field_county'
+  - 'create field_profile_address'
+  - 'create field_profile_location'
+  - 'create field_profile_park'
+  - 'create field_profile_state'
+  - 'create field_profile_zip'
+  - 'create shared email account'
+  - 'view field_county'
+  - 'view field_profile_address'
+  - 'view field_profile_location'
+  - 'view field_profile_park'
+  - 'view field_profile_state'
+  - 'view field_profile_zip'
+  - 'view own field_county'
+  - 'view own field_profile_address'
+  - 'view own field_profile_location'
+  - 'view own field_profile_park'
+  - 'view own field_profile_state'
+  - 'view own field_profile_zip'

@@ -1,0 +1,25 @@
+uuid: 77232f07-3d82-4378-9cdd-827c3379c5cb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.associate_member
+  module:
+    - text
+_core:
+  default_config_hash: fTyXdZUyavoAKRpkK0YBe-P9vSJUDvXJ5K3rlB_3Urg
+id: node.associate_member.body
+field_name: body
+entity_type: node
+bundle: associate_member
+label: 'Contact Info'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+field_type: text_with_summary

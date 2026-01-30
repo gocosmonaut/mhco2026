@@ -1,0 +1,33 @@
+uuid: 997dc421-b8fa-4e23-866d-daa7180bd35d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_column_icon
+    - node.type.article
+    - taxonomy.vocabulary.column_icons
+  content:
+    - 'taxonomy_term:column_icons:2abfd183-8745-4395-b0ba-ccd0eaf87806'
+id: node.article.field_column_icon
+field_name: field_column_icon
+entity_type: node
+bundle: article
+label: 'Article Icon'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    target_uuid: 2abfd183-8745-4395-b0ba-ccd0eaf87806
+default_value_callback: ''
+settings:
+  handler: 'default:filter_existing_terms'
+  handler_settings:
+    target_bundles:
+      column_icons: column_icons
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,37 @@
+uuid: 87e024c9-c5d1-42c4-8ba4-4d8f46c47f5d
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.full
+    - field.field.taxonomy_term.column_topics.field_term_page_publication_date
+    - taxonomy.vocabulary.column_topics
+  module:
+    - layout_builder
+    - text
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: taxonomy_term.column_topics.full
+targetEntityType: taxonomy_term
+bundle: column_topics
+mode: full
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_term_page_publication_date:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

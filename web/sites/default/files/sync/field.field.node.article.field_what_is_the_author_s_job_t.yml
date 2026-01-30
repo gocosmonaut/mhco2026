@@ -1,0 +1,33 @@
+uuid: 7f33db7f-4f76-47dd-8132-8ee95199c183
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_what_is_the_author_s_job_t
+    - node.type.article
+    - taxonomy.vocabulary.columnist_job_titles
+  content:
+    - 'taxonomy_term:columnist_job_titles:9006ba32-ca92-41f6-8ff0-51bae32ad287'
+id: node.article.field_what_is_the_author_s_job_t
+field_name: field_what_is_the_author_s_job_t
+entity_type: node
+bundle: article
+label: "Author's Title"
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    target_uuid: 9006ba32-ca92-41f6-8ff0-51bae32ad287
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      columnist_job_titles: columnist_job_titles
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

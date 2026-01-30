@@ -1,0 +1,9 @@
+uuid: 7ae53b45-ba65-46bb-b5e2-58be73b99a65
+langcode: en
+status: true
+dependencies: {  }
+name: 'Counties - Oregon'
+vid: counties_oregon
+description: null
+weight: 0
+new_revision: false

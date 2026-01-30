@@ -1,0 +1,40 @@
+uuid: 3ffc2562-1edd-4b11-a6e7-d035834874ae
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_column_image
+    - node.type.community_updates
+  module:
+    - image
+_core:
+  default_config_hash: 01S8qTtVfN-Yjm2cm9zUKkJ4MsmtT-FlHL8NVs2-edI
+id: node.community_updates.field_column_image
+field_name: field_column_image
+entity_type: node
+bundle: community_updates
+label: 'Column Image'
+description: 'This image will appear to the top and/or left of the body content.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: columns-update-images
+  file_extensions: 'png gif jpg jpeg'
+  max_filesize: ''
+  max_resolution: 1000x800
+  min_resolution: 120x120
+  alt_field: true
+  alt_field_required: true
+  title_field: true
+  title_field_required: false
+  default_image:
+    uuid: ''
+    alt: ''
+    title: ''
+    width: null
+    height: null
+field_type: image

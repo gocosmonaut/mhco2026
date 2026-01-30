@@ -1,0 +1,27 @@
+uuid: 5c807777-6e4b-44d5-870d-7277298dfcb8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_icon
+    - taxonomy.vocabulary.column_icons
+  module:
+    - file
+id: taxonomy_term.column_icons.field_icon
+field_name: field_icon
+entity_type: taxonomy_term
+bundle: column_icons
+label: Icon
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: column-icons
+  file_extensions: 'txt gif png jpg'
+  max_filesize: '1 MB'
+  description_field: true
+field_type: file

@@ -1,0 +1,25 @@
+uuid: 5e55d1d7-c8ab-4474-a6a3-bcffe6565e6b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.fillable_forms
+  module:
+    - text
+_core:
+  default_config_hash: l44KTbYqNvX5ur0pO_4cvbNqffwsAVEt623ZBhqgEEU
+id: node.fillable_forms.body
+field_name: body
+entity_type: node
+bundle: fillable_forms
+label: Body
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary

@@ -1,0 +1,38 @@
+uuid: c0298a95-ee83-46b9-b759-7bc14ddc9505
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.user_export
+  module:
+    - system
+    - user
+    - views
+  theme:
+    - palmdesert
+id: palmdesert_views_block__user_export_block_1
+theme: palmdesert
+region: footer_first
+weight: 0
+provider: null
+plugin: 'views_block:user_export-block_1'
+settings:
+  id: 'views_block:user_export-block_1'
+  label: ''
+  label_display: '0'
+  provider: views
+  context_mapping: {  }
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: "/forms-oregon-laws/mhco-forms\r\n/articles/*"
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      authenticated: authenticated

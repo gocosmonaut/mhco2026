@@ -1,0 +1,20 @@
+uuid: 97ae7dcb-9063-478f-8257-50779b7136c4
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main-menu
+    parent: 'main-menu:0:'
+_core:
+  default_config_hash: SCQlw3r3yHGK6g1ChqUoc-o2NSbNxXAom8EqdNVjgU8
+name: 'Community Updates'
+type: community_updates
+description: 'Please use this for legislative updates and other general news.'
+help: null
+new_revision: false
+preview_mode: 1
+display_submitted: false

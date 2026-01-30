@@ -1,0 +1,22 @@
+uuid: ab12052c-aa52-44d4-9a0d-b9af7e6d59f4
+langcode: und
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+_core:
+  default_config_hash: 1QqSWwEvHrfMjfL9w37h8-z4lulvAzk-FoNQiYVHF9k
+id: node.field_what_is_the_author_s_compa
+field_name: field_what_is_the_author_s_compa
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

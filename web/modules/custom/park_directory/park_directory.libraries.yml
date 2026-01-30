@@ -1,0 +1,7 @@
+park_directory-js:
+  js:
+    js/park-directory-form.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal.ajax
+    - core/once

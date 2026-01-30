@@ -1,0 +1,38 @@
+uuid: d41ceb44-4bab-48df-b186-352cbc57c0a8
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:basic:913fc220-1a7a-4d05-8f7b-97f94c735a04'
+  module:
+    - block_content
+    - system
+    - user
+  theme:
+    - salem
+id: downloadoutage
+theme: salem
+region: content
+weight: -14
+provider: null
+plugin: 'block_content:913fc220-1a7a-4d05-8f7b-97f94c735a04'
+settings:
+  id: 'block_content:913fc220-1a7a-4d05-8f7b-97f94c735a04'
+  label: 'Download Outage'
+  label_display: visible
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /forms-oregon-laws/mhco-forms
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      authenticated: authenticated

@@ -1,0 +1,124 @@
+// Non-modular or client styles for the .l-content region.
+.section-news-and-resources,
+.section-membership,
+.section-chuck-carpenter-mhco-executive-director,
+.section-seminars-and-conferences,
+.section-contact-mhco,
+.section-forms-oregon-laws {
+    .grid-container main#main.grid-margin-x {
+        padding: 0;
+
+        .cell {
+            //  padding: 2rem 1.25rem;
+            padding: 0;
+
+            &.medium-10.medium-order-2,
+            &.large-10.medium-order-2 {
+                width: 83.333%;
+                margin: 0;
+                background: #f2f2f2;
+                padding: 0;
+                border-left: 1px solid #ccc;
+
+                #block-salem-page-title {
+                    h1 {
+                        background: rgba(0, 0, 0, 0.05);
+                        font-weight: 500;
+
+                        font-size: 2.25rem;
+                        line-height: 125%;
+                        padding: 1rem .25rem 1rem 1.25rem;
+                    }
+                }
+                #block-salem-content {
+                    .views-element-container {
+                        padding: 1.25rem 1.75rem 1rem 1.25rem;
+
+                        .js-form-type-select {
+                            label {
+                                font-family: $node-type-font-family;
+                                text-transform: uppercase;
+                                letter-spacing: 1px;
+                                padding: 0 0 .5rem 0;
+                            }
+
+                            select {
+                                width: auto;
+                            }
+                        }
+
+                      
+                    }
+                }
+                .field--node-field-publication-date,
+                .field--node-field-author,
+                .field--node-field-what-is-the-author-s-compa,
+                .field--node-field-what-is-the-author-s-job-t,
+                .field--node-field-reports
+                 {
+                    padding-left: 1.25rem;
+                }
+                .field--node-field-question-or-teaser {
+                    padding: 1.25rem 1.25rem 0 1.25rem;
+                }
+
+            }
+
+
+            #sidebar-first,
+            #sidebar-second {
+                background: #fafafa;
+                width: 16.666%;
+
+                &.sidebar.large-2 {
+                    padding: 0;
+                    margin-left: 0;
+                }
+
+                &.medium-2,
+                &.sidebar.medium-order-1.large-2 {
+                    width: 16.666% !important;
+                }
+
+                &.large-10 {
+                    padding: 0;
+                }
+
+                &.cell.medium-3.sidebar {
+                    margin: 0;
+                    width: 25%;
+                    padding: 1.25rem 1.5rem;
+                    border-right: inset 3px #eee;
+                }
+            }
+        }
+
+
+        .not-front {
+            #sidebar-first.large-3 {
+
+                padding: 0;
+                // margin: 0;
+
+                #block-views-block-search-block-1 {
+                    width: 83.333%;
+                }
+
+                #block-views-block-advertisements-block-1 {
+                    width: fit-content;
+
+                    .views-row {
+                        border-bottom: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+.section-contact-mhco {
+    #sidebar-first {
+    form {
+        display: none;
+    }
+}
+}

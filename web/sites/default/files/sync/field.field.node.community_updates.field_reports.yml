@@ -1,0 +1,29 @@
+uuid: bf86ad6f-4b22-439f-b274-510b5c4c6925
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_reports
+    - node.type.community_updates
+  module:
+    - file
+_core:
+  default_config_hash: TJjO7HIxCNKQ8cGwNuR8paz6vbMb98eMpX9U6ZebrXY
+id: node.community_updates.field_reports
+field_name: field_reports
+entity_type: node
+bundle: community_updates
+label: Downloads
+description: 'Attach any files or downloads to the Community Update here.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: community-updates
+  file_extensions: 'txt pdf doc rtf docx ppt pptx'
+  max_filesize: 20MB
+  description_field: true
+field_type: file

@@ -1,0 +1,206 @@
+.view-mhco-forms {
+    .view-content.row {
+        display: inline;
+
+        .views-view-grid.horizontal.cols-1 {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+
+            .form-download-div {
+                padding: 1.25rem 1rem;
+                box-shadow: 1px 1px 3px rgba(0, 0, 0, .25);
+                background: #fff;
+
+                &:nth-child(even) {
+                    background: whitesmoke;
+                    border-radius: .25rem;
+                }
+
+                @media (min-width: $bp-lg) {
+                    flex-basis: calc(25% - 1.5rem);
+                }
+
+                @media (min-width: $bp-md) and (max-width: $bp-lg) {
+                    flex-basis: calc(50% - 1.5rem);
+                }
+
+                @media (max-width: $bp-md) {
+                    flex-basis: 100%;
+                }
+
+                .views-field-title {
+                    margin-top: .75rem;
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    background: whitesmoke;
+                    background: linear-gradient(315deg, rgba(255, 252, 217, 1) 0%, rgba(245, 245, 245, 1) 50%, rgba(196, 218, 242, 0.85) 80%, rgba(17, 126, 242, 1) 100%);
+
+                    .field-content {
+                        color: #00619a;
+                    }
+
+                }
+            }
+        }
+
+        .badge {
+
+            &.form-button {
+                background: $gray-800;
+                background-image: url(/themes/custom/palmdesert/images/download.png);
+                color: $white;
+                font-size: 1.5rem;
+                text-align: center;
+                transition: all 0.4s ease-out;
+                background-size: 30px;
+                background-position-x: 175%;
+                background-position-y: center;
+                background-repeat: no-repeat;
+                min-width: 100px;
+
+
+                &:hover {
+                    cursor: pointer;
+                    background: $link-hover-color;
+                    background-image: url(/themes/custom/palmdesert/images/download.png);
+                    transition: all 0.25s ease-in;
+                    background-position-x: 90%;
+                    background-repeat: no-repeat;
+                    background-size: 30px;
+                    background-position-y: center;
+                    padding-right: 3rem;
+                    overflow-x: visible;
+                    text-shadow: 0px 0px 4px rgba(255, 255, 255, 0.5);
+                }
+
+                &.form-block {
+                    font-size: 1.25rem;
+                    max-width: 65px;
+                    width: 65px;
+                    padding: .5rem 1rem;
+                    background: $gray-800;
+                    min-width: 0;
+                    overflow: hidden;
+
+                    &:hover {
+                        background: $link-hover-color;
+                        padding: .5rem 1.5rem;
+                        max-width: none;
+                        width: auto;
+                    }
+                }
+            }
+        }
+    }
+
+    #forms-dashboard {
+        display: flex;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 1rem;
+
+        nav {
+            float: right;
+        }
+
+        @media (max-width: $bp-lg) {
+            display: inline;
+        }
+
+        .form-totals,
+        .community-totals {
+            flex-basis: 50%;
+
+            h4 {
+                padding-bottom: 0.5rem;
+                border-bottom: 1px solid darkgoldenrod;
+                color: darkgoldenrod;
+                margin-bottom: 1rem;
+                font-family: $font-fancy;
+   font-size: 1.125rem;
+            }
+        }
+
+        table {
+            thead {
+                font-size: .875rem;
+            }
+
+            tr:nth-child(odd) td {
+                background: #f0f0f0;
+            }
+
+            tr:nth-child(even) td {
+                background: #f9f9f9;
+            }
+
+            .views-field-counter {
+                text-align: center;
+                font-size: .875rem;
+            }
+
+            .views-field-field-form-download-count,
+            .views-field-field-park-form-downloads {
+                text-align: center;
+            }
+
+            .form-dashboard-form-names {
+                font-size: .875rem;
+            }
+        }
+
+        .form-totals {
+            padding-right: 1%;
+
+            @media (max-width: $bp-lg) {
+                padding-right: 0;
+            }
+        }
+
+        .community-totals {
+            padding-left: 1%;
+
+            @media (max-width: $bp-lg) {
+                padding-left: 0;
+            }
+        }
+    }
+}
+
+#block-palmdesert-views-block-mhco-forms-forms-block {
+    .view-content.row {
+        display: block;
+    }
+
+    .view-header {
+        padding: .5rem 0 .75rem;
+    }
+
+    padding: 1rem 0 0 1.5rem;
+    border-left: 1px solid #ddd;
+    border-right: 0;
+    border-bottom: 0;
+    border-top: 1px solid #ddd;
+    margin: 2rem 0;
+
+    @media (max-width: $bp-lg) {
+        padding: 0;
+        border-left: 0;
+        margin-bottom: 0;
+    }
+
+    h2 {
+        @media (max-width: $bp-lg) {
+            padding: 1rem 0;
+        }
+    }
+
+    .views-field-title {
+        font-size: .875rem;
+        padding: 0.5rem 0;
+        line-height: 1.5;
+    }
+}

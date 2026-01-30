@@ -1,0 +1,9 @@
+uuid: 90101edb-188b-4c57-9743-4fa9c3053daf
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: cTdde52huNYxNtLUL96uAw47ATRVAXBuZW7cnitEwAk
+id: user
+label: User
+description: 'A user of the site.'

@@ -1,0 +1,11 @@
+uuid: 74c991d4-e39a-43b6-87f6-98805d3657a8
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.slideshow
+label: Slideshow
+description: ''
+targetEntityType: node
+cache: true

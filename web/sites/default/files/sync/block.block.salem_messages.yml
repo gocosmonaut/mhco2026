@@ -1,0 +1,22 @@
+uuid: 23126dba-9042-4aa3-ac18-a4bced6962d3
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - salem
+_core:
+  default_config_hash: dqzHPrWKOFZg0C2LSS89u9zn02nkQbAjqMC5H5IMtgw
+id: salem_messages
+theme: salem
+region: content
+weight: -17
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  label_display: '0'
+  provider: system
+visibility: {  }

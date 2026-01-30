@@ -1,0 +1,194 @@
+{
+  "name": "intl-tel-input",
+  "version": "25.13.2",
+  "description": "A JavaScript plugin for entering and validating international telephone numbers",
+  "keywords": [
+    "international",
+    "country",
+    "dial code",
+    "telephone",
+    "phone",
+    "mobile",
+    "input",
+    "flag",
+    "dropdown",
+    "javascript",
+    "plugin",
+    "css",
+    "html",
+    "validation",
+    "formatting",
+    "react",
+    "vue",
+    "angular",
+    "component",
+    "typescript"
+  ],
+  "license": "MIT",
+  "author": "Jack O'Connor (http://jackocnr.com)",
+  "devDependencies": {
+    "@angular/compiler": "^19.2.14",
+    "@angular/compiler-cli": "^19.2.14",
+    "@angular/core": "^19.1.4",
+    "@angular/forms": "^19.1.4",
+    "@angular/platform-browser": "^19.1.4",
+    "@babel/plugin-transform-modules-commonjs": "^7.25.7",
+    "@babel/preset-typescript": "^7.27.1",
+    "@playwright/test": "^1.47.2",
+    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/react": "^18.2.74",
+    "@types/react-dom": "^18.2.24",
+    "@typescript-eslint/eslint-plugin": "^8.1.0",
+    "@typescript-eslint/parser": "^8.1.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "babel-plugin-add-module-exports": "^1.0.4",
+    "cspell": "^8.6.1",
+    "esbuild": "^0.25.0",
+    "eslint": "^8.57.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jest": "^28.5.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "fast-xml-parser": "^5.2.5",
+    "flag-icons": "^7.2.3",
+    "google-closure-compiler": "^20240317.0.0",
+    "google-closure-library": "^20230802.0.0",
+    "grunt": "^1.6.1",
+    "grunt-bump": "^0.8.0",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-connect": "^5.0.0",
+    "grunt-contrib-cssmin": "^5.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-replace": "^2.0.2",
+    "grunt-sass": "^3.0.0",
+    "grunt-shell": "^4.0.0",
+    "http-server": "^14.1.1",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jquery": "^3.1.1",
+    "load-grunt-config": "^4.0.1",
+    "playwright": "^1.47.2",
+    "prettier": "^3.2.5",
+    "prettier-eslint": "^16.4.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sass": "^1.83.1",
+    "sharp": "^0.33.5",
+    "time-grunt": "^2.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3",
+    "vite": "^6.1.0",
+    "vue": "^3.4.38",
+    "zone.js": "^0.15.0"
+  },
+  "files": [
+    "build/*",
+    "react/build/*",
+    "vue/build/*",
+    "angular/build/*",
+    "CHANGELOG.md",
+    "LICENSE",
+    "package.json",
+    "package-lock.json",
+    "README.md",
+    "index.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jackocnr/intl-tel-input.git"
+  },
+  "homepage": "https://intl-tel-input.com",
+  "scripts": {
+    "test": "jest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "lint:js": "eslint .",
+    "lint:spelling": "cspell --dot --gitignore --no-progress '**'",
+    "watch": "grunt watch",
+    "build": "grunt build",
+    "build:js": "grunt build:js",
+    "build:jsfast": "grunt build:jsfast",
+    "build:translations": "grunt build:translations",
+    "build:utils": "grunt build:utils",
+    "build:css": "grunt build:css",
+    "build:img": "grunt build:img",
+    "build:react": "grunt build:react",
+    "build:vue": "grunt build:vue",
+    "build:angular": "grunt build:angular",
+    "build:ci": "grunt build:ci",
+    "prepublishOnly": "grunt build",
+    "vue:demo": "vite --config vue/demo/validation/vite.config.js"
+  },
+  "style": "build/css/intlTelInput.css",
+  "main": "./build/js/intlTelInput.js",
+  "types": "./build/js/intlTelInput.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/js/intlTelInput.d.ts",
+      "import": "./build/js/intlTelInput.js",
+      "default": "./build/js/intlTelInput.js"
+    },
+    "./intlTelInputWithUtils": {
+      "types": "./build/js/intlTelInput.d.ts",
+      "import": "./build/js/intlTelInputWithUtils.js",
+      "default": "./build/js/intlTelInputWithUtils.js"
+    },
+    "./data": "./build/js/data.js",
+    "./utils": "./build/js/utils.js",
+    "./react": {
+      "types": "./react/build/IntlTelInput.d.ts",
+      "require": "./react/build/IntlTelInput.cjs",
+      "import": "./react/build/IntlTelInput.js",
+      "default": "./react/build/IntlTelInput.js"
+    },
+    "./reactWithUtils": {
+      "types": "./react/build/IntlTelInput.d.ts",
+      "require": "./react/build/IntlTelInputWithUtils.cjs",
+      "import": "./react/build/IntlTelInputWithUtils.js",
+      "default": "./react/build/IntlTelInputWithUtils.js"
+    },
+    "./vue": {
+      "import": "./vue/build/IntlTelInput.mjs"
+    },
+    "./vueWithUtils": {
+      "import": "./vue/build/IntlTelInputWithUtils.mjs"
+    },
+    "./angular": {
+      "types": "./angular/build/types/intl-tel-input/angular.d.ts",
+      "import": "./angular/build/IntlTelInput.js",
+      "default": "./angular/build/IntlTelInput.js"
+    },
+    "./angularWithUtils": {
+      "types": "./angular/build/types/intl-tel-input/angularWithUtils.d.ts",
+      "import": "./angular/build/IntlTelInputWithUtils.js",
+      "default": "./angular/build/IntlTelInputWithUtils.js"
+    },
+    "./i18n": {
+      "types": "./build/js/intlTelInput.d.ts",
+      "import": "./build/js/i18n/index.js",
+      "default": "./build/js/i18n/index.js"
+    },
+    "./i18n/*": {
+      "types": "./build/js/intlTelInput.d.ts",
+      "import": "./build/js/i18n/*/index.js",
+      "default": "./build/js/i18n/*/index.js"
+    },
+    "./styles": "./build/css/intlTelInput.css",
+    "./*": "./*"
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "build/js/intlTelInput.d.ts"
+      ],
+      "react": [
+        "react/build/IntlTelInput.d.ts"
+      ],
+      "angular": [
+        "angular/build/types/intl-tel-input/angular.d.ts"
+      ]
+    }
+  }
+}

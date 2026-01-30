@@ -1,0 +1,16 @@
+/node_modules/
+/lib/*
+!/lib/libphonenumber
+/.sass-cache/
+/.grunt/
+/tmp/
+/vendor/
+/.idea/
+*.iml
+.DS_Store
+/build/
+/react/build/
+/vue/build/
+/angular/build/
+/*/demo/*/*-bundle.js
+/test-results/

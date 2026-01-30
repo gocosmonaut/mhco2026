@@ -1,0 +1,22 @@
+uuid: 2179980f-6f82-4668-92b8-2619d760fe7f
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - palmdesert
+_core:
+  default_config_hash: d1hZY2WbQ5aTsW9Hlto8YzWYzSwspxYaY57SWBoFmso
+id: palmdesert_content
+theme: palmdesert
+region: content
+weight: -8
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  label_display: '0'
+  provider: system
+visibility: {  }

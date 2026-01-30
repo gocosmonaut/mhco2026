@@ -1,0 +1,35 @@
+uuid: 851fd9bb-32a1-4295-b6bc-ac2c38dcc344
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_what_image_should_accompan
+    - node.type.column
+    - taxonomy.vocabulary.slideshow_images
+  content:
+    - 'taxonomy_term:slideshow_images:4be1c704-2969-41b6-8a72-b0bf25acea65'
+_core:
+  default_config_hash: tHmKcKNb7O_dVHbVavRLduGZ8P9uybVobZeJG3u6Oug
+id: node.column.field_what_image_should_accompan
+field_name: field_what_image_should_accompan
+entity_type: node
+bundle: column
+label: 'What image should accompany this column?'
+description: "Please select the image that will appear with this column. It's necessary for the home page slideshow. Phil Querin is the default."
+required: false
+translatable: false
+default_value:
+  -
+    target_uuid: 4be1c704-2969-41b6-8a72-b0bf25acea65
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      slideshow_images: slideshow_images
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

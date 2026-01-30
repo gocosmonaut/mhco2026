@@ -1,0 +1,7 @@
+name: 'Content Copier'
+type: module
+description: 'Copies nodes from two content types to a new one.'
+package: Custom
+core_version_requirement: ^9 || ^10
+dependencies:
+  - drupal:node

@@ -1,0 +1,9 @@
+uuid: e9f505ca-4319-4ec2-9161-0def89f6a1db
+langcode: en
+status: true
+dependencies: {  }
+name: 'Columnist Company Names'
+vid: columnist_company_names
+description: null
+weight: 0
+new_revision: false

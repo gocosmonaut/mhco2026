@@ -1,0 +1,32 @@
+uuid: 1d6d06eb-39b9-46bb-9294-25c5271c4429
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.slideshow_images.field_featured_image
+    - taxonomy.vocabulary.slideshow_images
+  module:
+    - image
+id: taxonomy_term.slideshow_images.default
+targetEntityType: taxonomy_term
+bundle: slideshow_images
+mode: default
+content:
+  field_featured_image:
+    type: image
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: ''
+      image_loading:
+        attribute: eager
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  description: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  feeds_item: true
+  search_api_excerpt: true

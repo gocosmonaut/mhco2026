@@ -1,0 +1,35 @@
+uuid: e2ec0de2-de94-4fa3-9eed-8fb661191f77
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_what_is_the_author_s_job_t
+    - node.type.column
+    - taxonomy.vocabulary.columnist_job_titles
+  content:
+    - 'taxonomy_term:columnist_job_titles:27518aa3-8b85-4271-9512-a9351e8a2709'
+_core:
+  default_config_hash: o4VzWgdIaphhDGxP1lob4cTaXCuQwFEojHlGpB6mumQ
+id: node.column.field_what_is_the_author_s_job_t
+field_name: field_what_is_the_author_s_job_t
+entity_type: node
+bundle: column
+label: "What is the author's job title?"
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    target_uuid: 27518aa3-8b85-4271-9512-a9351e8a2709
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      columnist_job_titles: columnist_job_titles
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

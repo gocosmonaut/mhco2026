@@ -1,0 +1,29 @@
+uuid: 9040fdc2-d156-41e6-b0ec-032412d88885
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_author
+    - node.type.community_updates
+    - taxonomy.vocabulary.authors
+id: node.community_updates.field_author
+field_name: field_author
+entity_type: node
+bundle: community_updates
+label: By
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      authors: authors
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

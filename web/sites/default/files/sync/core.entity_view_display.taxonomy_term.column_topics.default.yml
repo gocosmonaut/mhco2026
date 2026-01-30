@@ -1,0 +1,32 @@
+uuid: 575f1296-41a0-4de9-a064-46c06a9d902d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.column_topics.field_term_page_publication_date
+    - taxonomy.vocabulary.column_topics
+  module:
+    - text
+id: taxonomy_term.column_topics.default
+targetEntityType: taxonomy_term
+bundle: column_topics
+mode: default
+content:
+  description:
+    type: text_trimmed
+    label: hidden
+    settings:
+      trim_length: 1200
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_term_page_publication_date:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

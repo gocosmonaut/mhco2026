@@ -1,0 +1,68 @@
+uuid: 7beb6174-0b71-4dd6-992d-631d350548a3
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.column.body
+    - field.field.node.column.field_author
+    - field.field.node.column.field_column_category
+    - field.field.node.column.field_column_icon
+    - field.field.node.column.field_column_image
+    - field.field.node.column.field_ct
+    - field.field.node.column.field_location_tags
+    - field.field.node.column.field_publication_date
+    - field.field.node.column.field_question_or_teaser
+    - field.field.node.column.field_reports
+    - field.field.node.column.field_should_this_be_featured_in
+    - field.field.node.column.field_what_image_should_accompan
+    - field.field.node.column.field_what_is_the_author_s_compa
+    - field.field.node.column.field_what_is_the_author_s_job_t
+    - node.type.column
+  module:
+    - text
+    - user
+_core:
+  default_config_hash: 5YZS-iSTQDnm4pgvo2hkEOEdXFo5jwq8rrnycDNrh4E
+id: node.column.teaser
+targetEntityType: node
+bundle: column
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 450
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_question_or_teaser:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_author: true
+  field_column_category: true
+  field_column_icon: true
+  field_column_image: true
+  field_ct: true
+  field_location_tags: true
+  field_publication_date: true
+  field_reports: true
+  field_should_this_be_featured_in: true
+  field_what_image_should_accompan: true
+  field_what_is_the_author_s_compa: true
+  field_what_is_the_author_s_job_t: true
+  search_api_excerpt: true

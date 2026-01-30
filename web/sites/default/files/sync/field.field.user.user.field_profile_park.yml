@@ -1,0 +1,21 @@
+uuid: d5f8b505-a199-41e5-a733-60a2b4fced1a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_profile_park
+    - user_bundle.user_type.user
+id: user.user.field_profile_park
+field_name: field_profile_park
+entity_type: user
+bundle: user
+label: 'Park Name'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: 'My Community Name'
+default_value_callback: ''
+settings: {  }
+field_type: string

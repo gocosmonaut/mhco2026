@@ -1,0 +1,22 @@
+uuid: f7aa9cad-687e-4001-a950-c07033d57266
+langcode: en
+status: false
+dependencies:
+  module:
+    - system
+  theme:
+    - salem
+_core:
+  default_config_hash: F9razTMNH9dD3hmzkpIPTFwJeYqb-XBSgYMGRdB0I68
+id: salem_breadcrumbs
+theme: salem
+region: header
+weight: -11
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Breadcrumbs
+  label_display: '0'
+  provider: system
+visibility: {  }

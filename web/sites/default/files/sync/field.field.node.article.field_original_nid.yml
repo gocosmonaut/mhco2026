@@ -1,0 +1,23 @@
+uuid: 69e59bb6-0d74-4d52-908d-5dbcb2ca7887
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_original_nid
+    - node.type.article
+id: node.article.field_original_nid
+field_name: field_original_nid
+entity_type: node
+bundle: article
+label: 'Original NID'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

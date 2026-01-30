@@ -1,0 +1,5 @@
+sharedemail.settings_form:
+  route_name: sharedemail.settings_form
+  parent: user.admin_index
+  title: 'Shared Email settings'
+  description: 'Configure Shared Email settings.'

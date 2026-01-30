@@ -1,0 +1,35 @@
+uuid: ec0ce916-7677-44aa-b724-4babd3a48688
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_associate_member_industry
+    - node.type.associate_member
+    - taxonomy.vocabulary.associate_member_industries
+  content:
+    - 'taxonomy_term:associate_member_industries:e9467add-34df-4ad1-84e5-75593bde2787'
+_core:
+  default_config_hash: URlIFAaGSQvV2IlBFuTw8YaJfHYJXEVT2AJhfoH5KKw
+id: node.associate_member.field_associate_member_industry
+field_name: field_associate_member_industry
+entity_type: node
+bundle: associate_member
+label: 'Associate Member Industry'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    target_uuid: e9467add-34df-4ad1-84e5-75593bde2787
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      associate_member_industries: associate_member_industries
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

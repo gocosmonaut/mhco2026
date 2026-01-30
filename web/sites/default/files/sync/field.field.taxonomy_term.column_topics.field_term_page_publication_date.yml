@@ -1,0 +1,23 @@
+uuid: 26c1dc59-1d38-4725-9fbe-edb8488a7b43
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_term_page_publication_date
+    - taxonomy.vocabulary.column_topics
+id: taxonomy_term.column_topics.field_term_page_publication_date
+field_name: field_term_page_publication_date
+entity_type: taxonomy_term
+bundle: column_topics
+label: 'Term Page Publication Date'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:field_config'
+  handler_settings:
+    target_bundles: null
+    auto_create: false
+field_type: entity_reference

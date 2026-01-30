@@ -1,0 +1,67 @@
+uuid: c635b3c4-ae48-4768-9237-0593da85c11f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.associate_member.body
+    - field.field.node.associate_member.field_associate_member_descripti
+    - field.field.node.associate_member.field_associate_member_industry
+    - field.field.node.associate_member.field_company_logo
+    - field.field.node.associate_member.field_location_tags
+    - node.type.associate_member
+  module:
+    - image
+    - text
+    - user
+_core:
+  default_config_hash: bCeqaPQRGYlxnFF9hlSF5D8XJbhDrz-9Zf4rN0FREqA
+id: node.associate_member.default
+targetEntityType: node
+bundle: associate_member
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_associate_member_descripti:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_company_logo:
+    type: image
+    label: above
+    settings:
+      image_link: ''
+      image_style: ''
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_location_tags:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  feeds_item: true
+  field_associate_member_industry: true
+  search_api_excerpt: true

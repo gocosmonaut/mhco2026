@@ -1,0 +1,108 @@
+uuid: 4fba5591-635c-4f03-9a92-d4b7df8c2563
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.article.body
+    - field.field.node.article.comment
+    - field.field.node.article.field_author
+    - field.field.node.article.field_column_category
+    - field.field.node.article.field_column_icon
+    - field.field.node.article.field_comments
+    - field.field.node.article.field_ct
+    - field.field.node.article.field_image
+    - field.field.node.article.field_legacy_content_type
+    - field.field.node.article.field_location_tags
+    - field.field.node.article.field_original_nid
+    - field.field.node.article.field_publication_date
+    - field.field.node.article.field_question_or_teaser
+    - field.field.node.article.field_should_this_be_featured_in
+    - field.field.node.article.field_tags
+    - field.field.node.article.field_what_image_should_accompan
+    - field.field.node.article.field_what_is_the_author_s_compa
+    - field.field.node.article.field_what_is_the_author_s_job_t
+    - node.type.article
+  module:
+    - datetime
+    - text
+    - user
+_core:
+  default_config_hash: jkgMFGvSrydIKdTEP4VEWBOTbypdYQOjM7mJsX7-v3E
+id: node.article.default
+targetEntityType: node
+bundle: article
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_author:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_column_category:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_ct:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_publication_date:
+    type: datetime_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: civilian
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_what_is_the_author_s_compa:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_what_is_the_author_s_job_t:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+hidden:
+  comment: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_column_icon: true
+  field_comments: true
+  field_image: true
+  field_legacy_content_type: true
+  field_location_tags: true
+  field_original_nid: true
+  field_question_or_teaser: true
+  field_should_this_be_featured_in: true
+  field_tags: true
+  field_what_image_should_accompan: true
+  links: true
+  search_api_excerpt: true

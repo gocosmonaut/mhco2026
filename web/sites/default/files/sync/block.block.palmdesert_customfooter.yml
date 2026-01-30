@@ -1,0 +1,25 @@
+uuid: 4638db75-6f3c-4f2b-888f-5ac255a7896a
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:6366b41c-35e9-4a7e-a258-7f2fa4dc3503'
+  module:
+    - block_content
+  theme:
+    - palmdesert
+id: palmdesert_customfooter
+theme: palmdesert
+region: footer_first
+weight: 0
+provider: null
+plugin: 'block_content:6366b41c-35e9-4a7e-a258-7f2fa4dc3503'
+settings:
+  id: 'block_content:6366b41c-35e9-4a7e-a258-7f2fa4dc3503'
+  label: 'Custom Footer'
+  label_display: '0'
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

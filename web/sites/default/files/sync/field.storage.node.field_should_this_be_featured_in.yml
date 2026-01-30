@@ -1,0 +1,20 @@
+uuid: 23238316-78e0-4dac-ad9a-5277ff66430b
+langcode: und
+status: true
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: GG-gPQZuMQoC2HSZcbSOP6mq01Z6aDuLCWb32ZffZuU
+id: node.field_should_this_be_featured_in
+field_name: field_should_this_be_featured_in
+entity_type: node
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

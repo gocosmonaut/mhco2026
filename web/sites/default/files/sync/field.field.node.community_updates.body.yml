@@ -1,0 +1,25 @@
+uuid: 0eae5c93-1b77-454a-b89b-dc6348329e90
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.community_updates
+  module:
+    - text
+_core:
+  default_config_hash: ArmmzKAuST7f5OUVP69zuEQLjFTnWlah9VTctgMY9wE
+id: node.community_updates.body
+field_name: body
+entity_type: node
+bundle: community_updates
+label: Body
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary

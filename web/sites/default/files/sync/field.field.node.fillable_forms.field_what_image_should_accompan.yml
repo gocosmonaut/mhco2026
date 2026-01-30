@@ -1,0 +1,25 @@
+uuid: a0f8b2f1-336e-494d-ba5f-99a87a8988ea
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_what_image_should_accompan
+    - node.type.fillable_forms
+_core:
+  default_config_hash: WTS9wowYL5ns1PfUsl7fJRL0DUgW1NOvcQ8bfeGN-HY
+id: node.fillable_forms.field_what_image_should_accompan
+field_name: field_what_image_should_accompan
+entity_type: node
+bundle: fillable_forms
+label: 'What image should accompany this column?'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    tid: '192'
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings: {  }
+field_type: entity_reference

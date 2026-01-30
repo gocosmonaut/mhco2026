@@ -1,0 +1,29 @@
+uuid: f38cc43e-aa6d-4e2f-bae1-22b691363bb8
+langcode: en
+status: false
+dependencies:
+  config:
+    - views.view.columns
+  module:
+    - system
+    - views
+  theme:
+    - palmdesert
+id: palmdesert_views_block__columns_home_page_articles
+theme: palmdesert
+region: content
+weight: -4
+provider: null
+plugin: 'views_block:columns-home_page_articles'
+settings:
+  id: 'views_block:columns-home_page_articles'
+  label: ''
+  label_display: '0'
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

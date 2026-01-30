@@ -1,0 +1,128 @@
+#sidebar_second {
+    padding: 0 1rem 0 1.5rem;
+
+       @media (max-width: $bp-lg) {
+           width: 100%;
+        }
+
+    #block-palmdesert-articlecontainer--2 {
+        padding: 0;
+        border: none;
+
+        #article-search {
+            &.subpage {
+                background: aliceblue;
+                border-radius: 0.25rem;
+                padding: 1rem;
+                margin-bottom: 2rem;
+                border-top: 1px solid #999;
+                border-left: 1px solid #999;
+                box-shadow: 3px 3px 5px rgba(0, 0, 0, .25);
+
+                .view-article-search .view-content.row {
+                    display: none;
+                }
+
+                h4 {
+                    font-size: 1.125rem;
+                }
+
+                p {
+                    font-size: .875rem;
+                }
+
+                [data-drupal-selector="edit-actions"] {
+                    width: 100%;
+                    text-align: center;
+                }
+
+            }
+        }
+
+        .view-id-search {
+            padding: 1.5rem 1rem;
+            background: #f9f9f9;
+            border-radius: .5rem;
+            border-bottom: 2px solid #ddd;
+            border-right: 2px solid #ddd;
+            border-top: 1px solid #eee;
+            border-left: 1px solid #eee;
+            margin-bottom: 2rem;
+        }
+
+        .view-id-advertisements {
+            text-align: center;
+            padding: 0;
+            width: 100%;
+
+            img {
+                width: 100%;
+                height: auto;
+
+                     @media (max-width: $bp-lg) {
+           width: auto;
+        }
+
+            }
+        }
+
+        .view-id-columns {
+            padding: 0 0 0 1.5rem;
+            border-left: 1px solid #ddd;
+            margin: 2rem 0;
+
+                 @media (max-width: $bp-lg) {
+          border: 0;
+          padding: 0;
+        }
+
+
+            .views-row {
+                margin-bottom: 1.5rem;
+
+                h6 {
+                    font-size: .9rem;
+                    border-bottom: 1px solid #ddd;
+                    padding-bottom: .25rem;
+                }
+
+                .views-field-title {
+                    a {
+                        font-size: 1.125rem;
+                    }
+                }
+
+                .views-field-field-publication-date {
+                    font-size: .9rem;
+                    font-weight: 500;
+                }
+
+                .views-field-field-question-or-teaser {
+                    padding: 1rem 0 .75rem;
+                    line-height: 1.375;
+                    font-size: .9375rem;
+                }
+
+                .views-field-field-ct {
+                    line-height: 1.375;
+                    display: flex;
+
+
+                    .field-content {
+                        padding-left: .5rem;
+
+                        a {
+                            font-size: .875rem;
+                        }
+                    }
+                }
+
+                a {
+                    font-weight: 400;
+                    font-size: 1rem;
+                    text-transform: capitalize;
+                }
+            }
+        }
+    }
+}

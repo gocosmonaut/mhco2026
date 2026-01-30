@@ -1,0 +1,33 @@
+uuid: 28720c64-51eb-41d7-9f09-eb712ba5f1c9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_what_image_should_accompan
+    - node.type.article
+    - taxonomy.vocabulary.slideshow_images
+  content:
+    - 'taxonomy_term:slideshow_images:4551f0ee-27a4-48e0-96ee-9c626d45a515'
+id: node.article.field_what_image_should_accompan
+field_name: field_what_image_should_accompan
+entity_type: node
+bundle: article
+label: 'Article Image'
+description: 'This appears in the lower right corner of the home page slideshow. The MHCO logo is the default selection.'
+required: false
+translatable: true
+default_value:
+  -
+    target_uuid: 4551f0ee-27a4-48e0-96ee-9c626d45a515
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      slideshow_images: slideshow_images
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

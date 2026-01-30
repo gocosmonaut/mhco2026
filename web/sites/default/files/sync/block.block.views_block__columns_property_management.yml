@@ -1,0 +1,29 @@
+uuid: 15432bfa-9009-44e4-9e2b-9ec88ece2c41
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.columns
+  module:
+    - system
+    - views
+  theme:
+    - salem
+id: views_block__columns_property_management
+theme: salem
+region: content
+weight: -2
+provider: null
+plugin: 'views_block:columns-property_management'
+settings:
+  id: 'views_block:columns-property_management'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

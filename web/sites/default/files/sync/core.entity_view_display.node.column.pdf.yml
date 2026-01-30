@@ -1,0 +1,79 @@
+uuid: 77a3e750-1774-4f81-bee2-4ae85cacb667
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.pdf
+    - field.field.node.column.body
+    - field.field.node.column.field_author
+    - field.field.node.column.field_column_category
+    - field.field.node.column.field_column_icon
+    - field.field.node.column.field_column_image
+    - field.field.node.column.field_ct
+    - field.field.node.column.field_location_tags
+    - field.field.node.column.field_publication_date
+    - field.field.node.column.field_question_or_teaser
+    - field.field.node.column.field_reports
+    - field.field.node.column.field_should_this_be_featured_in
+    - field.field.node.column.field_what_image_should_accompan
+    - field.field.node.column.field_what_is_the_author_s_compa
+    - field.field.node.column.field_what_is_the_author_s_job_t
+    - node.type.column
+  module:
+    - datetime
+    - text
+    - user
+id: node.column.pdf
+targetEntityType: node
+bundle: column
+mode: pdf
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  entity_print_view_pdf:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_author:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_publication_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_word_docx: true
+  field_column_category: true
+  field_column_icon: true
+  field_column_image: true
+  field_ct: true
+  field_location_tags: true
+  field_question_or_teaser: true
+  field_reports: true
+  field_should_this_be_featured_in: true
+  field_what_image_should_accompan: true
+  field_what_is_the_author_s_compa: true
+  field_what_is_the_author_s_job_t: true
+  search_api_excerpt: true

@@ -1,0 +1,9 @@
+uuid: c345b06c-6f89-4a08-8a7a-33c7f231a337
+langcode: en
+status: true
+dependencies: {  }
+name: 'Geographic Tags'
+vid: geographic_tags
+description: null
+weight: 0
+new_revision: false

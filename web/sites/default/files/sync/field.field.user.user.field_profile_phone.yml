@@ -1,0 +1,19 @@
+uuid: db8f240b-f79f-4dc1-aabd-54f96ccb12b1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_profile_phone
+    - user_bundle.user_type.user
+id: user.user.field_profile_phone
+field_name: field_profile_phone
+entity_type: user
+bundle: user
+label: Phone
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

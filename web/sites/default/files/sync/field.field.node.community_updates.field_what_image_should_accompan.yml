@@ -1,0 +1,29 @@
+uuid: 89720266-5afb-4337-ba9b-c5c76b9ed6af
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_what_image_should_accompan
+    - node.type.community_updates
+    - taxonomy.vocabulary.slideshow_images
+id: node.community_updates.field_what_image_should_accompan
+field_name: field_what_image_should_accompan
+entity_type: node
+bundle: community_updates
+label: 'What image should accompany this column?'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      slideshow_images: slideshow_images
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

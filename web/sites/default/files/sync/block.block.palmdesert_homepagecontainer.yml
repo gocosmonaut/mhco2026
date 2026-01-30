@@ -1,0 +1,30 @@
+uuid: b0ced3ea-5939-4ea9-a25d-f584814d01b9
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:311cf458-49c7-4c5f-8771-a36ba6bcd9a2'
+  module:
+    - block_content
+    - system
+  theme:
+    - palmdesert
+id: palmdesert_homepagecontainer
+theme: palmdesert
+region: content
+weight: -10
+provider: null
+plugin: 'block_content:311cf458-49c7-4c5f-8771-a36ba6bcd9a2'
+settings:
+  id: 'block_content:311cf458-49c7-4c5f-8771-a36ba6bcd9a2'
+  label: 'Home Page Container'
+  label_display: '0'
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

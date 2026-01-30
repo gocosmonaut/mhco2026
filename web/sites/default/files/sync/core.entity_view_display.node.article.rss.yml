@@ -1,0 +1,60 @@
+uuid: 8cad92fc-1539-4816-8536-9f2ab7800490
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.rss
+    - field.field.node.article.body
+    - field.field.node.article.comment
+    - field.field.node.article.field_author
+    - field.field.node.article.field_column_category
+    - field.field.node.article.field_column_icon
+    - field.field.node.article.field_comments
+    - field.field.node.article.field_ct
+    - field.field.node.article.field_image
+    - field.field.node.article.field_legacy_content_type
+    - field.field.node.article.field_location_tags
+    - field.field.node.article.field_original_nid
+    - field.field.node.article.field_publication_date
+    - field.field.node.article.field_question_or_teaser
+    - field.field.node.article.field_should_this_be_featured_in
+    - field.field.node.article.field_tags
+    - field.field.node.article.field_what_image_should_accompan
+    - field.field.node.article.field_what_is_the_author_s_compa
+    - field.field.node.article.field_what_is_the_author_s_job_t
+    - node.type.article
+  module:
+    - user
+_core:
+  default_config_hash: 2rIr6K5Q0UQ9khg0zE_CK-PtJH76UL-BDDZcZnZzwCc
+id: node.article.rss
+targetEntityType: node
+bundle: article
+mode: rss
+content:
+  links:
+    weight: 100
+    region: content
+hidden:
+  body: true
+  comment: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_author: true
+  field_column_category: true
+  field_column_icon: true
+  field_comments: true
+  field_ct: true
+  field_image: true
+  field_legacy_content_type: true
+  field_location_tags: true
+  field_original_nid: true
+  field_publication_date: true
+  field_question_or_teaser: true
+  field_should_this_be_featured_in: true
+  field_tags: true
+  field_what_image_should_accompan: true
+  field_what_is_the_author_s_compa: true
+  field_what_is_the_author_s_job_t: true
+  search_api_excerpt: true

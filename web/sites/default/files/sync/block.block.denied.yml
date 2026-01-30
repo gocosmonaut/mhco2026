@@ -1,0 +1,48 @@
+uuid: 6081cea7-5524-4da8-807e-c8ff489e74b8
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:b463b47c-99c9-4202-ad3f-02d815fc46ec'
+  module:
+    - block_content
+    - node
+    - system
+    - user
+  theme:
+    - salem
+id: denied
+theme: salem
+region: content
+weight: -15
+provider: null
+plugin: 'block_content:b463b47c-99c9-4202-ad3f-02d815fc46ec'
+settings:
+  id: 'block_content:b463b47c-99c9-4202-ad3f-02d815fc46ec'
+  label: 'Do you want access to MHCO content?'
+  label_display: visible
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      column: column
+      community_updates: community_updates
+      fillable_forms: fillable_forms
+  request_path:
+    id: request_path
+    negate: false
+    pages: "/news-and-resources/columns*\r\n/news-and-resources/community-updates/*\r\n/forms-oregon-laws/mhco-forms\r\n/forms-oregon-laws/mhco-forms/*"
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      anonymous: anonymous

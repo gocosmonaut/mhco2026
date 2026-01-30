@@ -1,0 +1,25 @@
+uuid: 2155c1cc-e88b-462b-ad16-23b29e02455a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_park_form_downloads
+    - user_bundle.user_type.user
+id: user.user.field_park_form_downloads
+field_name: field_park_form_downloads
+entity_type: user
+bundle: user
+label: 'Park Form Downloads'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

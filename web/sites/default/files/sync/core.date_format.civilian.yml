@@ -1,0 +1,8 @@
+uuid: e44e934b-9a92-457f-8988-c3941a9c4686
+langcode: en
+status: true
+dependencies: {  }
+id: civilian
+label: Civilian
+locked: false
+pattern: 'F j, Y'

@@ -1,0 +1,5 @@
+name: Park Directory
+type: module
+description: 'A module with a form that sends POST to a .jsp URL via AJAX.'
+core_version_requirement: ^10
+package: Custom

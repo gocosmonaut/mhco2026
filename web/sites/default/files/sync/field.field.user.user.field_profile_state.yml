@@ -1,0 +1,33 @@
+uuid: d4dee98f-628e-424a-8455-baf75a5b2fd9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_profile_state
+    - taxonomy.vocabulary.states
+    - user_bundle.user_type.user
+  content:
+    - 'taxonomy_term:states:bbfbd803-764c-40e7-943c-196176896644'
+id: user.user.field_profile_state
+field_name: field_profile_state
+entity_type: user
+bundle: user
+label: State
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    target_uuid: bbfbd803-764c-40e7-943c-196176896644
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      states: states
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

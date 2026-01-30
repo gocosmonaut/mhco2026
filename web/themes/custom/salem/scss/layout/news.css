@@ -1,0 +1,60 @@
+.section-news-and-resources .cell {
+  padding: 0;
+}
+.section-news-and-resources .cell.medium-9.medium-order-2, .section-news-and-resources .cell.large-9.medium-order-2 {
+  width: 75%;
+}
+.section-news-and-resources .cell.medium-10.medium-order-2, .section-news-and-resources .cell.large-10.medium-order-2 {
+  width: 83.333%;
+}
+.section-news-and-resources .cell.medium-9.medium-order-2, .section-news-and-resources .cell.large-9.medium-order-2, .section-news-and-resources .cell.medium-10.medium-order-2, .section-news-and-resources .cell.large-10.medium-order-2 {
+  margin: 0;
+  background: #f2f2f2;
+  padding: 0;
+  border-left: 1px solid #ccc;
+}
+.section-news-and-resources .cell.medium-9.medium-order-2 #block-salem-page-title h1, .section-news-and-resources .cell.large-9.medium-order-2 #block-salem-page-title h1, .section-news-and-resources .cell.medium-10.medium-order-2 #block-salem-page-title h1, .section-news-and-resources .cell.large-10.medium-order-2 #block-salem-page-title h1 {
+  background: rgba(0, 0, 0, 0.05);
+  font-weight: 500;
+  font-size: 2.25rem;
+  line-height: 125%;
+  padding: 1.25rem 0.25rem 1rem 1.25rem;
+}
+.section-news-and-resources .cell #sidebar-first,
+.section-news-and-resources .cell #sidebar-second {
+  background: #f9f9f9;
+}
+.section-news-and-resources .cell #sidebar-first.large-2,
+.section-news-and-resources .cell #sidebar-second.large-2 {
+  padding: 0;
+  margin-left: 0;
+}
+.section-news-and-resources .cell #sidebar-first.medium-2, .section-news-and-resources .cell #sidebar-first.large-2,
+.section-news-and-resources .cell #sidebar-second.medium-2,
+.section-news-and-resources .cell #sidebar-second.large-2 {
+  width: 16.66%;
+}
+.section-news-and-resources .cell #sidebar-first.large-10,
+.section-news-and-resources .cell #sidebar-second.large-10 {
+  padding: 0;
+}
+.section-news-and-resources .cell #sidebar-first.cell.medium-3.sidebar,
+.section-news-and-resources .cell #sidebar-second.cell.medium-3.sidebar {
+  margin: 0;
+  width: 25%;
+  padding: 1.25rem 1.5rem;
+  border-right: inset 3px #eee;
+}
+.section-news-and-resources .not-front #sidebar-first.large-3 {
+  padding: 0;
+}
+.section-news-and-resources .not-front #sidebar-first.large-3 #block-views-block-search-block-1 {
+  width: 83.333%;
+}
+.section-news-and-resources .not-front #sidebar-first.large-3 #block-views-block-advertisements-block-1 {
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.section-news-and-resources .not-front #sidebar-first.large-3 #block-views-block-advertisements-block-1 .views-row {
+  border-bottom: 0;
+}/*# sourceMappingURL=news.css.map */

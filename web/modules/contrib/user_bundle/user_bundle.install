@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the user_bundle module.
+ */
+
+use Symfony\Component\Yaml\Yaml;
+
+/**
+ * Implements hook_install().
+ */
+function user_bundle_install() {
+  // First, we need to place the base field definition for the new 'type' field
+  // in the last installed schema repository, otherwise we can't set it as the
+  // 'bundle' key for the User entity type. This step doesn't update the
+  // database schema, that will happen when we install the new base field below.
+  /** @var \Drupal\Core\Field\BaseFieldDefinition $type_storage_definition */
+  $type_storage_definition = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('user')['type'];
+  $type_storage_definition
+    ->setName('type')
+    ->setTargetEntityTypeId('user')
+    ->setProvider('user_bundle')
+    ->setTargetBundle(NULL);
+
+  /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $last_installed_schema_repository */
+  $last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
+  $last_installed_schema_repository->setLastInstalledFieldStorageDefinition($type_storage_definition);
+
+  // Next, we can update the entity type definition with the new 'bundle' key.
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $entity_definition_update_manager->getEntityType('user');
+  $keys = $entity_type->getKeys();
+  $keys['bundle'] = 'type';
+  $entity_type->set('entity_keys', $keys);
+  $entity_definition_update_manager->updateEntityType($entity_type);
+
+  // And now we can finally install the new base field definition.
+  $type_storage_definition->setInitialValue('user');
+  $entity_definition_update_manager->installFieldStorageDefinition('type', 'user', 'user_bundle', $type_storage_definition);
+
+  // Add a new "Type" column and filter into the admin/people view.
+  $module_handler = \Drupal::service('module_handler');
+  if ($module_handler->moduleExists('views')
+    && ($view = \Drupal::configFactory()->getEditable('views.view.user_admin_people'))) {
+    $base = $module_handler->getModule('user_bundle')->getPath() . '/install';
+
+    // Add "Type" field to view, as the third field.
+    $config = $view->get('display.default.display_options.fields') ?: [];
+    $config = array_slice($config, 0, 2, TRUE) +
+      ['type' => Yaml::parse(file_get_contents("$base/display.default.display_options.fields.type.yml"))] +
+      array_slice($config, 2, count($config) - 1, TRUE);
+    $view->set('display.default.display_options.fields', $config);
+
+    // Add "Type" column to the table.
+    $view->set('display.default.display_options.style.options.columns.type', 'type');
+    $view->set('display.default.display_options.style.options.info.type', Yaml::parse(file_get_contents("$base/display.default.display_options.style.options.info.type.yml")));
+
+    // Add "Type" exposed filter, as the second filter.
+    $config = $view->get('display.default.display_options.filters') ?: [];
+    $config = array_slice($config, 0, 1, TRUE) +
+      ['type' => Yaml::parse(file_get_contents("$base/display.default.display_options.filters.type.yml"))] +
+      array_slice($config, 1, count($config) - 1, TRUE);
+    $view->set('display.default.display_options.filters', $config);
+
+    // Save our changes.
+    $view->save(TRUE);
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function user_bundle_uninstall() {
+  // Remove "Type" column and filter from the admin/people view.
+  if (\Drupal::service('module_handler')->moduleExists('views') && ($view = \Drupal::configFactory()->getEditable('views.view.user_admin_people'))) {
+    $properties = [
+      'display.default.display_options.fields',
+      'display.default.display_options.style.options.columns',
+      'display.default.display_options.style.options.info',
+      'display.default.display_options.filters',
+    ];
+    foreach ($properties as $property) {
+      $config = $view->get($property);
+      if (isset($config['type'])) {
+        unset($config['type']);
+        $view->set($property, $config);
+      }
+    }
+    $view->save(TRUE);
+  }
+
+  // Delete all configurable fields first, otherwise they are being deleted
+  // in the wrong order.
+  $field_storages = \Drupal::entityTypeManager()->getStorage('field_storage_config')->loadByProperties(['entity_type' => 'user']);
+  foreach ($field_storages as $field_storage) {
+    $field_storage->delete();
+  }
+
+  // Remove the 'type' field from the User entity type.
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  if ($definition = $entity_definition_update_manager->getFieldStorageDefinition('type', 'user')) {
+    $entity_definition_update_manager->uninstallFieldStorageDefinition($definition);
+
+    $entity_type = $entity_definition_update_manager->getEntityType('user');
+    $keys = $entity_type->getKeys();
+    $keys['bundle'] = '';
+    $entity_type->set('entity_keys', $keys);
+    $entity_definition_update_manager->updateEntityType($entity_type);
+  }
+}

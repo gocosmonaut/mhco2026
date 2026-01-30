@@ -1,0 +1,257 @@
+// header adjusts based on whether user is admin
+
+.user-logged-in.adminimal-admin-toolbar {
+    .block-utilitynavauthenticateduser {
+        top: 39px;
+    }
+
+    nav#block-salem-main-menu {
+        top: 68px;
+    }
+
+    &.toolbar-tray-open {
+        .block-utilitynavauthenticateduser {
+            top: 75px;
+        }
+
+        nav#block-salem-main-menu {
+            top: 105px;
+        }
+    }
+}
+ 
+// Non-modular or client styles for .l-header region.
+header {
+    margin-bottom: 135px;
+
+    .block-utilitynav,
+    .block-utilitynavauthenticateduser {
+        top: 0;
+    }
+
+    .block-utilitynav,
+    .block-utilitynavauthenticateduser {
+        width: 100%;
+        background: linear-gradient(90deg,
+                rgb(5, 64, 111) 0%,
+                rgba(32, 163, 211, 0.9) 50%,
+                rgba(5, 64, 111) 100%);
+        position: fixed;
+        z-index: 15;
+        //  top: 75px;
+        height: 30px;
+        max-height: 30px;
+
+        overflow-y: hidden;
+
+        .field--name-body {
+            max-width: 90rem;
+            margin: 0px auto;
+
+            .site-name {
+                width: 40%;
+                display: inline-block;
+                text-align: left;
+                font-size: .95rem;
+                letter-spacing: 0.25px;
+                font-weight: 500;
+
+                padding: 3px 8px 0 0;
+
+                p {
+                    font-family: $page-title  !important;
+                    margin-bottom: 0 !important;
+                }
+
+                a {
+                   // text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.8);
+
+                    &:hover {
+                        color: #ffcc00;
+                    }
+
+                    // font-family: "AG Semibold" !important;
+                }
+            }
+        }
+
+        .activities {
+            font-size: 0.9em;
+            width: 60%;
+            float: right;
+            text-align: right;
+            padding: 2px 0px 0px 8px;
+
+            p {
+                margin-bottom: 0 !important;
+            }
+
+            p span,
+            p span a,
+            p a {
+                font-family: $page-title  !important;
+            }
+
+            a {
+                padding: 0px 9px;
+
+                img {
+                    padding: 0px 5px 1px 2px;
+
+                    &:hover {
+                        filter: saturate(6);
+                    }
+                }
+
+                    &:hover {
+                        color: #ffcc00;
+
+
+                    }
+                }
+            }
+
+            p {
+                color: beige;
+            }
+
+            a {
+                color: white;
+            }
+        }
+    }
+
+    #top-bar-sticky-container {
+        background: linear-gradient(0deg, rgba(0, 36, 65, 0.85) 0%, rgba(0, 36, 65, 0.9) 100%);
+
+        &.scrolldown {
+            box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #bbb;
+        }
+
+        &.scrollup {
+            box-shadow: none;
+            border-bottom: 1px solid #fff;
+        }
+    }
+
+    nav#block-salem-main-menu {
+        opacity: 0;
+        position: fixed;
+        top: 30px;
+        width: 100%;
+        //     background: #aaa;
+        z-index: 15;
+
+        &.fade-in {
+            opacity: 1;
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        .sticky.is-anchored {
+            // top bar
+
+            nav#main-menu {
+                background: none;
+            }
+        }
+
+        #main-menu.top-bar {
+            max-width: 90em;
+            margin: 0px auto;
+            z-index: 111;
+            padding: .5rem 0;
+            background: none;
+
+            .top-bar-left {
+                .dropdown.menu {
+                    background: none;
+                }
+
+                .site-logo {
+                    width: 140px;
+                    height: 100%;
+                    padding: 0.25em 0;
+
+                    svg {
+                        fill: #fff;
+                        width: 100%;
+                        height: auto;
+
+                        &:hover {
+                            fill: cyan;
+                        }
+                    }
+                }
+            }
+
+            .top-bar-right {
+                ul {
+                    background: none;
+
+                    li {
+                        &:last-of-type {
+                            a {
+                                padding-right: 0;
+                            }
+                        }
+
+                        a {
+                            font-family: $font-sans-serif-narrow;
+                            //  font-weight: normal;
+                            // font-size: 1.3rem;
+                            letter-spacing: 0.5px;
+                            color: cyan;
+                        }
+
+                        &.is-active {
+                            ul {
+                                transition: all 1s ease-in;
+                                opacity: 1;
+                            }
+                        }
+
+                        ul {
+                            transition: all 1s ease-out;
+                            opacity: 0;
+                            left: 0;
+                            //  top: -30px;
+                            width: fit-content;
+                            border: 1px solid #bbb;
+                            box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+                            margin-left: 1rem;
+                            background: #444;
+
+                            li {
+
+                                //   width: max-content;
+                                display: table-row;
+                                background: #444;
+
+                                &:hover {
+                                    background: #004b87;
+                                    filter: saturate(2);
+                                    padding-right: 10px;
+                                }
+
+                                a {
+                                    font-family: $font-sans-serif;
+                                    // font-size: 1.15rem;
+                                    width: max-content;
+                                }
+
+                                &:last-of-type {
+                                    display: block;
+                                    width: 100%;
+
+                                    a {
+                                        padding: .7rem 1rem;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }

@@ -1,0 +1,21 @@
+uuid: 6147e6f4-6d21-4a43-88c8-8167438f26fb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_caption
+    - node.type.marquee_promotion
+  module:
+    - text
+id: node.marquee_promotion.field_caption
+field_name: field_caption
+entity_type: node
+bundle: marquee_promotion
+label: Caption
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text

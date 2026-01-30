@@ -1,0 +1,12 @@
+name: 'Shared Email'
+type: module
+description: 'Allow an email address to be used by more than one user account'
+configure: sharedemail.settings_form
+core_version_requirement: ^10.2 || ^11
+dependencies:
+  - drupal:user
+
+# Information added by Drupal.org packaging script on 2025-01-22
+version: '3.2.0'
+project: 'sharedemail'
+datestamp: 1737580200

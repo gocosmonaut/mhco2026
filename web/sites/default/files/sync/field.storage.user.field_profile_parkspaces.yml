@@ -1,0 +1,20 @@
+uuid: c053cc46-29ab-4e67-bc5f-8ae17347b1f1
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: user.field_profile_parkspaces
+field_name: field_profile_parkspaces
+entity_type: user
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

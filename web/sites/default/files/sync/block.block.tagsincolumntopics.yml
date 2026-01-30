@@ -1,0 +1,40 @@
+uuid: 651e679f-db04-4fc1-9f9f-5a05d25cdedf
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+    - tagclouds
+    - user
+  theme:
+    - salem
+id: tagsincolumntopics
+theme: salem
+region: content
+weight: -6
+provider: null
+plugin: 'tagclouds_block:column_topics'
+settings:
+  id: 'tagclouds_block:column_topics'
+  label: 'Trending Topics'
+  label_display: '0'
+  provider: tagclouds
+  cache:
+    max_age: 0
+    contexts: {  }
+  tags: '10'
+  vocabulary: column_topics
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      authenticated: authenticated
+      content_editor: content_editor
+      administrator: administrator

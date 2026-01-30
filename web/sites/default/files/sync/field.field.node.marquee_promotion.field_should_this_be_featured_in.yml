@@ -1,0 +1,25 @@
+uuid: 5a14db76-f9c8-4765-a83e-fa4969625fbe
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_should_this_be_featured_in
+    - node.type.marquee_promotion
+_core:
+  default_config_hash: yz9S6F17IleV83j4qTdWx40lJHXXrKi7CGuBLp_cizc
+id: node.marquee_promotion.field_should_this_be_featured_in
+field_name: field_should_this_be_featured_in
+entity_type: node
+bundle: marquee_promotion
+label: 'Feature this on the home page slideshow?'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -1,0 +1,21 @@
+uuid: 317125c4-c354-4f34-9201-3925cbab65b3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_download_link
+    - node.type.fillable_forms
+_core:
+  default_config_hash: dFXkuBmbghCplrqOvBHFl2-TKjLcCmHoTcdczPkrGi4
+id: node.fillable_forms.field_download_link
+field_name: field_download_link
+entity_type: node
+bundle: fillable_forms
+label: 'Download Link'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

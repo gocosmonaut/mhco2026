@@ -1,0 +1,38 @@
+uuid: 6471b378-058b-44af-8fb1-fc23bec78dd7
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.user_export
+  module:
+    - system
+    - user
+    - views
+  theme:
+    - salem
+id: views_block__user_export_block_1
+theme: salem
+region: content
+weight: -9
+provider: null
+plugin: 'views_block:user_export-block_1'
+settings:
+  id: 'views_block:user_export-block_1'
+  label: ''
+  label_display: '0'
+  provider: views
+  context_mapping: {  }
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /forms-oregon-laws/mhco-forms
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      authenticated: authenticated

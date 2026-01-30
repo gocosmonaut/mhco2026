@@ -1,0 +1,33 @@
+uuid: 5de28ae2-d3e6-436a-88e8-09b14c5b8d5a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ad_placement
+    - node.type.advertisement
+    - taxonomy.vocabulary.ad_placement
+  content:
+    - 'taxonomy_term:ad_placement:0ae5abd7-3617-454c-9ce2-241a8c194a0c'
+id: node.advertisement.field_ad_placement
+field_name: field_ad_placement
+entity_type: node
+bundle: advertisement
+label: 'Ad Placement'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    target_uuid: 0ae5abd7-3617-454c-9ce2-241a8c194a0c
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      ad_placement: ad_placement
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

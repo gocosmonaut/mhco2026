@@ -1,0 +1,169 @@
+uuid: c72001f5-317a-4baa-ba8b-60b7f4cbcd96
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.column.body
+    - field.field.node.column.field_author
+    - field.field.node.column.field_column_category
+    - field.field.node.column.field_column_icon
+    - field.field.node.column.field_column_image
+    - field.field.node.column.field_ct
+    - field.field.node.column.field_location_tags
+    - field.field.node.column.field_publication_date
+    - field.field.node.column.field_question_or_teaser
+    - field.field.node.column.field_reports
+    - field.field.node.column.field_should_this_be_featured_in
+    - field.field.node.column.field_what_image_should_accompan
+    - field.field.node.column.field_what_is_the_author_s_compa
+    - field.field.node.column.field_what_is_the_author_s_job_t
+    - node.type.column
+  module:
+    - datetime
+    - file
+    - path
+    - text
+_core:
+  default_config_hash: yqt97Iopw-s2XGgVai7rX5yJQRcKMG8q4D0YCbzJHRc
+id: node.column.default
+targetEntityType: node
+bundle: column
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 14
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  created:
+    type: datetime_timestamp
+    weight: 13
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_author:
+    type: options_select
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_column_category:
+    type: options_select
+    weight: 8
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_column_icon:
+    type: options_select
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_ct:
+    type: entity_reference_autocomplete_tags
+    weight: 2
+    region: content
+    settings:
+      match_operator: STARTS_WITH
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_publication_date:
+    type: datetime_default
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_question_or_teaser:
+    type: text_textarea
+    weight: 12
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_reports:
+    type: file_generic
+    weight: 26
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+  field_should_this_be_featured_in:
+    type: options_buttons
+    weight: 11
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_what_image_should_accompan:
+    type: options_select
+    weight: 9
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_what_is_the_author_s_compa:
+    type: options_select
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_what_is_the_author_s_job_t:
+    type: options_select
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 19
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 17
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    weight: 15
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 20
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    weight: 16
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: options_select
+    weight: 7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_column_image: true
+  field_location_tags: true

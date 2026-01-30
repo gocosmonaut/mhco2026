@@ -1,0 +1,22 @@
+uuid: 50217f09-ddcf-45cb-a27b-bf45173dbeed
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - palmdesert
+_core:
+  default_config_hash: '-eXymA-QIYRbnkVwoTmdw2P2C7aGbqPq9IPNlopqsOM'
+id: palmdesert_messages
+theme: palmdesert
+region: highlighted
+weight: -6
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  label_display: '0'
+  provider: system
+visibility: {  }

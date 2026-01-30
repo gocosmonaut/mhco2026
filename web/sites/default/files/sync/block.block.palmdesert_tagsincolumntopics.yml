@@ -1,0 +1,38 @@
+uuid: c3cb98ee-7d1e-47fe-8562-7b466797ac7b
+langcode: en
+status: false
+dependencies:
+  module:
+    - system
+    - tagclouds
+    - user
+  theme:
+    - palmdesert
+id: palmdesert_tagsincolumntopics
+theme: palmdesert
+region: content
+weight: -1
+provider: null
+plugin: 'tagclouds_block:column_topics'
+settings:
+  id: 'tagclouds_block:column_topics'
+  label: 'Tags in Column Topics'
+  label_display: '0'
+  provider: tagclouds
+  cache:
+    max_age: 0
+    contexts: {  }
+  tags: '12'
+  vocabulary: column_topics
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      authenticated: authenticated

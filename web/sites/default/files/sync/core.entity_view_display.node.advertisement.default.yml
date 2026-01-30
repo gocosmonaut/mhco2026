@@ -1,0 +1,61 @@
+uuid: 56df36b1-ec14-41f6-a3ec-001cbce54d28
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.advertisement.body
+    - field.field.node.advertisement.field_ad_image
+    - field.field.node.advertisement.field_ad_link
+    - field.field.node.advertisement.field_ad_placement
+    - node.type.advertisement
+  module:
+    - image
+    - link
+    - user
+id: node.advertisement.default
+targetEntityType: node
+bundle: advertisement
+mode: default
+content:
+  field_ad_image:
+    type: image
+    label: above
+    settings:
+      image_link: ''
+      image_style: ''
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_ad_link:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_ad_placement:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden:
+  body: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  search_api_excerpt: true

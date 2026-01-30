@@ -1,0 +1,29 @@
+uuid: c15953d4-780c-45f6-bea7-0445181a4f52
+langcode: en
+status: false
+dependencies:
+  config:
+    - views.view.columns
+  module:
+    - system
+    - views
+  theme:
+    - palmdesert
+id: palmdesert_views_block__columns_marquee_slideshow
+theme: palmdesert
+region: content
+weight: -6
+provider: null
+plugin: 'views_block:columns-marquee_slideshow'
+settings:
+  id: 'views_block:columns-marquee_slideshow'
+  label: ''
+  label_display: '0'
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

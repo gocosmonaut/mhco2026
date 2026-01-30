@@ -1,0 +1,23 @@
+uuid: 65660985-98ec-4d1e-a5ad-0ef651ed09d6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_should_this_be_featured_in
+    - node.type.community_updates
+id: node.community_updates.field_should_this_be_featured_in
+field_name: field_should_this_be_featured_in
+entity_type: node
+bundle: community_updates
+label: 'Feature this column in the home page slideshow?'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

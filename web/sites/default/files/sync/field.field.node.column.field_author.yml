@@ -1,0 +1,35 @@
+uuid: 578af690-0a85-425d-990f-7fbd49c3fe2b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_author
+    - node.type.column
+    - taxonomy.vocabulary.authors
+  content:
+    - 'taxonomy_term:authors:6b78eeb1-8c41-463a-b51f-199d14f3746e'
+_core:
+  default_config_hash: _2TXuBN6SkJvmsTrMAeveL62vH7GW4x0XLeEiarC4vk
+id: node.column.field_author
+field_name: field_author
+entity_type: node
+bundle: column
+label: By
+description: 'The author of this column. Just the name, do not type "By." This field will autofill to ensure consistency in spelling to identify authorship. Please a comma-separated list if there are multiple authors. IMPORTANT: If you are appending terms like "esq." or "Jr." please put names in quotation marks. For example, John Smith, Jr. should be entered as "John Smith, Jr."'
+required: true
+translatable: false
+default_value:
+  -
+    target_uuid: 6b78eeb1-8c41-463a-b51f-199d14f3746e
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      authors: authors
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

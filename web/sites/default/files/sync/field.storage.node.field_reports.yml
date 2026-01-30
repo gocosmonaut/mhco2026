@@ -1,0 +1,25 @@
+uuid: 5925b63e-385b-496f-b9ea-1d3c0fd3ab96
+langcode: und
+status: true
+dependencies:
+  module:
+    - file
+    - node
+_core:
+  default_config_hash: UXLhyQWaqWcYNR_xmsLZ_sPXQCTZxC9EBhlsMJhZf6A
+id: node.field_reports
+field_name: field_reports
+entity_type: node
+type: file
+settings:
+  target_type: file
+  display_field: true
+  display_default: true
+  uri_scheme: public
+module: file
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

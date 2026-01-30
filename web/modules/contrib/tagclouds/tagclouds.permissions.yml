@@ -1,0 +1,4 @@
+administer tagclouds settings:
+  title: 'Administer TagClouds Settings'
+  description: 'This role provides access to TagClouds settings page'
+  restrict access: TRUE

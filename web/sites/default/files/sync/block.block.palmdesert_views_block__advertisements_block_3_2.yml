@@ -1,0 +1,29 @@
+uuid: 3b4c66f3-3b96-440a-b262-6a9ea2f188bb
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.advertisements
+  module:
+    - system
+    - views
+  theme:
+    - palmdesert
+id: palmdesert_views_block__advertisements_block_3_2
+theme: palmdesert
+region: featured_bottom_first
+weight: -11
+provider: null
+plugin: 'views_block:advertisements-block_3'
+settings:
+  id: 'views_block:advertisements-block_3'
+  label: ''
+  label_display: '0'
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: "<front>\r\n/articles*\r\n/membership/*"

@@ -1,0 +1,9 @@
+uuid: a345384f-9937-42ae-a6c1-a0aaee2751d0
+langcode: en
+status: true
+dependencies: {  }
+name: 'Column Icons'
+vid: column_icons
+description: null
+weight: 0
+new_revision: false

@@ -1,0 +1,30 @@
+uuid: 4f937e8f-2370-4f4e-8f84-1c71adf280e4
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:basic:ff7d1601-beb8-4ce1-859f-4d54b233aea5'
+  module:
+    - block_content
+    - system
+  theme:
+    - palmdesert
+id: palmdesert_homesidebarcontainer
+theme: palmdesert
+region: content
+weight: -5
+provider: null
+plugin: 'block_content:ff7d1601-beb8-4ce1-859f-4d54b233aea5'
+settings:
+  id: 'block_content:ff7d1601-beb8-4ce1-859f-4d54b233aea5'
+  label: 'Associate Members'
+  label_display: visible
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

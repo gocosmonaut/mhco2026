@@ -1,0 +1,25 @@
+uuid: a6786810-e55c-4e9a-9e9f-e6c2b4e0fc1e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_should_this_be_featured_in
+    - node.type.fillable_forms
+_core:
+  default_config_hash: lWNo2Tm-hEyEno24ZsSY5relunkvg8HxWgDItoSCWHY
+id: node.fillable_forms.field_should_this_be_featured_in
+field_name: field_should_this_be_featured_in
+entity_type: node
+bundle: fillable_forms
+label: 'Feature this form in the home page slideshow?'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

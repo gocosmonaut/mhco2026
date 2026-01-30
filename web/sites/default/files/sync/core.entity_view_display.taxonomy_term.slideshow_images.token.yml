@@ -1,0 +1,39 @@
+uuid: 768df2bb-24c7-448e-a99e-6861b6e4f077
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.token
+    - field.field.taxonomy_term.slideshow_images.field_featured_image
+    - image.style.medium
+    - taxonomy.vocabulary.slideshow_images
+  module:
+    - image
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: taxonomy_term.slideshow_images.token
+targetEntityType: taxonomy_term
+bundle: slideshow_images
+mode: token
+content:
+  field_featured_image:
+    type: image
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: medium
+      image_loading:
+        attribute: eager
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  description: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  feeds_item: true
+  search_api_excerpt: true

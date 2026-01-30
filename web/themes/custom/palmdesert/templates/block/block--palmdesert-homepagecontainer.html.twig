@@ -1,0 +1,111 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a block.
+ *
+ * Available variables:
+ * - plugin_id: The ID of the block implementation.
+ * - label: The configured label of the block if visible.
+ * - configuration: A list of the block's configuration values.
+ *   - label: The configured label for the block.
+ *   - label_display: The display settings for the label.
+ *   - provider: The module or other provider that provided this block plugin.
+ *   - Block plugin specific settings will also be stored here.
+ * - content: The content of this block.
+ * - attributes: array of HTML attributes populated by modules, intended to
+ *   be added to the main container tag of this template.
+ *   - id: A valid HTML ID and guaranteed unique.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - content_attributes: Same as attributes, except applied to the main content
+ *   tag that appears in the template.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ *
+ * @see template_preprocess_block()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    'block',
+    'block-' ~ configuration.provider|clean_class,
+    'block-' ~ plugin_id|clean_class,
+  ]
+%}
+<div{{attributes.addClass(classes)}}>
+	{{ title_prefix }}
+	{% if label %}
+		<h2{{title_attributes}}>{{ label }}</h2>
+	{% endif %}
+	{{ title_suffix }}
+	{% block content %}
+		<div{{content_attributes.addClass('content')}}>
+			<div id="home-top-container">
+				<div id="home-col-1">
+					{{ drupal_view('columns', 'marquee_slideshow') }}
+				</div>
+				<div id="home-col-2">
+					<div id="site-introduction">
+						<p>MHCO is the foremost advocate for your interests in lobbying and ripping off tenants in Oregon.
+							<a>Register</a>
+							to reap the benefits of our evil doing.</p>
+					</div>
+					{{ drupal_view('advertisements', 'block_2') }}
+					<div id="associate-members-container">
+						<h5>Associate Member Spotlight</h5>
+						{{ drupal_view('associate_members', 'associate_members_home') }}
+					</div>
+				</div>
+			</div>
+			{% if logged_in %}
+				<div id="article-search-tagclouds-container">
+					<div id="article-search">
+						<h4>MHCO Article Search
+							<span>Exclusive for MHCO Members<span></h4>
+								<h5>Instantly search hundreds of topics in the MHCO library.</h5>
+								{{ drupal_view('article_search', 'block_1') }}
+							</div>
+
+							<div id="article-tags">
+								<h4>Trending Topics</h4>
+								{{ drupal_entity('block', 'tagsincolumntopics')}}
+							</div>
+						</div>
+					{% endif %}
+					{% if not logged_in %}
+						<div id="home-page-touts-container">
+							<div id="article-anonymous">
+								<div class="iconography"><img src="sites/default/files/supporting/mhco-articles.jpg"></div>
+								<div class="tout">
+									<h4>MHCO Articles</h4>
+									<p>
+										<a href="/user-login">Sign in</a>
+										or
+										<a href="/membership/become-community-member">become a community member</a>
+										for full access to new and archived content from MHCO and its contributors.</p>
+								</div>
+							</div>
+							<div id="forms-anonymous">
+								<div class="iconography"><img src="sites/default/files/supporting/mhco-forms.jpg"></div>
+								<div class="tout">
+									<h4>MHCO Forms</h4>
+									<p>
+										<a href="/user-login">Sign in</a>
+										or
+										<a href="/membership/become-community-member">become a community member</a>
+										to download forms from the MHCO library, customized for your park or community.</p>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+					{{ drupal_view('columns', 'home_page_articles') }}
+
+				</div>
+				{{ content }}
+			</div>
+		{% endblock %}
+	</div>

@@ -1,0 +1,7 @@
+services:
+  tagclouds.tag:
+    class: Drupal\tagclouds\TagService
+    arguments: ['@config.factory', '@language_manager', '@cache.data', '@request_stack', '@database']
+  tagclouds.cloud_builder:
+    class: Drupal\tagclouds\CloudBuilder
+    arguments: ['@config.factory', '@language_manager', '@entity_type.manager']

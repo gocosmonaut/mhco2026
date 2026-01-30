@@ -1,0 +1,38 @@
+uuid: 56e40533-2bab-4c4d-8737-4514cffa3e62
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:9ec99cfa-2131-4e7b-a9fe-ab705db8adc0'
+  module:
+    - block_content
+    - node
+    - system
+  theme:
+    - palmdesert
+id: palmdesert_articlecontainer
+theme: palmdesert
+region: sidebar_second
+weight: -12
+provider: null
+plugin: 'block_content:9ec99cfa-2131-4e7b-a9fe-ab705db8adc0'
+settings:
+  id: 'block_content:9ec99cfa-2131-4e7b-a9fe-ab705db8adc0'
+  label: 'Article Container'
+  label_display: '0'
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      article: article
+  request_path:
+    id: request_path
+    negate: false
+    pages: "/articles\r\n/articles/*\r\n/membership/associate-members/"

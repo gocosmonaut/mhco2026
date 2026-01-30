@@ -1,0 +1,1 @@
+https://pdf-temp-files.s3.us-west-2.amazonaws.com/TNT7TJGSY8RVIE0PUA42CK5N6ZA6VUO9/Cosmonaut_-_01B.pdf?X-Amz-Expires=3600&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIZJDPLX6D7EHVCKA/20251015/us-west-2/s3/aws4_request&X-Amz-Date=20251015T203548Z&X-Amz-SignedHeaders=host&X-Amz-Signature=75a3c0ededfab7e50a555db8aa6138446f99340972437ca263ea0a2b5abc72cc

@@ -1,0 +1,56 @@
+uuid: 0c74ab63-f01b-48b0-bfa9-8c9c511901a5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.slideshow_images.field_featured_image
+    - image.style.thumbnail
+    - taxonomy.vocabulary.slideshow_images
+  module:
+    - image
+    - path
+    - text
+id: taxonomy_term.slideshow_images.default
+targetEntityType: taxonomy_term
+bundle: slideshow_images
+mode: default
+content:
+  description:
+    type: text_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_featured_image:
+    type: image_image
+    weight: 31
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 100
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+hidden:
+  feeds_item: true

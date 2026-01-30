@@ -1,0 +1,9 @@
+uuid: f7240486-ae50-4d21-b2fd-a37f88c5b47a
+langcode: en
+status: true
+dependencies: {  }
+name: 'Slideshow Images'
+vid: slideshow_images
+description: null
+weight: 0
+new_revision: false

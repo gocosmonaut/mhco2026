@@ -1,0 +1,22 @@
+uuid: 90ac049c-d5c5-4a8a-8610-f6f592ae7abf
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: columns_d9
+label: 'Columns - D9'
+type: 'canonical_entities:node'
+pattern: 'news-and-resources/columns/[node:title]'
+selection_criteria:
+  ff8ec3d1-51fb-4bcd-9c2a-84d7c12f9e80:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: ff8ec3d1-51fb-4bcd-9c2a-84d7c12f9e80
+    context_mapping:
+      node: node
+    bundles:
+      column: column
+selection_logic: and
+weight: -5
+relationships: {  }

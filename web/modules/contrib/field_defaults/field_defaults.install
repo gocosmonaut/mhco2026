@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Field Defaults module.
+ */
+
+/**
+ * Transfer "Retain original entity updated time" value, after rename.
+ *
+ * See https://www.drupal.org/project/field_defaults/issues/3245865
+ */
+function field_defaults_update_8001() {
+  $config_factory = \Drupal::configFactory();
+  $config_old = $config_factory->getEditable('field_defaults.configuration');
+  $config = $config_factory->getEditable('field_defaults.settings');
+  if ($config_old->get('update_date') == '1') {
+    $config->set('retain_changed_date', 1);
+  }
+  else {
+    $config->set('retain_changed_date', 0);
+  }
+
+  // Remove both old file and settings.
+  $config_old->delete();
+  $config->clear('field_defaults');
+
+  $config->save(TRUE);
+}

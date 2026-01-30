@@ -1,0 +1,35 @@
+uuid: d215cc58-41be-4969-b72e-b02f59c5f1be
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_column_category
+    - node.type.column
+    - taxonomy.vocabulary.topics
+  content:
+    - 'taxonomy_term:topics:b358f180-705a-4ca5-9571-d0e9f8e65087'
+_core:
+  default_config_hash: gAQYZ0IQrRwrgwNAJ69ws_ngf9TTcX9zBIzMHP4rJNE
+id: node.column.field_column_category
+field_name: field_column_category
+entity_type: node
+bundle: column
+label: 'What type of column is this?'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    target_uuid: b358f180-705a-4ca5-9571-d0e9f8e65087
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      topics: topics
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: column_topics
+field_type: entity_reference

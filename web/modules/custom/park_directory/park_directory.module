@@ -1,0 +1,12 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function park_directory_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'park_directory_form') { // Matches the form ID from your form class.
+  $form['#attached']['library'][] = 'park_directory/park_directory-js';
+  }
+}

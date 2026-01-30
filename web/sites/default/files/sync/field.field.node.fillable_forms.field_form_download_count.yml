@@ -1,0 +1,25 @@
+uuid: a069ad58-0b7b-43a7-bebb-fa1e4d882749
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_form_download_count
+    - node.type.fillable_forms
+id: node.fillable_forms.field_form_download_count
+field_name: field_form_download_count
+entity_type: node
+bundle: fillable_forms
+label: 'Form Download Count'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

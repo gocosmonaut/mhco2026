@@ -1,0 +1,27 @@
+// Non-modular or client styles for asides or sidebars.
+.contact-form {
+    form {
+    width: 62.5%;
+    padding-left: 1.25rem;
+    .form-item-intro {
+        font-family: $font-sans-serif;
+        font-size: 1.125rem;
+        padding: 0 0 2rem 0;
+    }
+    label {
+        font-family: $page-title;
+        font-size: 1.1rem;
+    }
+    .text-count-message {
+        font-family: $font-serif;
+        display: block !important;
+        padding: 0 0 1rem 0;
+    }
+    .button.success {
+       // background: $primary-color;
+        color: #fff;
+        font-size: 1.125rem;
+        font-family: $font-sans-serif-medium;
+    }
+}
+}

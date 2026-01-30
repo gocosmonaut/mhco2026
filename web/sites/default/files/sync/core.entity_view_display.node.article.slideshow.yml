@@ -1,0 +1,80 @@
+uuid: 1cee9383-d4d7-4c8b-8c68-638b1c4ac4a8
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.slideshow
+    - field.field.node.article.body
+    - field.field.node.article.comment
+    - field.field.node.article.field_author
+    - field.field.node.article.field_column_category
+    - field.field.node.article.field_column_icon
+    - field.field.node.article.field_comments
+    - field.field.node.article.field_ct
+    - field.field.node.article.field_image
+    - field.field.node.article.field_legacy_content_type
+    - field.field.node.article.field_location_tags
+    - field.field.node.article.field_original_nid
+    - field.field.node.article.field_publication_date
+    - field.field.node.article.field_question_or_teaser
+    - field.field.node.article.field_should_this_be_featured_in
+    - field.field.node.article.field_tags
+    - field.field.node.article.field_what_image_should_accompan
+    - field.field.node.article.field_what_is_the_author_s_compa
+    - field.field.node.article.field_what_is_the_author_s_job_t
+    - node.type.article
+  module:
+    - datetime
+    - layout_builder
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+_core:
+  default_config_hash: jkgMFGvSrydIKdTEP4VEWBOTbypdYQOjM7mJsX7-v3E
+id: node.article.slideshow
+targetEntityType: node
+bundle: article
+mode: slideshow
+content:
+  field_publication_date:
+    type: datetime_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: civilian
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_what_image_should_accompan:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  body: true
+  comment: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_author: true
+  field_column_category: true
+  field_column_icon: true
+  field_comments: true
+  field_ct: true
+  field_image: true
+  field_legacy_content_type: true
+  field_location_tags: true
+  field_original_nid: true
+  field_question_or_teaser: true
+  field_should_this_be_featured_in: true
+  field_tags: true
+  field_what_is_the_author_s_compa: true
+  field_what_is_the_author_s_job_t: true
+  links: true
+  search_api_excerpt: true

@@ -1,0 +1,15 @@
+_core:
+  default_config_hash: VDJxTZtQR21qB4lvOq8zszJZLvLKrSPQpdn2E3T71Ww
+langcode: en
+uuid: 6f34effd-304d-4416-86ef-b3b039d6acdc
+name: 'MHCO | Manufactured Housing Communities of Oregon'
+mail: info@mhco.org
+slogan: ''
+page:
+  403: ''
+  404: ''
+  front: /node/2310
+admin_compact_mode: false
+weight_select_max: 100
+default_langcode: en
+mail_notification: ''

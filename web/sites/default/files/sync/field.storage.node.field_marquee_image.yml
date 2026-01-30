@@ -1,0 +1,28 @@
+uuid: 52a5c3b5-3f67-4967-9266-36dd663efdbc
+langcode: und
+status: true
+dependencies:
+  module:
+    - file
+    - image
+    - node
+_core:
+  default_config_hash: 78459izE16ytr_W9zT4WmgeXZmedjOoQ0QQPqbB4t3s
+id: node.field_marquee_image
+field_name: field_marquee_image
+entity_type: node
+type: image
+settings:
+  target_type: file
+  display_field: false
+  display_default: false
+  uri_scheme: public
+  default_image:
+    uuid: ''
+module: image
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

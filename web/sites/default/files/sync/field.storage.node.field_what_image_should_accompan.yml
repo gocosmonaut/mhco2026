@@ -1,0 +1,22 @@
+uuid: f49bf612-0472-4be7-8f1a-d75bbe1937dd
+langcode: und
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+_core:
+  default_config_hash: vVUyoeoWwt20Bp-5a6eXx9lg0e_kS-Osfbor1rKkBy4
+id: node.field_what_image_should_accompan
+field_name: field_what_image_should_accompan
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

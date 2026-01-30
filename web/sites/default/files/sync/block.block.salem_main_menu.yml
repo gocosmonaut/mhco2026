@@ -1,0 +1,27 @@
+uuid: 9f3676c2-b0d1-4eb4-8d28-78b41f02e6e0
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - system
+  theme:
+    - salem
+_core:
+  default_config_hash: 55zEI9IS274xKs1JU_PlTq0vVIEt1qVYBdYR7oqyR6I
+id: salem_main_menu
+theme: salem
+region: header
+weight: -17
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: 'Main navigation'
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

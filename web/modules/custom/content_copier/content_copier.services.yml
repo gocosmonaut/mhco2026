@@ -1,0 +1,5 @@
+services:
+  content_copier.commands:
+    class: \Drupal\content_copier\Commands\ContentCopierCommands
+    tags:
+      - { name: drush.command }

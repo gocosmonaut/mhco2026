@@ -1,0 +1,19 @@
+uuid: 89ff7ac8-ed37-492e-9997-1b299a6ea51d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_profile_email
+    - user_bundle.user_type.user
+id: user.user.field_profile_email
+field_name: field_profile_email
+entity_type: user
+bundle: user
+label: 'Email Profile'
+description: 'The email associated with this account is [current-user:mail].'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: email

@@ -1,0 +1,23 @@
+uuid: de104e9a-fadc-4bfc-9c49-e5932ddeac47
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_associate_member_descripti
+    - node.type.associate_member
+  module:
+    - text
+_core:
+  default_config_hash: 0pMW_XB-swO8EBEdJLp3iYTz-kZZ2oIPO6MY8CcBAec
+id: node.associate_member.field_associate_member_descripti
+field_name: field_associate_member_descripti
+entity_type: node
+bundle: associate_member
+label: 'Associate Member Description'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text

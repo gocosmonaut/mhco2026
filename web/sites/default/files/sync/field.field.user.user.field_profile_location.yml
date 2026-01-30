@@ -1,0 +1,33 @@
+uuid: 77f38f5e-f247-47e0-ba1a-4b700848d145
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_profile_location
+    - taxonomy.vocabulary.cities
+    - user_bundle.user_type.user
+  content:
+    - 'taxonomy_term:cities:9b2af90e-3280-49fb-9e15-ca6b4f9d53e4'
+id: user.user.field_profile_location
+field_name: field_profile_location
+entity_type: user
+bundle: user
+label: City
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    target_uuid: 9b2af90e-3280-49fb-9e15-ca6b4f9d53e4
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      cities: cities
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

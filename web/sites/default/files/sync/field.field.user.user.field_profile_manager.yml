@@ -1,0 +1,23 @@
+uuid: acca38a5-fa19-4242-8860-6a7009533941
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_profile_manager
+    - user_bundle.user_type.user
+id: user.user.field_profile_manager
+field_name: field_profile_manager
+entity_type: user
+bundle: user
+label: 'Are you the park manager?'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean

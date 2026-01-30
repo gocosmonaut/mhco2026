@@ -1,0 +1,29 @@
+uuid: 6754ff11-ac6d-49f8-8dd1-3cdad18b9969
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_what_is_the_author_s_job_t
+    - node.type.community_updates
+    - taxonomy.vocabulary.columnist_job_titles
+id: node.community_updates.field_what_is_the_author_s_job_t
+field_name: field_what_is_the_author_s_job_t
+entity_type: node
+bundle: community_updates
+label: "What is the author's job title?"
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      columnist_job_titles: columnist_job_titles
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

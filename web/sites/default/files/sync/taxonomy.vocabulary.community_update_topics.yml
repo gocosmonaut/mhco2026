@@ -1,0 +1,9 @@
+uuid: a57f6236-a7a9-4cd9-900c-68e284e6be72
+langcode: en
+status: true
+dependencies: {  }
+name: 'Community Update Topics'
+vid: community_update_topics
+description: null
+weight: 0
+new_revision: false

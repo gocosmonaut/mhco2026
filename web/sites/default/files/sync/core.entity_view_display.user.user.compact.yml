@@ -1,0 +1,61 @@
+uuid: d7902241-7720-4668-b7f0-f9917867434f
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.user.compact
+    - field.field.user.user.field_county
+    - field.field.user.user.field_park_form_downloads
+    - field.field.user.user.field_profile_address
+    - field.field.user.user.field_profile_email
+    - field.field.user.user.field_profile_location
+    - field.field.user.user.field_profile_manager
+    - field.field.user.user.field_profile_name
+    - field.field.user.user.field_profile_owner
+    - field.field.user.user.field_profile_park
+    - field.field.user.user.field_profile_parkspaces
+    - field.field.user.user.field_profile_phone
+    - field.field.user.user.field_profile_state
+    - field.field.user.user.field_profile_zip
+    - field.field.user.user.field_renewal_date
+    - field.field.user.user.user_picture
+    - image.style.thumbnail
+    - user_bundle.user_type.user
+  module:
+    - image
+_core:
+  default_config_hash: 00zr_RBdTjPjBGITD3h4c1ESQZimjdVCcHGt1trLqIY
+id: user.user.compact
+targetEntityType: user
+bundle: user
+mode: compact
+content:
+  user_picture:
+    type: image
+    label: hidden
+    settings:
+      image_link: content
+      image_style: thumbnail
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  customer_profiles: true
+  field_county: true
+  field_park_form_downloads: true
+  field_profile_address: true
+  field_profile_email: true
+  field_profile_location: true
+  field_profile_manager: true
+  field_profile_name: true
+  field_profile_owner: true
+  field_profile_park: true
+  field_profile_parkspaces: true
+  field_profile_phone: true
+  field_profile_state: true
+  field_profile_zip: true
+  field_renewal_date: true
+  member_for: true
+  search_api_excerpt: true

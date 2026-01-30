@@ -1,0 +1,25 @@
+uuid: 8c8c650c-456d-4273-ad02-d787de053279
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_location_tags
+    - node.type.article
+_core:
+  default_config_hash: '-NML5UxqsJyKz9Pd6Wnhcmo_faV8OIBU_ra-ErXUsf8'
+id: node.article.field_location_tags
+field_name: field_location_tags
+entity_type: node
+bundle: article
+label: 'Location Tags'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    tid: '1122'
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings: {  }
+field_type: entity_reference

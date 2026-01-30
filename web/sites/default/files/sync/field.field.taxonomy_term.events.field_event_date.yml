@@ -1,0 +1,24 @@
+uuid: 532810bb-c690-4834-a8e5-73ac8c7d0d4a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_event_date
+    - taxonomy.vocabulary.events
+  module:
+    - datetime
+id: taxonomy_term.events.field_event_date
+field_name: field_event_date
+entity_type: taxonomy_term
+bundle: events
+label: 'Event Date'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    default_date_type: now
+    default_date: now
+default_value_callback: ''
+settings: {  }
+field_type: datetime

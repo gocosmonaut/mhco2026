@@ -1,0 +1,29 @@
+uuid: c7b53f5c-f772-49f6-a4c2-d0f016ddbd23
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ct
+    - node.type.fillable_forms
+    - taxonomy.vocabulary.column_topics
+id: node.fillable_forms.field_ct
+field_name: field_ct
+entity_type: node
+bundle: fillable_forms
+label: Topics
+description: 'Please enter as many topics as possible to improve the site search.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:filter_existing_terms'
+  handler_settings:
+    target_bundles:
+      column_topics: column_topics
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

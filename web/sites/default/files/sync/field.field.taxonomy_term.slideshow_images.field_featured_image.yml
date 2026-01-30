@@ -1,0 +1,38 @@
+uuid: ede498b6-11c7-41e6-8d2b-67abded016e9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_featured_image
+    - taxonomy.vocabulary.slideshow_images
+  module:
+    - image
+id: taxonomy_term.slideshow_images.field_featured_image
+field_name: field_featured_image
+entity_type: taxonomy_term
+bundle: slideshow_images
+label: 'Featured Image'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: slideshow-images
+  file_extensions: 'png gif jpg jpeg'
+  max_filesize: ''
+  max_resolution: ''
+  min_resolution: ''
+  alt_field: true
+  alt_field_required: true
+  title_field: false
+  title_field_required: false
+  default_image:
+    uuid: 92ea1d90-75f1-43a1-9177-c8c5632bd19c
+    alt: ''
+    title: ''
+    width: 267
+    height: 300
+field_type: image

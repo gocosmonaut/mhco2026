@@ -1,0 +1,92 @@
+/* VARIABLES */
+
+// colors
+$primary-shade: rgb(255, 78, 46);
+$primary-light: tint-color($primary-shade, 37%);
+$primary-dark: shade-color($primary-shade, 12%);
+$accent-shade: #0079C0;
+$accent-light: tint-color($accent-shade, 37%);
+$accent-dark: shade-color($accent-shade, 12%);
+// Reassign color vars to semantic color scheme
+$red: #dc3545;
+$yellow: #ffc107;
+$green: #28a745;
+$cyan: #17a2b8;
+$white: #f0f0f0;
+$gray-100: #f8f9fa;
+$gray-800: #343a40;
+// scss-docs-start theme-color-variables
+$primary: $accent-shade;
+$secondary: $primary-shade;
+$success: $green;
+$info: $cyan;
+$warning: $yellow;
+$danger: $red;
+$brand-primary: $accent-shade;
+$light: $gray-100;
+$dark: $gray-800;
+//$brand-success: $green;
+//$brand-info: $teal;
+//$brand-warning: $orange;
+//$brand-danger: $red;
+$brand-inverse: $primary-shade;
+// Body
+//
+// Settings for the `<body>` element.
+$body-bg: $white;
+$body-color: $gray-800;
+$inverse-bg: $primary-shade;
+$inverse-color: $white;
+// Links
+//
+// Style anchor elements.
+//$link-color: $accent-shade;
+$link-decoration: none;
+//$link-hover-color: $accent-dark;
+//$link-hover-decoration: underline;
+// Comments
+$comment-spacer-x: 1.25em;
+$comment-spacer-y: 1.25em;
+// Responsive font sizes
+$enable-responsive-font-sizes: true;
+$enable-shadows: false;
+$enable-gradients: false;
+// Breadcrumbs (Works only on Bootstrap 5+)
+// $breadcrumb-divider: quote(">");
+$enable-caret: true;
+
+// Breakpoints
+$bp-xs: 0;
+$bp-sm: 35.999rem;
+$bp-md: 47.999rem;
+$bp-lg: 61.999rem;
+$bp-xl: 74.999rem;
+$bp-xxl: 87.499rem;
+
+/* Test breakpoints
+#main {
+    @media (min-width: $bp-xxl) {
+        background: red;
+    }
+
+    @media (min-width: $bp-xl) and (max-width: $bp-xxl) {
+        background: green;
+    }
+
+    @media (min-width: $bp-lg) and (max-width: $bp-xl) {
+        background: yellow;
+    }
+
+    @media (min-width: $bp-md) and (max-width: $bp-lg) {
+        background: gray;
+    }
+
+    @media (min-width: $bp-sm) and (max-width: $bp-md) {
+        background: orange;
+    }
+
+    @media (max-width: $bp-sm) {
+        background: pink;
+    }
+}
+    */

@@ -1,0 +1,109 @@
+#page {
+    &.article {
+        #main {
+            background: #fff;
+
+            .articles-intro {
+                padding-bottom: .5rem;
+                border-bottom: 1px solid darkgoldenrod;
+                color: darkgoldenrod;
+                margin-bottom: 1rem;
+                 font-family: $font-fancy;
+   font-size: 1.125rem;
+            }
+
+            .field--type-entity-reference {
+                margin-bottom: 0;
+            }
+
+            .field--name-field-publication-date {
+                margin: 1rem 0;
+            }
+
+            .field--name-field-ct {
+                margin: 1rem 0;
+                font-size: .9375rem;
+                display: flex;
+                border-bottom: 1px solid #ccc;
+                padding-bottom: .75rem;
+
+                &::before {
+                    content: "Related topics: ";
+                    float: left;
+                    padding-right: .25rem;
+                }
+
+                .field__item {
+                    &::after {
+                        content: ",";
+                        padding-right: .25rem;
+                    }
+
+                    &:last-of-type {
+                        &::after {
+                            content: "";
+                        }
+                    }
+
+                    a {
+                        text-transform: capitalize;
+                    }
+                }
+            }
+
+            .field--name-field-column-category {
+
+                a {
+                    color: #333;
+
+                    &:hover {
+                        color: #fff;
+                        background: #0079C0;
+                    }
+
+
+                    background: wheat;
+                    font-size: .9375rem;
+                    padding: .25rem .375rem;
+                    border-radius: .25rem;
+                
+
+
+                }
+
+                &.Busch {
+                    a {
+                        background: gainsboro;
+
+                        &:hover {
+                            color: #fff;
+                            background: #0079C0;
+                        }
+                    }
+                }
+
+                &.Community {
+                    a {
+                        background: paleturquoise;
+
+                        &:hover {
+                            color: #fff;
+                            background: #0079C0;
+                        }
+                    }
+                }
+
+                &.Property {
+                    a {
+                        background: khaki;
+
+                        &:hover {
+                            color: #fff;
+                            background: #0079C0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

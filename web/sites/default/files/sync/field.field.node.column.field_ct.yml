@@ -1,0 +1,31 @@
+uuid: ce7c60d6-991b-487e-bab0-488f4c022e7f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ct
+    - node.type.column
+    - taxonomy.vocabulary.column_topics
+_core:
+  default_config_hash: 427VPEId8aqgynBNbhScVdfH5BY-hQFjBwteQ4nCQ58
+id: node.column.field_ct
+field_name: field_ct
+entity_type: node
+bundle: column
+label: 'Column Topics'
+description: 'Add topics that are covered in this column. This is a comma-separated list that will auto-fill as you type. Please keep spelling consistent.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      column_topics: column_topics
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

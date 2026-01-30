@@ -1,0 +1,18 @@
+uuid: 7b8a7387-84c6-4ccd-94f0-0285868e80d0
+langcode: en
+status: true
+dependencies:
+  module:
+    - field_permissions
+_core:
+  default_config_hash: OeKGIkmZA_c-t6QLH81WNQx8gDCc1MRmxaTuQgxBByU
+id: administrator
+label: Administrator
+weight: 3
+is_admin: true
+permissions:
+  - 'create field_profile_zip'
+  - 'edit field_profile_zip'
+  - 'edit own field_profile_zip'
+  - 'view field_profile_zip'
+  - 'view own field_profile_zip'

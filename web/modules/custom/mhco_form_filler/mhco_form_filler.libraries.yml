@@ -1,0 +1,7 @@
+mhco_form_filler:
+  version: 1.0
+  js:
+    fark.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings

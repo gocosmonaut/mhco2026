@@ -1,0 +1,22 @@
+uuid: 1b2404f6-e6d4-4e2d-85a8-c97ad58ae619
+langcode: en
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - palmdesert
+_core:
+  default_config_hash: oNx-0IRP1k_ihf0jHDN3a0_gnjcQxotg2-ePYYWGp7k
+id: palmdesert_help
+theme: palmdesert
+region: highlighted
+weight: -2
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Help
+  label_display: '0'
+  provider: help
+visibility: {  }

@@ -1,0 +1,72 @@
+uuid: d725abdc-3d5e-40d2-af50-976b52da0c3e
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.advertisement
+    - node.type.article
+    - node.type.associate_member
+    - node.type.column
+    - node.type.community_updates
+    - node.type.marquee_promotion
+    - node.type.page
+    - node.type.webform
+    - taxonomy.vocabulary.tags
+  module:
+    - comment
+    - contextual
+    - field_permissions
+    - file
+    - help
+    - node
+    - path
+    - system
+    - taxonomy
+    - toolbar
+    - tour
+_core:
+  default_config_hash: Wur9kcEOwY1Jal81NssKnz3RhVJxAvBwyWQBGcA_1Go
+id: content_editor
+label: 'Content editor'
+weight: 2
+is_admin: false
+permissions:
+  - 'access administration pages'
+  - 'access content overview'
+  - 'access contextual links'
+  - 'access files overview'
+  - 'access help pages'
+  - 'access toolbar'
+  - 'access tour'
+  - 'administer url aliases'
+  - 'create advertisement content'
+  - 'create article content'
+  - 'create associate_member content'
+  - 'create column content'
+  - 'create community_updates content'
+  - 'create marquee_promotion content'
+  - 'create page content'
+  - 'create terms in tags'
+  - 'create url aliases'
+  - 'create webform content'
+  - 'delete article revisions'
+  - 'delete own article content'
+  - 'delete own associate_member content'
+  - 'delete own column content'
+  - 'delete own community_updates content'
+  - 'delete own files'
+  - 'delete own marquee_promotion content'
+  - 'delete own page content'
+  - 'delete own webform content'
+  - 'delete page revisions'
+  - 'edit own article content'
+  - 'edit own comments'
+  - 'edit own marquee_promotion content'
+  - 'edit own page content'
+  - 'edit terms in tags'
+  - 'revert all revisions'
+  - 'view all revisions'
+  - 'view field_profile_zip'
+  - 'view own field_profile_zip'
+  - 'view own unpublished content'
+  - 'view the administration theme'

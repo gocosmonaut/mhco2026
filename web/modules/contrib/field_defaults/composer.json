@@ -1,0 +1,22 @@
+{
+    "name": "drupal/field_defaults",
+    "type": "drupal-module",
+    "description": "Field Defaults allows batch updating of default field values to existing content.",
+    "keywords": ["Drupal", "Content", "Fields"],
+    "license": "GPL-2.0-or-later",
+    "homepage": "https://www.drupal.org/project/field_defaults",
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/field_defaults",
+        "source": "https://git.drupalcode.org/project/field_defaults"
+    },
+    "require": {
+        "drupal/core": "^10.0 || ^11.0"
+    },
+    "extra": {
+        "drush": {
+            "services": {
+                "drush.services.yml": "^11 || ^12"
+            }
+        }
+    }
+}

@@ -1,0 +1,33 @@
+uuid: dda9c1bc-0b90-4032-8cf0-063ef39a967d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_author
+    - node.type.article
+    - taxonomy.vocabulary.authors
+  content:
+    - 'taxonomy_term:authors:18cd7b09-5b95-4760-81dc-4204b66a89b2'
+id: node.article.field_author
+field_name: field_author
+entity_type: node
+bundle: article
+label: 'Article Author'
+description: 'Chuck Carpenter is the default.'
+required: true
+translatable: true
+default_value:
+  -
+    target_uuid: 18cd7b09-5b95-4760-81dc-4204b66a89b2
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      authors: authors
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

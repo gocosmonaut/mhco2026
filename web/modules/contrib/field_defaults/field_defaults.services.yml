@@ -1,0 +1,4 @@
+services:
+  field_defaults.processor:
+    class: Drupal\field_defaults\Service\FieldDefaultsProcessor
+    arguments: ['@entity_type.manager', '@config.factory']

@@ -1,0 +1,92 @@
+uuid: 4c2b77b4-b59b-43e9-a3d3-67573ae83cf8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.marquee_promotion.body
+    - field.field.node.marquee_promotion.field_caption
+    - field.field.node.marquee_promotion.field_event_date
+    - field.field.node.marquee_promotion.field_marquee_image
+    - field.field.node.marquee_promotion.field_marquee_link
+    - field.field.node.marquee_promotion.field_publication_date
+    - field.field.node.marquee_promotion.field_should_this_be_featured_in
+    - node.type.marquee_promotion
+  module:
+    - datetime
+    - image
+    - text
+    - user
+_core:
+  default_config_hash: _FeYS6Vl9W0P7NJ3FEb0wp-Kso7RL_WEi3ERjs1jcFQ
+id: node.marquee_promotion.default
+targetEntityType: node
+bundle: marquee_promotion
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_caption:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_event_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_marquee_image:
+    type: image
+    label: above
+    settings:
+      image_link: ''
+      image_style: ''
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_marquee_link:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_publication_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 9
+    region: content
+  field_should_this_be_featured_in:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
+    region: content
+hidden:
+  search_api_excerpt: true

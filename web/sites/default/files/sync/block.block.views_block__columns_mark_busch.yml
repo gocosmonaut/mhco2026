@@ -1,0 +1,29 @@
+uuid: f26b6c91-dd45-4d39-8335-d71cf92d5771
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.columns
+  module:
+    - system
+    - views
+  theme:
+    - salem
+id: views_block__columns_mark_busch
+theme: salem
+region: content
+weight: -3
+provider: null
+plugin: 'views_block:columns-mark_busch'
+settings:
+  id: 'views_block:columns-mark_busch'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

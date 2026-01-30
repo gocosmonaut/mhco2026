@@ -1,0 +1,62 @@
+uuid: 4275a26a-5a53-422e-bb79-d47f2e6ea48e
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.community_updates.body
+    - field.field.node.community_updates.field_author
+    - field.field.node.community_updates.field_column_category
+    - field.field.node.community_updates.field_column_icon
+    - field.field.node.community_updates.field_column_image
+    - field.field.node.community_updates.field_ct
+    - field.field.node.community_updates.field_location_tags
+    - field.field.node.community_updates.field_publication_date
+    - field.field.node.community_updates.field_question_or_teaser
+    - field.field.node.community_updates.field_reports
+    - field.field.node.community_updates.field_should_this_be_featured_in
+    - field.field.node.community_updates.field_what_image_should_accompan
+    - field.field.node.community_updates.field_what_is_the_author_s_compa
+    - field.field.node.community_updates.field_what_is_the_author_s_job_t
+    - node.type.community_updates
+  module:
+    - text
+    - user
+_core:
+  default_config_hash: eLfZmBHYh0F7WziGOlXxMeolCcwymPYraxpB5gUky2s
+id: node.community_updates.teaser
+targetEntityType: node
+bundle: community_updates
+mode: teaser
+content:
+  body:
+    type: text_trimmed
+    label: hidden
+    settings:
+      trim_length: 200
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_author: true
+  field_column_category: true
+  field_column_icon: true
+  field_column_image: true
+  field_ct: true
+  field_location_tags: true
+  field_publication_date: true
+  field_question_or_teaser: true
+  field_reports: true
+  field_should_this_be_featured_in: true
+  field_what_image_should_accompan: true
+  field_what_is_the_author_s_compa: true
+  field_what_is_the_author_s_job_t: true
+  search_api_excerpt: true

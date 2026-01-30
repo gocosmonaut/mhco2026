@@ -1,0 +1,35 @@
+uuid: d72388bf-02e2-4580-b5ed-4768b33c5677
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_what_is_the_author_s_compa
+    - node.type.column
+    - taxonomy.vocabulary.columnist_company_names
+  content:
+    - 'taxonomy_term:columnist_company_names:c32318b4-475b-4eb1-8e99-e6399da1c390'
+_core:
+  default_config_hash: hCYCClzwMz0W6ETZXsLyUWVnY8cbvNR1vdzlGncHGIQ
+id: node.column.field_what_is_the_author_s_compa
+field_name: field_what_is_the_author_s_compa
+entity_type: node
+bundle: column
+label: "What is the author's company or organization?"
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    target_uuid: c32318b4-475b-4eb1-8e99-e6399da1c390
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      columnist_company_names: columnist_company_names
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

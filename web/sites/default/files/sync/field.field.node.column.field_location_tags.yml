@@ -1,0 +1,31 @@
+uuid: f8bb83aa-7973-4e92-8fa9-1c3f664ab839
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_location_tags
+    - node.type.column
+    - taxonomy.vocabulary.geographic_tags
+_core:
+  default_config_hash: rTS7aPcsGWkAp-xiqJ9XswlXI6vLwwwj5IREltu5wAc
+id: node.column.field_location_tags
+field_name: field_location_tags
+entity_type: node
+bundle: column
+label: 'Location Tags'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      geographic_tags: geographic_tags
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

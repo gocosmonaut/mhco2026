@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Contains tagclouds module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function tagclouds_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.tagclouds':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Tagclouds offers dynamic urls.') . '</p>';
+      $output .= '<p>' . t('Visit example.com/tagclouds/list/{Taxonomy Vocabulary name} (for example "Tags") to get the vocabulary name, description and all tags.') . '</p>';
+      $output .= '<p>' . t('Visit example.com/tagclouds/chunk/{Taxonomy Vocabulary name} (for example "Tags") to get a tag cloud of the terms for this vocabulary.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function tagclouds_theme() {
+  return [
+    'tagclouds_list_box' => [
+      'variables' => [
+        'vocabulary' => NULL,
+        'children' => NULL,
+      ],
+    ],
+    'tagclouds_weighted' => [
+      'variables' => [
+        'terms' => [],
+        'children' => NULL,
+      ],
+    ],
+  ];
+}

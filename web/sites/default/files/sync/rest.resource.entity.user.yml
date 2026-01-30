@@ -1,0 +1,16 @@
+uuid: ea6497f4-f64e-4158-b360-915bc6889e04
+langcode: en
+status: true
+dependencies:
+  module:
+    - serialization
+    - user
+id: entity.user
+plugin_id: 'entity:user'
+granularity: method
+configuration:
+  GET:
+    supported_formats:
+      - xml
+    supported_auth:
+      - cookie

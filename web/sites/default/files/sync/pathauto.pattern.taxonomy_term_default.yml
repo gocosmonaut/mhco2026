@@ -1,0 +1,35 @@
+uuid: 1dacb67f-75bd-4054-88a7-05a4573dbbbd
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+    - taxonomy
+id: taxonomy_term_default
+label: 'Taxonomy Term Default'
+type: 'canonical_entities:taxonomy_term'
+pattern: '[term:vocabulary]/[term:name]'
+selection_criteria:
+  597d8a43-7d90-49c8-ba31-68d2559419b7:
+    id: 'entity_bundle:taxonomy_term'
+    negate: false
+    uuid: 597d8a43-7d90-49c8-ba31-68d2559419b7
+    context_mapping:
+      taxonomy_term: taxonomy_term
+    bundles:
+      associate_member_industries: associate_member_industries
+      authors: authors
+      cities: cities
+      column_icons: column_icons
+      column_topics: column_topics
+      columnist_company_names: columnist_company_names
+      columnist_job_titles: columnist_job_titles
+      counties_oregon: counties_oregon
+      geographic_tags: geographic_tags
+      slideshow_images: slideshow_images
+      states: states
+      tags: tags
+      topics: topics
+selection_logic: and
+weight: -5
+relationships: {  }

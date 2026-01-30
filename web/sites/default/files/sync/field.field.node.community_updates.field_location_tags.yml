@@ -1,0 +1,25 @@
+uuid: 8cecd0b7-67a3-49b0-9b41-6d0995cd2a24
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_location_tags
+    - node.type.community_updates
+_core:
+  default_config_hash: 6zJ5jAZVBlGsXnWoMXAtHM2Q4ovSRi8UT4Xu0XUKNHI
+id: node.community_updates.field_location_tags
+field_name: field_location_tags
+entity_type: node
+bundle: community_updates
+label: 'Location Tags'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    tid: '1122'
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings: {  }
+field_type: entity_reference

@@ -1,0 +1,76 @@
+uuid: 1343a2da-f85f-420b-84cd-dc086b24392c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.fillable_forms.body
+    - field.field.node.fillable_forms.field_ct
+    - field.field.node.fillable_forms.field_download_link
+    - field.field.node.fillable_forms.field_form_download_count
+    - field.field.node.fillable_forms.field_form_number
+    - field.field.node.fillable_forms.field_should_this_be_featured_in
+    - field.field.node.fillable_forms.field_what_image_should_accompan
+    - node.type.fillable_forms
+  module:
+    - text
+    - user
+_core:
+  default_config_hash: rxV_f0KSq8OjY6mLbnaq98qoeML9a5o8XSyx_u3lu8c
+id: node.fillable_forms.default
+targetEntityType: node
+bundle: fillable_forms
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_download_link:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_form_number:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_should_this_be_featured_in:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_what_image_should_accompan:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_ct: true
+  field_form_download_count: true
+  search_api_excerpt: true

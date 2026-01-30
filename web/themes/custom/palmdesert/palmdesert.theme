@@ -1,0 +1,119 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the SASS Starterkit subtheme.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Cache\Cache;
+use Drupal\block\Entity\Block;
+use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\Access\AccessManagerInterface;
+
+/**
+ * Implements hook_form_system_theme_settings_alter() for settings form.
+ *
+ * Replace Barrio setting options with subtheme ones.
+ */
+/**
+ * Implements hook_theme_suggestions_form_alter().
+ */
+function palmdesert_theme_suggestions_form_alter(array &$suggestions, array $variables) {
+  // Get the form ID from the variables.
+  $form_id = $variables['element']['#form_id'];
+
+  // Define an array of form IDs that should use the common suggestion.
+  $common_forms = [
+    'user_login_form',
+    'user_register_form',
+    'contact_message_feedback_form', // Example: site-wide contact form.
+  ];
+
+  // If the current form ID matches one in the array, add the common suggestion.
+  if (in_array($form_id, $common_forms)) {
+    $suggestions[] = 'form__common';
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_page_alter().
+ */
+function palmdesert_theme_suggestions_page_alter(array &$suggestions, array $variables) {
+  // Example 1: Add a suggestion based on a specific path.
+  // This will create a suggestion like 'page--node--123.html.twig' for node 123.
+  if (\Drupal::routeMatch()->getRouteName() === 'entity.node.canonical') {
+    $node = \Drupal::routeMatch()->getParameter('node');
+    if ($node) {
+      $suggestions[] = 'page__' . $node->bundle(); // page--[content-type].html.twig
+      $suggestions[] = 'page__' . $node->id();     // page--[node-id].html.twig
+    }
+  }
+
+  // Add a suggestion based on a specific user role.
+  // This will create a suggestion like 'page--authenticated-user.html.twig'.
+  if (\Drupal::currentUser()->isAuthenticated()) {
+    $suggestions[] = 'page__authenticated_user';
+  }
+
+  // Example 3: Add a suggestion based on a custom condition.
+  // You can add any custom logic here to determine your suggestions.
+  // $my_custom_condition = TRUE; // Replace with your actual condition
+  // if ($my_custom_condition) {
+    $suggestions[] = 'page__custom_template'; // page--custom-template.html.twig
+  // }
+
+  // Remember to clear caches after making changes to theme suggestion hooks.
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+
+function palmdesert_theme_suggestions_views_view_alter(array &$suggestions, array $variables) {
+  $view = $variables['view'];
+  // Add a theme suggestion based on the view's ID.
+  $suggestions[] = 'views_view__' . $view->id();
+  // Add a theme suggestion based on the view's ID and display ID.
+  $suggestions[] = 'views_view__' . $view->id() . '__' . $view->current_display;
+}
+
+function palmdesert_theme_suggestions_views_view_unformatted_alter(array &$suggestions, array $variables) {
+  $suggestions[] = 'views_view_unformatted__' . $variables['view']->id();
+}
+
+function palmdesert_theme_suggestions_region_alter(array &$suggestions, array $variables) {
+  // Check if the current region is the one you want to target.
+  if (isset($variables['elements']['#region']) && $variables['elements']['#region'] === 'header') {
+    // Add a new suggestion for the 'header' region.
+    $suggestions[] = 'region__header__custom';
+  }
+
+  // You can add more complex logic here to add suggestions based on other conditions,
+  // such as current page, content type, user role, etc.
+  // For example, to add a suggestion for the 'sidebar_first' region on node pages:
+  // if (isset($variables['elements']['#region']) && $variables['elements']['#region'] === 'sidebar_first' && \Drupal::routeMatch()->getRouteName() === 'entity.node.canonical') {
+  //   $suggestions[] = 'region__sidebar_first__node';
+  // }
+}
+
+function palmdesert_theme_suggestions_page_title_alter(array &$suggestions, array $variables) {
+  $route_match = \Drupal::routeMatch();
+  if ($route_match->getRouteName() == 'view.VIEW_ID.PAGE_ID') {
+    $suggestions[] = 'page_title__view__' . $route_match->getParameter('view_id');
+    $suggestions[] = 'page_title__view__' . $route_match->getParameter('view_id') . '__' . $route_match->getParameter('display_id');
+  }
+    if ($node = $route_match->getParameter('node')) {
+    $title = $node->getTitle();
+    $title_without_spaces = str_replace(' ', '', $title);
+    $suggestions[] = 'page_title__node__' . $title_without_spaces;
+  }
+}
+
+function palmdesert_preprocess_block(&$variables) {
+  $current_user = \Drupal::currentUser();
+  if (!$current_user->hasPermission('administer site configuration')) {
+    // Set cache max age to 0 for non-admin users
+    $variables['elements']['#cache']['max-age'] = 0;
+  }
+}

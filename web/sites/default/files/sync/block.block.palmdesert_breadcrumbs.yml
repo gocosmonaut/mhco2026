@@ -1,0 +1,22 @@
+uuid: d3f34085-01a6-4fc3-bb2d-5d6d3019d775
+langcode: en
+status: false
+dependencies:
+  module:
+    - system
+  theme:
+    - palmdesert
+_core:
+  default_config_hash: Ti6YkJwdNe6zULWGWU_eFPM2QR-NLm07sTCa2UZKojI
+id: palmdesert_breadcrumbs
+theme: palmdesert
+region: breadcrumb
+weight: -11
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Breadcrumbs
+  label_display: '0'
+  provider: system
+visibility: {  }

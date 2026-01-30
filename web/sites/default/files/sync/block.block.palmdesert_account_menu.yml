@@ -1,0 +1,27 @@
+uuid: 26d8a681-80ec-437f-8ce0-7a28476381dc
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.account
+  module:
+    - system
+  theme:
+    - palmdesert
+_core:
+  default_config_hash: ftNBBQ66YZIaR4Gq88LvZNQn-HTH1HRkXDXRuWzkBDE
+id: palmdesert_account_menu
+theme: palmdesert
+region: top_header_form
+weight: -12
+provider: null
+plugin: 'system_menu_block:account'
+settings:
+  id: 'system_menu_block:account'
+  label: 'User account menu'
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: 1
+  expand_all_items: false
+visibility: {  }

@@ -1,0 +1,27 @@
+uuid: 66424fca-a7ce-4603-979e-2ac4dea5954a
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - system
+  theme:
+    - palmdesert
+_core:
+  default_config_hash: 86rky8vustfhbvQHMt3xKPA0Ivz2W2wTJBNx8dYbk1Y
+id: palmdesert_main_menu
+theme: palmdesert
+region: primary_menu
+weight: -6
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: 'Main navigation'
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: 2
+  expand_all_items: true
+visibility: {  }

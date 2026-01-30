@@ -1,0 +1,23 @@
+uuid: 11fc442b-805b-48e6-a3d7-f2409255a95f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_should_this_be_featured_in
+    - node.type.article
+id: node.article.field_should_this_be_featured_in
+field_name: field_should_this_be_featured_in
+entity_type: node
+bundle: article
+label: 'Should this article be featured in the home page slideshow?'
+description: 'Uncheck the box if you do not want this to appear in the marquee area of the home page.'
+required: false
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean

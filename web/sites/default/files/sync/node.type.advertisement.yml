@@ -1,0 +1,17 @@
+uuid: 5c235e56-2f6e-4845-942a-d60525974283
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Advertisement
+type: advertisement
+description: 'For banner ads, replacing Simple Ads from Drupal 7'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

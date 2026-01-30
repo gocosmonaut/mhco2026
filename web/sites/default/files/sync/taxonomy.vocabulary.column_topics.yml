@@ -1,0 +1,9 @@
+uuid: 142cb049-83be-42cf-bd2f-8334a341932c
+langcode: en
+status: true
+dependencies: {  }
+name: 'Column Topics'
+vid: column_topics
+description: null
+weight: 0
+new_revision: false

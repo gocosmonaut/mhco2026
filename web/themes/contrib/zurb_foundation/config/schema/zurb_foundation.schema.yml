@@ -1,0 +1,54 @@
+# Schema for the configuration files of the Olivero theme.
+
+zurb_foundation.settings:
+  type: theme_settings
+  label: 'Zurb Foundation settings'
+  mapping:
+    zurb_foundation_status_in_reveal:
+      type: boolean
+      label: "Display status messages in Reveal"
+    zurb_foundation_disable_base_css:
+      type: boolean
+      label: "Disable Base Theme CSS"
+    zurb_foundation_disable_base_js:
+      type: boolean
+      label: "Disable Base Theme JavaScript"
+    zurb_foundation_meta_header_grid:
+      type: boolean
+      label: "Contain Meta Header Region to Grid"
+    zurb_foundation_top_bar_enable:
+      type: integer
+      label: "Enable the top bar element"
+    zurb_foundation_top_bar_grid:
+      type: boolean
+      label: "Contain the top bar to grid"
+    zurb_foundation_top_bar_sticky:
+      type: boolean
+      label: "Make the top bar sticky"
+    zurb_foundation_top_bar_menu_text:
+      type: string
+      label: "Menu text"
+    zurb_foundation_top_bar_custom_back_text:
+      type: boolean
+      label: "Enable custom back text in dropdown"
+    zurb_foundation_top_bar_back_text:
+      type: string
+      label: "Custom back text"
+    zurb_foundation_top_bar_is_hover:
+      type: boolean
+      label: "Hover to expand menu"
+    zurb_foundation_top_bar_search:
+      type: boolean
+      label: "Add search to top bar"
+    zurb_foundation_top_bar_languageswitcher:
+      type: boolean
+      label: "Add language switcher to top bar"
+    zurb_foundation_block_copyright_show:
+      type: boolean
+      label: "Display custom copyright block"
+    zurb_foundation_block_copyright_custom_text:
+      type: boolean
+      label: "Set custom copyright block text"
+    zurb_foundation_block_copyright_text:
+      type: string
+      label: "Text for custom copyright block"

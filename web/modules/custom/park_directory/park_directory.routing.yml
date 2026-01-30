@@ -1,0 +1,7 @@
+park_directory.form:
+  path: '/park-directory-form'
+  defaults:
+    _form: '\Drupal\park_directory\Form\ParkDirectoryForm'
+    _title: 'Oregon Manufactured Dwelling Park Directory'
+  requirements:
+    _permission: 'access content' # Or a custom permission

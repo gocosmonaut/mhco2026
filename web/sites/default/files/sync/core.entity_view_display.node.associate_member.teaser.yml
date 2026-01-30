@@ -1,0 +1,45 @@
+uuid: a7cbfa73-d9f1-4589-addb-99339602cb87
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.associate_member.body
+    - field.field.node.associate_member.field_associate_member_descripti
+    - field.field.node.associate_member.field_associate_member_industry
+    - field.field.node.associate_member.field_company_logo
+    - field.field.node.associate_member.field_location_tags
+    - node.type.associate_member
+  module:
+    - text
+    - user
+_core:
+  default_config_hash: x-zKgsNfChRHrSBM8ibIytDjrVuKDAEOEbfNHLNJM5g
+id: node.associate_member.teaser
+targetEntityType: node
+bundle: associate_member
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  feeds_item: true
+  field_associate_member_descripti: true
+  field_associate_member_industry: true
+  field_company_logo: true
+  field_location_tags: true
+  search_api_excerpt: true

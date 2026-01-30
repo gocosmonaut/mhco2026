@@ -1,0 +1,25 @@
+uuid: 6ea209a1-acff-448c-a6e6-cc738dcd0d35
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_location_tags
+    - node.type.associate_member
+_core:
+  default_config_hash: zZoibo0eofcRAuyK2PsofA3q7CCBDFgVan9PBWPStAg
+id: node.associate_member.field_location_tags
+field_name: field_location_tags
+entity_type: node
+bundle: associate_member
+label: 'Location Tags'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    tid: '1122'
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings: {  }
+field_type: entity_reference

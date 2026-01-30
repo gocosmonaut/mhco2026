@@ -1,0 +1,79 @@
+.page-view-taxonomy-term {
+
+    .view-content.row {
+        .views-row {
+
+            border-bottom: 1px solid #ccc;
+            padding-top: 1rem;
+
+            &:last-of-type {
+                border: 0;
+            }
+        }
+    }
+
+    h1.title {
+        font-family: $font-family-regular;
+        font-weight: 500;
+    }
+
+    h4.term-intro {
+        padding-bottom: .5rem;
+        border-bottom: 1px solid darkgoldenrod;
+        color: darkgoldenrod;
+        margin-bottom: 1rem;
+        font-family: $font-fancy;
+        font-size: 1.125rem;
+    }
+
+    h2.node__title {
+        a {
+            span {
+                font-size: 1.75rem;
+                font-family: $font-family-condensed;
+            }
+        }
+    }
+
+    .field--name-field-column-category {
+
+        background: wheat;
+        font-size: .9375rem;
+        padding: .25rem .375rem;
+        border-radius: .25rem;
+        width: fit-content;
+        font-family: $font-family-condensed;
+        font-weight: 600;
+
+        &.Busch {
+            background: gainsboro;
+        }
+
+        &.Community {
+            background: paleturquoise;
+        }
+
+        &.Property {
+            background: khaki;
+        }
+    }
+
+    .field--name-field-author {
+        .field__item {
+            &:before {
+                content: "by ";
+            }
+        }
+    }
+
+    .term-body {
+        word-wrap: break-word;
+        padding-bottom: 1rem;
+        width: 90%;
+
+        p {
+            display: contents;
+
+        }
+    }
+}

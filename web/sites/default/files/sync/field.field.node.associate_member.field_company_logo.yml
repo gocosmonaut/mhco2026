@@ -1,0 +1,40 @@
+uuid: 4f8a459d-7a2b-495d-bf71-e3011baf09bb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_company_logo
+    - node.type.associate_member
+  module:
+    - image
+_core:
+  default_config_hash: r6pVlwno2uo4ap8yQAOguO7Pt3etQ1LMuOM7EJ4nJL4
+id: node.associate_member.field_company_logo
+field_name: field_company_logo
+entity_type: node
+bundle: associate_member
+label: 'Company Logo'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: associate-members
+  file_extensions: 'png gif jpg jpeg'
+  max_filesize: ''
+  max_resolution: ''
+  min_resolution: ''
+  alt_field: true
+  alt_field_required: true
+  title_field: true
+  title_field_required: false
+  default_image:
+    uuid: 19939b96-d20f-4287-b5ea-db155c3c3690
+    alt: 'MHCO Associate Member'
+    title: 'MHCO Associate Member'
+    width: 596
+    height: 446
+field_type: image

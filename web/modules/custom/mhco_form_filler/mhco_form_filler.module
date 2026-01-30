@@ -1,0 +1,187 @@
+<?php
+
+/**
+ * @file
+ * Pre-filling MHCO forms.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Http\RequestStack;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\user\Entity\User;
+use Drupal\user\UserData;
+use Drupal\user\UserInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\RequestOptions;
+use Drupal\Core\Session\AccountProxy;
+use Drupal\file\FileInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+
+if (isset($_POST['park'])) {
+    $park = ($_POST['park']);
+    $parkName = ($_POST['parkName']);
+    $parkAddress = ($_POST['parkAddress']);
+    $parkLocation = ($_POST['parkLocation']);
+    $parkZIP = ($_POST['parkZIP']);
+    $parkState = ($_POST['parkState']);
+    $parkPhone = ($_POST['parkPhone']);
+    $parkCombined = ($_POST['parkCombined']);
+    $parkUID = ($_POST['parkUID']);
+    $formID = ($_POST['formID']);
+    $formNID = ($_POST['formNID']);
+    $downloadLink = ($_POST['downloadLink']);
+    $formName = ($_POST['formName']);
+    $formNo = ($_POST['formNo']);
+
+    mhco_form_filler_receiver($park, $parkName, $parkAddress, $parkLocation, $parkZIP, $parkState, $parkPhone, $parkCombined, $downloadLink, $formName, $formNo, $formID, $formNID, $parkUID);
+};
+
+/**
+ * Implements hook_user_login().
+ */
+
+function mhco_form_filler_user_login(AccountInterface $account)
+{
+
+    // Process park city ID from taxonomy
+    $parkCityTID = $account->field_profile_location->target_id;
+    $parkCityValue = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($parkCityTID);
+    $parkCity = $parkCityValue->name->value;
+
+    // Process park state ID from taxonomy
+    $parkStateTID = $account->field_profile_state->target_id;
+    $parkStateValue = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($parkStateTID);
+    $parkStateName = $parkStateValue->name->value;
+}
+
+function mhco_form_filler_receiver($park, $parkName, $parkAddress, $parkLocation, $parkZIP, $parkState, $parkPhone, $parkCombined, $downloadLink, $formName, $formNo, $formID, $formNID, $parkUID)
+{
+    $data = [
+        'async' => false,
+        'encrypt' => false,
+        'inline' => true,
+        'name' => $park . '-' . $formNo . '-' . $formName,
+        'url' => $downloadLink,
+        'fields' => [
+            [
+                'fieldName' => 'profile_park',
+                'pages' => '*',
+                'text' => $park
+            ],
+            [
+                'fieldName' => 'profile_name',
+                'pages' => '*',
+                'text' => $parkName
+            ],
+            [
+                'fieldName' => 'profile_address',
+                'pages' => '*',
+                'text' => $parkAddress
+            ],
+            [
+                'fieldName' => 'profile_state',
+                'pages' => '*',
+                'text' => $parkState
+            ],
+            [
+                'fieldName' => 'profile_zip',
+                'pages' => '*',
+                'text' => $parkZIP
+            ],
+            [
+                'fieldName' => 'profile_location',
+                'pages' => '*',
+                'text' => $parkLocation
+            ],
+            [
+                'fieldName' => 'profile_phone',
+                'pages' => '*',
+                'text' => $parkPhone
+            ],
+            [
+                'fieldName' => 'profile_combined',
+                'pages' => '*',
+                'text' => $parkCombined
+            ]
+        ]
+    ];
+    $body = json_encode($data);
+    // dump($body);
+    // exit();
+
+    // exit();
+    $method = 'POST';
+    $client = new Client();
+    $endpoint = 'https://api.pdf.co/v1/pdf/edit/add';
+    $headers = [
+        'Content-Type' => 'application/json',
+        'x-api-key' => 'daniel@gocosmonaut.com_756db820256962b1740fb343f56713b21353894ca78836244355682bdc96b86b65f4334b'
+    ];
+    $sender = new Request(
+        $method,
+        $endpoint,
+        $headers,
+        $body
+    );
+    $res = $client->sendAsync($sender)->wait();
+    $data_JSON = $res->getBody();
+    $obj = (json_decode($data_JSON, true));
+    $url = $obj['url'];
+    file_put_contents("sites/default/files/form-data/form.txt", $url);
+    $rrm = '../../../../modules/custom/mhco_form_filler/fark.js';
+    $redirect = new RedirectResponse($rrm);
+    $redirect->send();
+    \Drupal::logger('fillable form')->notice('Form ' . $formNo . ' downloaded by ' . $park);
+    sleep(6);
+    unlink("sites/default/files/form-data/form.txt");
+    \Drupal::database()->update('node__field_form_download_count')
+        ->expression('field_form_download_count_value', 'field_form_download_count_value + 1')
+        ->condition('entity_id', $formNID)
+        ->execute();
+    
+
+    \Drupal::logger('fillable form')->notice('Form ' . $formNo . ' downloaded by ' . $parkUID);
+    \Drupal::database()->update('user__field_park_form_downloads')
+  ->expression('field_park_form_downloads_value', 'field_park_form_downloads_value + 1')
+  ->condition('entity_id', $parkUID)
+  ->execute();
+
+}
+
+function mhco_form_filler_park_download_stats(AccountInterface $account) {
+
+}
+
+
+function mhco_form_filler_downloader($url)
+{
+    return $url;
+}
+
+function mhco_form_filler_download_PDF($url)
+{
+    //  echo ($_SESSION["gonad"]);
+    // $client = new Client();
+    // $res = $client->request('GET', $url, ['allow_redirects' => true]);
+    $domDocument = new DOMDocument('1.0', 'iso-8859-1');
+
+    // Use createElement() function to add a new element node
+    $domElement1 = $domDocument->createElement('organization');
+    $domElement2 = $domDocument->createElement('name', 'GeeksforGeeks');
+    $domElement3 = $domDocument->createElement('address', 'Noida');
+    $domElement4 = $domDocument->createElement('email', 'abc@geeksforgeeks.org');
+
+    // Append element to the document
+    $domDocument->appendChild($domElement1);
+    $domElement1->appendChild($domElement2);
+    $domElement1->appendChild($domElement3);
+    $domElement1->appendChild($domElement4);
+
+    // Save XML file and display it
+    echo $domDocument->saveXML();
+}

@@ -1,0 +1,23 @@
+uuid: fed41a50-757f-4de6-be81-70a81bb00dfa
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_question_or_teaser
+    - node.type.column
+  module:
+    - text
+_core:
+  default_config_hash: PM06N1Yk3TtpeOwe10tAt4OZwzGBIaU08SWGjcN38G8
+id: node.column.field_question_or_teaser
+field_name: field_question_or_teaser
+entity_type: node
+bundle: column
+label: 'Question or Teaser'
+description: "This area should be used for Phil Querin's questions or teasers for other columns."
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

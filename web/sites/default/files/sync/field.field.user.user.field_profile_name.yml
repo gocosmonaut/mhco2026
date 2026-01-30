@@ -1,0 +1,21 @@
+uuid: 04ec0de0-28ad-47f4-b961-2fd1562cccf8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_profile_name
+    - user_bundle.user_type.user
+id: user.user.field_profile_name
+field_name: field_profile_name
+entity_type: user
+bundle: user
+label: 'Your Name'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: 'Contact First and Last Names'
+default_value_callback: ''
+settings: {  }
+field_type: string

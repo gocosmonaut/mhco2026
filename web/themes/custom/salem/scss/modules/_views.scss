@@ -1,0 +1,110 @@
+.views-row {
+    padding: 1.25em 0;
+    border-bottom: 1px solid #b4b4b7;
+
+    &:last-of-type {
+        border-bottom: none;
+    }
+
+    h2,
+    h5 {
+        line-height: 1.35;
+    }
+
+    h5 {
+        margin-bottom: 0.75em;
+    }
+
+    p,
+    span {
+        line-height: 1.65;
+    }
+
+    .views-field-body,
+    .views-field-field-question-or-teaser {
+        font-family: $font-serif;
+    }
+
+    .views-field-field-author {
+        font-family: $font-sans-serif-medium;
+        padding-bottom: 1rem;
+        font-size: 1.1rem;
+    }
+
+    .views-field-view-node {
+        margin: 1rem 0 .5rem;
+
+        a {
+            background: $secondary-color;
+            color: #fff;
+            font-family: $font-sans-serif-light;
+            letter-spacing: 0.5px;
+            text-transform: capitalize;
+            border-radius: 3px;
+            padding: .25em .5em;
+        }
+    }
+}
+
+.mhco-forms-grid {
+    h4.safari-warning {
+        background: #f1e3e3;
+        padding: 1rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        border: 1px solid darkred;
+
+        &.warning-off {
+            display: none;
+        }
+    }
+
+    #block-salem-content {
+        .views-row {
+            .views-col {
+                padding: 1rem;
+                &.col-1, &.col-3 {
+                    backdrop-filter: brightness(0.95);
+                }
+            }
+            border-bottom: 0;
+            padding-left: 1.25rem;
+            .badge {
+                font-size: 2em;
+                background: $primary-color;
+                border-radius: 8px;
+                cursor: pointer;
+                line-height: 1;
+                padding: 0.5rem 1rem;
+                font-family: $node-type-font-family;
+                transition: all 0.4s ease-out;
+                background-position-x: 200%;
+                background-position-y: center;
+                letter-spacing: 0.5px;
+
+                &:hover {
+                    filter: saturate(2);
+                    padding: 0.5rem 3rem 0.5rem 1rem;
+                    background-image: url('/themes/custom/salem/images/download.png');
+                    transition: all .25s ease-in;
+                    background-position-x: 90%;
+                    background-repeat: no-repeat;
+                    background-size: 30px;
+                    background-position-y: center;
+                    text-shadow: 0px 0px 4px rgba(255, 255, 255, 0.5);
+                }
+            }
+
+            .views-field-title {
+                font-family: $font-sans-serif-light;
+                font-size: 1em;
+                line-height: 100%;
+                padding: 1em 1.5em 1em 0;
+            }
+        }
+    }
+}
+
+#block-views-block-user-export-block-1 {
+    visibility: hidden;
+}

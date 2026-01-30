@@ -1,0 +1,20 @@
+uuid: 310b7c09-857f-4ee4-acf1-c7fdac7a9646
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_form_download_count
+field_name: field_form_download_count
+entity_type: node
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

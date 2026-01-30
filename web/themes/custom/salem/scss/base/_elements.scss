@@ -1,0 +1,204 @@
+// Elements
+//
+// Things to review before you write code here:
+// - Be sure to load after "foundation" import.
+// - Also, before adding styles be sure to modify variables in the
+//   "base/_common.scss" file. You may not need to write any code.
+
+// Headings
+//------------------------------------------
+
+
+h1, .h1.field--name-title {
+    font-family: $page-title;
+    font-weight: $page-title-font-weight;
+    line-height: 1.15;
+}
+h2,
+h3 {
+/*    font-family: $font-sans-serif-medium; */
+    line-height: 1.15;
+}
+h4,
+h5 {
+    font-family: $font-sans-serif-medium;
+    line-height: 1.25;
+}
+
+h5 {
+    margin-bottom: 1rem;
+    &.news-and-resources {
+        margin: 0;
+background: #ece5d1;     border-bottom: 1px solid #ccc;
+   
+    }
+    span.node-type {
+        font-family: $node-type-font-family;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: .8rem;
+        background: #fff;
+        display: inline-block;
+       padding: 0.5rem 1.25rem;
+       border-right: 1px solid #ccc;
+  
+
+        &.cu {
+            background: #e0d8c3;
+        }
+        &.cl {
+            background: #c5d0d3;
+        }
+    }
+}
+
+h6 {
+    font-family: $font-sans-serif;
+    line-height: 1.35;
+}
+
+h1, .h1.field--name-title {
+    font-weight: 500;
+    font-size: 2.125rem;
+    line-height: 125%;
+    margin-bottom: 0;
+}
+h2 {
+    font-size: 1.6rem;
+}
+h3 {
+    font-size: 1.45rem;
+}
+h4 {
+    font-size: 1.25rem;
+}
+h5 {
+    font-size: 1.15rem;
+}
+h6 {
+    font-size: 1.05rem;
+}
+// Body
+#inner-wrap {
+    transition: all 4s ease-out;
+ //   #block-utilitynav,
+  //  #block-utilitynavauthenticateduser,
+    #top-bar-sticky-container {
+        p,
+        span,
+        a,
+        ul,
+        ul li,
+        ul li a {
+            font-family: $font-sans-serif;
+        }
+    }
+    p {
+        font-size: 1.1em;
+        margin-bottom: 1rem;
+            b, strong {
+            font-weight: 500;
+        }
+    }
+    
+    div {
+        .field--node-body {
+            margin-bottom: 1.25em;
+           // height: 100vh;
+        }
+    }
+    p,
+    p span,
+    ul,
+    ol,
+    li,
+    sub,
+    sup,
+    blockquote {
+        font-family: $font-serif;
+        i,
+        em {
+            font-family: $font-serif-italic;
+            & b,
+            strong {
+                font-family: $font-serif-italic;
+            }
+        }
+        b,
+        strong {
+            font-family: $font-serif-bold;
+            & i,
+            em {
+                font-family: $font-serif-italic;
+            }
+        }
+    }
+    img {
+        &.page-inline {
+            margin: 0rem 0rem 1.5rem 1.5rem;
+            float: right;
+        }
+    }
+}
+// h4, h5, h6 {}
+
+// Anchors
+//-----------------------------------------------------------------------------
+a {
+    color: $primary-color;
+}
+
+// a:focus {}
+
+// a.active,
+// a:active,
+a:hover {
+    filter: saturate(1.5);
+}
+
+[data-dropdown-menu] ul {
+    display: none;
+}
+
+// Form Input
+//-----------------------------------------------------------------------------
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+input[type="submit"],
+input[type="reset"],
+textarea, select, label, button, option {    font-family: $font-sans-serif;
+}
+input[type="button"] {
+    font-size: $node-type-font-family;
+}
+
+.help-text {font-style: normal;}
+
+// input[type="text"],
+// input[type="password"],
+// input[type="date"],
+// input[type="datetime"],
+// input[type="datetime-local"],
+// input[type="month"],
+// input[type="week"],
+// input[type="email"],
+// input[type="number"],
+// input[type="search"],
+// input[type="tel"],
+// input[type="time"],
+// input[type="url"],
+// textarea {
+
+

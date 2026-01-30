@@ -1,0 +1,20 @@
+uuid: dde257c1-f004-47e7-b7d0-6b2ca38cf6ae
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime
+    - user
+id: user.field_renewal_date
+field_name: field_renewal_date
+entity_type: user
+type: datetime
+settings:
+  datetime_type: date
+module: datetime
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

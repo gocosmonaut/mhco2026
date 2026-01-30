@@ -1,0 +1,21 @@
+uuid: 08f14a83-18fa-4948-9730-8bf424458884
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_question_or_teaser
+    - node.type.community_updates
+  module:
+    - text
+id: node.community_updates.field_question_or_teaser
+field_name: field_question_or_teaser
+entity_type: node
+bundle: community_updates
+label: 'Question or Teaser'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

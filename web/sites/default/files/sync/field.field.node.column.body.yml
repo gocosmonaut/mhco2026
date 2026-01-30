@@ -1,0 +1,25 @@
+uuid: 4816f402-01ed-4797-a595-f8b9e44ddd73
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.column
+  module:
+    - text
+_core:
+  default_config_hash: mCxHMiOklxfteLBdr8werVv9tfjiOjb4HiSxwyJ7ISw
+id: node.column.body
+field_name: body
+entity_type: node
+bundle: column
+label: Body
+description: 'The primary content, or "answer," should be entered here.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+field_type: text_with_summary

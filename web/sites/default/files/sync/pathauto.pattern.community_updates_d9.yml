@@ -1,0 +1,22 @@
+uuid: 078e2dee-36fa-494c-b063-79b990bcd757
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: community_updates_d9
+label: 'Community Updates - D9'
+type: 'canonical_entities:node'
+pattern: 'news-and-resources/community-updates/[node:title]'
+selection_criteria:
+  1a068a53-3e5d-4e0f-b0e9-6d7a68edb6bb:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 1a068a53-3e5d-4e0f-b0e9-6d7a68edb6bb
+    context_mapping:
+      node: node
+    bundles:
+      community_updates: community_updates
+selection_logic: and
+weight: -5
+relationships: {  }

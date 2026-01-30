@@ -1,0 +1,29 @@
+uuid: 31f8daf5-24e5-4fdc-9ce1-e5cab577c5a1
+langcode: en
+status: false
+dependencies:
+  config:
+    - views.view.advertisements
+  module:
+    - system
+    - views
+  theme:
+    - palmdesert
+id: palmdesert_views_block__advertisements_block_2
+theme: palmdesert
+region: content
+weight: -2
+provider: null
+plugin: 'views_block:advertisements-block_2'
+settings:
+  id: 'views_block:advertisements-block_2'
+  label: ''
+  label_display: '0'
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

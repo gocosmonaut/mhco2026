@@ -1,0 +1,97 @@
+// Non-modular or client styles for the .l-content region.
+body {
+    background: #f9f9f9;
+
+
+    .grid-container {
+        max-width: none;
+        padding: 0;
+
+        main#main {
+            background: #f2f2f2;
+            opacity: 0;
+
+            #block-salem-page-title {
+                h1 {
+                    background: rgba(0, 0, 0, 0.05);
+                    font-weight: 500;
+
+                    font-size: 2.25rem;
+                    line-height: 125%;
+                    padding: 1rem .25rem 1rem 1.25rem;
+                }
+            }
+
+            .block-block-content, .field--node-body {
+                padding: 1.25rem 1.75rem 1rem 1.25rem;
+            }
+
+            &.fade-in {
+                opacity: 1;
+                transition: opacity 0.5s ease-in-out;
+            }
+
+            &.scroll-down {
+                box-shadow: rgba(0, 0, 10, 0.35);
+            }
+
+            &.grid-margin-x {
+                margin-left: auto;
+                margin-right: auto;
+                padding: 2rem 1rem;
+                max-width: 90em;
+                border-radius: 0.5em;
+                border-left: 1px solid #ccc;
+                border-top: 1px solid #ccc;
+                border-right: 1px solid #bbb;
+                border-bottom: 1px solid #bbb;
+                box-shadow: 0px 0px 18px rgba(0, 0, 0, 0.5);
+            }
+
+            .cell {
+                //  padding: 2rem 1.25rem;
+                padding: 0;
+            }
+
+            #sidebar-first {
+
+                &.large-2,
+                &.medium-2 {
+                    padding: 0;
+                    margin: 0;
+                    width: 16.666%;
+
+                    .block-views-block-search-block-1 {
+                        padding: 1.25rem .875rem .5rem .875rem;
+                        #edit-actions, #edit-actions--2, #edit-keywords {
+                            text-align: center;
+
+                        .success.button, #edit-submit-search {
+                            background: #999;
+                            padding: 0.375rem .5rem;
+                            border-radius: 2px;
+                            font-size: .9rem;
+                            color:#fff;
+                            &::after {
+                            content: "SUBMIT";
+                           font-family:  "Montserrat", "Helvetica", Verdana, "Geneva", Tahoma, sans-serif;
+    font-weight: 600;
+    transition: 0.1s all;
+                            }
+                            &:hover {
+                                background: #2ea2cb;
+                                letter-spacing: 2px;
+                            }
+             
+                        }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .large-9 {
+        padding: 0;
+    }
+}

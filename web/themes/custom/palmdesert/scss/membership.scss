@@ -1,0 +1,68 @@
+#page {
+    &.associate-members-page {
+        .views-view-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 2rem;
+            padding-top: 1rem;
+
+            @media (max-width: $bp-md) {
+                display: inline;
+            }
+
+            .views-row {
+                flex-basis: calc(33.3333% - 2rem);
+
+                @media (max-width: $bp-lg) {
+                    flex-basis: calc(50% - 2rem);
+                }
+
+                @media (max-width: $bp-md) {
+                    padding: 1rem 0;
+                    border-bottom: 1px solid #ccc;
+
+                    &:last-of-type {
+                        border: 0;
+                    }
+                }
+
+                .views-col {
+                    width: 100%;
+
+                    .views-field-title {
+                        h5 {
+                            margin-bottom: 0;
+                        }
+                    }
+
+                    .views-field-field-company-logo {
+                        margin: 0 0 1rem 1rem;
+                        float: right;
+
+                        img {
+                            max-width: 120px;
+                            height: auto;
+                        }
+                    }
+
+                    .views-field-field-associate-member-industry {
+                        font-size: .875rem;
+                        margin-bottom: 1rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+h4 {
+    &#membership-title {
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid darkgoldenrod;
+        color: darkgoldenrod;
+        margin-bottom: 1rem;
+font-family: $font-fancy;
+font-size: 1.125rem;
+    }
+}

@@ -1,0 +1,11 @@
+button:not(:disabled) {
+    &.btn-primary {
+        color: #fff;
+
+        &:hover {
+            color: #fff;
+            border-bottom-width: 1px;
+            margin-top: 0;
+        }
+    }
+}

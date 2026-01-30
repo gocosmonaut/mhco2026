@@ -1,0 +1,54 @@
+#park-directory-form {
+    thead {
+        display: none;
+    }
+
+    #DirectoryTable {
+        width: 100%;
+        background: none;
+
+        tr {
+            &:nth-child(2) {
+
+                td {
+                    &:nth-child(2) {
+                        display: none;
+                    }
+                }
+            }
+
+            &:nth-child(1),
+            &:nth-child(3) {
+                display: none;
+            }
+
+            &:nth-last-child(2) {
+
+                td {
+                    &:last-child {
+                        display: none;
+                    }
+                }
+            }
+            &:last-child {
+                text-align: center;
+                td {
+                  font-size: .875rem;
+                }
+            }
+
+        }
+
+        td {
+            font-family: $font-family-regular;
+            font-size: 1rem;
+            padding: .5rem 0;
+
+            &.topLink.style1 {
+                b {
+                    font-size: 1.125rem;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,25 @@
+uuid: 7f1a19a0-5f37-4c24-8fe4-f15fa1510713
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_should_this_be_featured_in
+    - node.type.column
+_core:
+  default_config_hash: wOqszv0icfzPuSFl0psnOqHrh-OSpgPCVasDW_0AmAo
+id: node.column.field_should_this_be_featured_in
+field_name: field_should_this_be_featured_in
+entity_type: node
+bundle: column
+label: 'Feature this column in the home page slideshow?'
+description: 'Do you want to feature this column on the home page?'
+required: true
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

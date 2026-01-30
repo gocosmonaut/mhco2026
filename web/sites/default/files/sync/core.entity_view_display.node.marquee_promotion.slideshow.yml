@@ -1,0 +1,56 @@
+uuid: 0546e894-1b5c-4591-b69c-c6d72c78951c
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.slideshow
+    - field.field.node.marquee_promotion.body
+    - field.field.node.marquee_promotion.field_caption
+    - field.field.node.marquee_promotion.field_event_date
+    - field.field.node.marquee_promotion.field_marquee_image
+    - field.field.node.marquee_promotion.field_marquee_link
+    - field.field.node.marquee_promotion.field_publication_date
+    - field.field.node.marquee_promotion.field_should_this_be_featured_in
+    - node.type.marquee_promotion
+  module:
+    - image
+    - layout_builder
+    - text
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+_core:
+  default_config_hash: _FeYS6Vl9W0P7NJ3FEb0wp-Kso7RL_WEi3ERjs1jcFQ
+id: node.marquee_promotion.slideshow
+targetEntityType: node
+bundle: marquee_promotion
+mode: slideshow
+content:
+  field_marquee_image:
+    type: image
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: ''
+      image_loading:
+        attribute: eager
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_marquee_link:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  body: true
+  field_caption: true
+  field_event_date: true
+  field_publication_date: true
+  field_should_this_be_featured_in: true
+  links: true
+  search_api_excerpt: true

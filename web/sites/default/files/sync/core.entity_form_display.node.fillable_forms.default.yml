@@ -1,0 +1,130 @@
+uuid: cbcda058-d1f3-48dd-b770-759f4282d05b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.fillable_forms.body
+    - field.field.node.fillable_forms.field_ct
+    - field.field.node.fillable_forms.field_download_link
+    - field.field.node.fillable_forms.field_form_download_count
+    - field.field.node.fillable_forms.field_form_number
+    - field.field.node.fillable_forms.field_should_this_be_featured_in
+    - field.field.node.fillable_forms.field_what_image_should_accompan
+    - node.type.fillable_forms
+  module:
+    - path
+    - text
+_core:
+  default_config_hash: Fdygs7iYtzmnSmtxuYQMRq7K7kwFUXqv8a7HZMEBP-Q
+id: node.fillable_forms.default
+targetEntityType: node
+bundle: fillable_forms
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 3
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  created:
+    type: datetime_timestamp
+    weight: 7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_ct:
+    type: entity_reference_autocomplete
+    weight: 12
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_download_link:
+    type: string_textfield
+    weight: 6
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_form_number:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 4
+      placeholder: ''
+    third_party_settings: {  }
+  field_should_this_be_featured_in:
+    type: options_buttons
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_what_image_should_accompan:
+    type: options_select
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    weight: 8
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 11
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    weight: 9
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 4
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  field_form_download_count: true

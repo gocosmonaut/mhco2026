@@ -1,0 +1,45 @@
+uuid: ab92ce1c-6174-4eec-903c-c266849a02ab
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.marquee_promotion.body
+    - field.field.node.marquee_promotion.field_caption
+    - field.field.node.marquee_promotion.field_event_date
+    - field.field.node.marquee_promotion.field_marquee_image
+    - field.field.node.marquee_promotion.field_marquee_link
+    - field.field.node.marquee_promotion.field_publication_date
+    - field.field.node.marquee_promotion.field_should_this_be_featured_in
+    - node.type.marquee_promotion
+  module:
+    - text
+    - user
+_core:
+  default_config_hash: ghoy6oJ1te6zJ-Qyyyom74A1fuoIZWmFzlqxrQD8od8
+id: node.marquee_promotion.teaser
+targetEntityType: node
+bundle: marquee_promotion
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_caption: true
+  field_event_date: true
+  field_marquee_image: true
+  field_marquee_link: true
+  field_publication_date: true
+  field_should_this_be_featured_in: true
+  search_api_excerpt: true

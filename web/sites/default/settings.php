@@ -90,7 +90,10 @@
  * ];
  * @endcode
  */
-$databases = [];
+
+$databases['default']['default']['database'] = "u840124626_mhco26";
+$databases['default']['default']['username'] = "u840124626_mhco26admin";
+$databases['default']['default']['password'] = "2k&Fx2yEA&RY";
 
 /**
  * Customizing database settings.

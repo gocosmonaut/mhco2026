@@ -1,6 +1,6 @@
 uuid: c3cb98ee-7d1e-47fe-8562-7b466797ac7b
 langcode: en
-status: false
+status: true
 dependencies:
   module:
     - system
@@ -10,7 +10,7 @@ dependencies:
     - palmdesert
 id: palmdesert_tagsincolumntopics
 theme: palmdesert
-region: content
+region: none
 weight: -1
 provider: null
 plugin: 'tagclouds_block:column_topics'

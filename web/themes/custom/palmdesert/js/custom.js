@@ -11,7 +11,7 @@
     attach: function (context, settings) {
 
       var $this = this;
-      $this.MarqueeMatchHeight();
+  $this.MarqueeMatchHeight();
       $this.ArticleSpaces();
       $this.ArticleSearch();
       $this.LinkMarquee();
@@ -33,7 +33,7 @@
       $('.views_slideshow_cycle_teaser_section').height(column_two_height);
       $('.views_slideshow_cycle_slide .views-row article').width(slideshow_width);
       var slideshow_height = $('.view-display-id-marquee_slideshow').height();
-      $('.views_slideshow_cycle_slide .views-row article').height(slideshow_height);
+     $('.views_slideshow_cycle_slide .views-row article').height(slideshow_height);
     },
     ArticleSpaces: function () {
       var isArticle = $("#page").hasClass("article");
@@ -82,7 +82,7 @@
     MarqueeRandomizer: function () {
       var marquee = "url(/sites/default/files/marquee-bg/";
       $(".views_slideshow_cycle_slide").each(function (index, value) {
-        var selector = Math.floor(Math.random() * 17 + 1);
+        var selector = Math.floor(Math.random() * 11 + 1);
         $(this).css({
           "background-image":
             "linear-gradient(0deg,rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.4) 85%, rgba(0, 0, 0, 0.8) 100%), url(/sites/default/files/marquee-bg/" + selector + ".jpg",

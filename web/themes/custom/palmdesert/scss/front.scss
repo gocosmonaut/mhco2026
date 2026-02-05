@@ -9,8 +9,8 @@
 }
 
 .path-frontpage #main-wrapper {
-    background: url('../images/sheep_rock.jpg') no-repeat;
-    background-size: cover;
+    background: #d7cf91 url('../images/sheep_rock.jpg') top no-repeat;
+    background-size: contain;
     padding: 2rem 0;
     box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.5);
     // clip-path: ellipse(50% 30% at 50% 100%); /* Creates an elliptical curve at the bottom */
@@ -36,7 +36,13 @@
         max-height: 450px;
         overflow: hidden;
 
+#views_slideshow_cycle_main_columns-marquee_slideshow {
+// height: 100vh;
+}
 
+.views_slideshow_cycle_slide {
+  //  height: 100vh;
+}
 
         .node__content {
             margin: 0;
@@ -53,6 +59,8 @@
             }
 
             .field--name-field-marquee-image {
+                margin: 0;
+
                 img {
                     width: 100%;
                     height: auto;
@@ -89,6 +97,7 @@
                     max-width: 930px;
                     max-height: 450px;
                     overflow: hidden;
+                    height: 100vh;
 
                     .field--name-field-publication-date {
                         margin-top: 1rem;
@@ -110,7 +119,7 @@
 
                         a span {
                             font-size: 2rem;
-                           font-family: $font-fancy;
+                            font-family: $font-fancy;
                             line-height: 1.35;
                         }
 
@@ -329,7 +338,7 @@
 
                 .views-field-field-column-category {
                     h6 {
-                         font-family: $font-family-condensed;
+                        font-family: $font-family-condensed;
                         font-size: .9375rem;
                         background: wheat;
                         width: fit-content;
@@ -471,16 +480,16 @@
             border-left: 0;
         }
 
-        #block-tagsincolumntopics {
+        #block-palmdesert-tagsincolumntopics {
 
 
 
             span {
                 color: $gray-800;
-                font-size: .75rem;
+                font-size: .875rem;
 
                 a {
-                    padding-right: .25rem;
+                    padding-right: .375rem;
                     font-size: 1rem;
                 }
             }

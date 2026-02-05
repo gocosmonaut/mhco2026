@@ -1,0 +1,14 @@
+name: Content Type Clone
+type: module
+description: Allows to clone content types from a simple link added to each content type in the content type list
+package: Content Type Clone
+core_version_requirement: '^8 || ^9 || ^10'
+dependencies:
+  - drupal:node
+  - drupal:path
+  - drupal:text
+
+# Information added by Drupal.org packaging script on 2025-10-15
+version: '8.x-1.3'
+project: 'content_type_clone'
+datestamp: 1760508472

@@ -61,6 +61,7 @@ module:
   node: 0
   options: 0
   page_cache: 0
+  park_directory: 0
   path: 0
   path_alias: 0
   phpass: 0
@@ -108,8 +109,6 @@ module:
 theme:
   claro: 0
   stable: 0
-  zurb_foundation: 0
-  salem: 0
   stable9: 0
   gin: 0
   bootstrap: 0

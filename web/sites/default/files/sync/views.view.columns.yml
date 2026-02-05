@@ -2949,7 +2949,7 @@ display:
         type: some
         options:
           offset: 0
-          items_per_page: 12
+          items_per_page: 8
       access:
         type: none
         options: {  }

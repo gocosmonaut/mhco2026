@@ -108,8 +108,9 @@
           var results = $('.view-article-search .view-content.row').html();
           $('#block-palmdesert-page-title').remove();
           $('.articles-intro').html("MHCO Article Search Results");
-          $('#block-palmdesert-content').html(results);
-        }, 1100);
+          console.log(results);
+         $('article').html(results);
+        }, 1500);
 
       });
       $('#views-exposed-form-article-search-block-2 button').on('click', function () {

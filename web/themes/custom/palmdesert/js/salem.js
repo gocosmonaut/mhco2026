@@ -82,38 +82,6 @@
   });
 
 
-  // Randomize slideshow background images
-  $(document).ready(function () {
-    if (onHomePage == true) {
-      var marquee = "url(/sites/default/files/marquee-bg/";
-      $(".views_slideshow_cycle_slide").each(function (index, value) {
-        var selector = Math.floor(Math.random() * 17 + 1);
-  //      console.log("Selector dipshit = " + selector);
-             $(this).css({
-          "background-image":
-            "url(/sites/default/files/marquee-bg/" + selector + ".jpg",
-          "background-size": "cover",
-          "background-repeat": "no-repeat",
-        });
-     //   var dipshit = "url(/sites/default/files/marquee-bg/" + selector + ".jpg";
-       // console.log("Dipshit = " + dipshit);
-       imgDelay(selector);
-      });
-    }});
-
-    // Preload slideshow background images after a slight delay
-    function imgDelay(selector) {
-          setTimeout(function () {
-            $('#footer').append('<div style="width: 5px; height: auto; display: none;"></div><img style="width: 5px; height: 5px; display: none;" src="/sites/default/files/slideshow-images/mhco_logo_0.png"></div>');
-            $('#footer').append('<div style="width: 5px; height: auto; display: none;"></div><img style="width: 5px; height: 5px; display: none;" src="/sites/default/files/slideshow-images/querin_0_0.png"></div>');
-            $('#footer').append('<div style="width: 5px; height: auto; display: none;"></div><img style="width: 5px; height: 5px; display: none;" src="/sites/default/files/slideshow-images/rogers.png"></div>');
-            $('#footer').append('<div style="width: 5px; height: auto; display: none;"></div><img style="width: 5px; height: 5px; display: none;" src="/sites/default/files/slideshow-images/busch_0_0.png"></div>');
-            $('#footer').append('<div style="width: 5px; height: auto; display: none;"></div><img style="width: 5px; height: 5px; display: none;" src="/sites/default/files/slideshow-images/miner.png"></div>');
-      $('#footer').append('<div style="width: 5px; height: auto; display: none;"></div><img style="width: 5px; height: 5px; display: none;" src="/sites/default/files/marquee-bg/' + selector + '.jpg"></div>' );
-    console.log(selector);
-  }, 6000);
-    }
-
 
   // Fade in menu and content areas because of weird loading hiccups
   $(document).ready(function () {

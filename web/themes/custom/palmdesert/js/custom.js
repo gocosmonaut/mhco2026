@@ -11,7 +11,7 @@
     attach: function (context, settings) {
 
       var $this = this;
-  $this.MarqueeMatchHeight();
+      $this.MarqueeMatchHeight();
       $this.ArticleSpaces();
       $this.ArticleSearch();
       $this.LinkMarquee();
@@ -33,7 +33,7 @@
       $('.views_slideshow_cycle_teaser_section').height(column_two_height);
       $('.views_slideshow_cycle_slide .views-row article').width(slideshow_width);
       var slideshow_height = $('.view-display-id-marquee_slideshow').height();
-     $('.views_slideshow_cycle_slide .views-row article').height(slideshow_height);
+      $('.views_slideshow_cycle_slide .views-row article').height(slideshow_height);
     },
     ArticleSpaces: function () {
       var isArticle = $("#page").hasClass("article");
@@ -82,7 +82,7 @@
     MarqueeRandomizer: function () {
       var marquee = "url(/sites/default/files/marquee-bg/";
       $(".views_slideshow_cycle_slide").each(function (index, value) {
-        var selector = Math.floor(Math.random() * 11 + 1);
+        var selector = Math.floor(Math.random() * 12 + 1);
         $(this).css({
           "background-image":
             "linear-gradient(0deg,rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.4) 85%, rgba(0, 0, 0, 0.8) 100%), url(/sites/default/files/marquee-bg/" + selector + ".jpg",
@@ -109,7 +109,7 @@
           $('#block-palmdesert-page-title').remove();
           $('.articles-intro').html("MHCO Article Search Results");
           console.log(results);
-         $('article').html(results);
+          $('article').html(results);
         }, 1500);
 
       });
@@ -129,39 +129,31 @@
       });
     },
     FormClick: function () {
-      var isForm = $('body').hasClass('page-view-mhco-forms');
+      // Tell users to wait for download
 
-      if (isForm) {
-        // Tell users to wait for download
+      $(".form-download-div").off('click').on('click', function () {
+        var formName = $(this).attr('title');
+        var thisFormID = $(this).attr("id");
+        var waitMessage = "Your form is being generated. Please wait several seconds for your form to load in a browser tab."
+        $(this).find('.views-field-title').after('<br><div id="waitMessage" style="color: red">' + waitMessage + '</div>');
+        setTimeout(function () {
+          $('#waitMessage').remove();
+        }, 5000);
+      });
 
-        $(".form-download-div").off('click').on('click', function() {
-          var formName = $(this).attr('title');
-          var thisFormID = $(this).attr("id");
-          var waitMessage = "Your form is being generated. Please wait several seconds for your form to load in a browser tab."
-          $(this).find('.views-field-title').after('<br><div id="waitMessage" style="color: red">' + waitMessage + '</div>');
-          setTimeout(function () {
-            $('#waitMessage').remove();
-          }, 5000);
-        });
-      }
-
-
-      if (isForm) {
-        $('.form-download-div').each(function (index, value) {
-          var formID = $(this).find('.form-button.badge').attr("id");
-          var formNID = $(this).find('.form-button.badge').attr("nid");
-          var formDL = $(this).find('.form-button.badge').attr("dl");
-          var formTitle = $(this).find('.form-button.badge').attr("title");
-          //  console.log(formID + formNID + formDL + formTitle);
-          $(this).attr("id", formID);
-          $(this).attr("nid", formNID);
-          $(this).attr("dl", formDL);
-          $(this).attr("title", formTitle);
-        })
-
-
-      }
+      $('.form-download-div').each(function (index, value) {
+        var formID = $(this).find('.form-button.badge').attr("id");
+        var formNID = $(this).find('.form-button.badge').attr("nid");
+        var formDL = $(this).find('.form-button.badge').attr("dl");
+        var formTitle = $(this).find('.form-button.badge').attr("title");
+        //  console.log(formID + formNID + formDL + formTitle);
+        $(this).attr("id", formID);
+        $(this).attr("nid", formNID);
+        $(this).attr("dl", formDL);
+        $(this).attr("title", formTitle);
+      })
     },
+
     TermBodyTrim: function () {
       var isTermPage = $("body").hasClass("page-vocabulary-column-topics");
       if (isTermPage) {

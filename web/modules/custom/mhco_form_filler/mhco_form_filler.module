@@ -5,20 +5,9 @@
  * Pre-filling MHCO forms.
  */
 
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\user\Entity\User;
-use Drupal\user\UserData;
-use Drupal\user\UserInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\RequestOptions;
-use Drupal\Core\Session\AccountProxy;
-use Drupal\file\FileInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
@@ -40,24 +29,6 @@ if (isset($_POST['park'])) {
 
     mhco_form_filler_receiver($park, $parkName, $parkAddress, $parkLocation, $parkZIP, $parkState, $parkPhone, $parkCombined, $downloadLink, $formName, $formNo, $formID, $formNID, $parkUID);
 };
-
-/**
- * Implements hook_user_login().
- */
-
-function mhco_form_filler_user_login(AccountInterface $account)
-{
-
-    // Process park city ID from taxonomy
-    $parkCityTID = $account->field_profile_location->target_id;
-    $parkCityValue = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($parkCityTID);
-    $parkCity = $parkCityValue->name->value;
-
-    // Process park state ID from taxonomy
-    $parkStateTID = $account->field_profile_state->target_id;
-    $parkStateValue = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($parkStateTID);
-    $parkStateName = $parkStateValue->name->value;
-}
 
 function mhco_form_filler_receiver($park, $parkName, $parkAddress, $parkLocation, $parkZIP, $parkState, $parkPhone, $parkCombined, $downloadLink, $formName, $formNo, $formID, $formNID, $parkUID)
 {

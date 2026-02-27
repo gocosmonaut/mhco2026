@@ -54,28 +54,28 @@ class TagcloudsPageChunk extends ControllerBase {
   /**
    * Renders a list of vocabularies.
    *
-   * @param string $tagclouds_vocs_str
+   * @param string $tagclouds_vocabularies_str
    *   A comma separated list of vocabulary ids.
    *
    * @return array
    *   A render array.
    */
-  public function chunk($tagclouds_vocs_str = '') {
-    $vocs = $this->csvToArray($tagclouds_vocs_str);
-    if (empty($vocs)) {
+  public function chunk($tagclouds_vocabularies_str = '') {
+    $vocabularies = $this->csvToArray($tagclouds_vocabularies_str);
+    if (empty($vocabularies)) {
       $query = $this->entityTypeManager()
         ->getStorage('taxonomy_vocabulary')
         ->getQuery()
         ->accessCheck(FALSE);
       $all_ids = $query->execute();
       foreach ($this->entityTypeManager()->getStorage('taxonomy_vocabulary')->loadMultiple($all_ids) as $vocabulary) {
-        $vocs[] = $vocabulary->id();
+        $vocabularies[] = $vocabulary->id();
       }
     }
     $config = $this->config('tagclouds.settings');
     $tags = $this
       ->tagcloudTag
-      ->getTags($vocs, $config->get('levels'), $config->get('page_amount'));
+      ->getTags($vocabularies, $config->get('levels'), $config->get('page_amount'));
 
     $sorted_tags = $this->tagcloudTag->sortTags($tags);
 

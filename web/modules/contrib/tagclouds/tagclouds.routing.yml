@@ -14,16 +14,16 @@ tagclouds.page_chunk:
   requirements:
     _permission: 'access content'
 
-tagclouds.list_vocs:
-  path: '/tagclouds/list/{tagclouds_vocs_str}'
+tagclouds.list_vocabularies:
+  path: '/tagclouds/list/{tagclouds_vocabularies_str}'
   defaults:
-    _controller: '\Drupal\tagclouds\Controller\TagcloudsListVocs::listVocs'
+    _controller: '\Drupal\tagclouds\Controller\TagcloudsListVocabularies::listVocabularies'
     _title: 'Tags'
   requirements:
     _permission: 'access content'
 
-tagclouds.chunk_vocs:
-  path: '/tagclouds/chunk/{tagclouds_vocs_str}'
+tagclouds.chunk_vocabularies:
+  path: '/tagclouds/chunk/{tagclouds_vocabularies_str}'
   defaults:
     _controller: '\Drupal\tagclouds\Controller\TagcloudsPageChunk::chunk'
     _title: 'Tags'

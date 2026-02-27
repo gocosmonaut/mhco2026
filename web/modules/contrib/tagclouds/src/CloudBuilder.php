@@ -179,7 +179,7 @@ class CloudBuilder implements CloudBuilderInterface {
     if ($term = $this->entityTypeManager->getStorage('taxonomy_term')->load($tid)) {
       $uri = $term->toUrl();
       $options = $uri->getOptions();
-      $options['options']['attributes']['class'][] = 'tagclouds';
+      $options['attributes']['class'][] = 'tagclouds';
       $options['language'] = $this->languageManager->getCurrentLanguage();
       $uri->setOptions($options);
 

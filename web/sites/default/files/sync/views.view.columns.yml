@@ -11,6 +11,8 @@ dependencies:
     - field.storage.node.field_download_link
     - field.storage.node.field_event_date
     - field.storage.node.field_marquee_image
+    - field.storage.node.field_marquee_image_medium
+    - field.storage.node.field_marquee_image_small
     - field.storage.node.field_marquee_link
     - field.storage.node.field_publication_date
     - field.storage.node.field_question_or_teaser
@@ -2511,7 +2513,7 @@ display:
           admin_label: ''
           plugin_id: field
           label: ''
-          exclude: false
+          exclude: true
           alter:
             alter_text: true
             text: '{{ title }}'
@@ -2574,7 +2576,7 @@ display:
           admin_label: ''
           plugin_id: field
           label: ''
-          exclude: false
+          exclude: true
           alter:
             alter_text: true
             text: '<a href="{{ field_download_link_1 }}">Download now <span class="glyphicon glyphicon-chevron-right"></span></a>'
@@ -2753,6 +2755,138 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        field_marquee_image_small:
+          id: field_marquee_image_small
+          table: node__field_marquee_image_small
+          field: field_marquee_image_small
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: '<div class="marquee-promotion">{{ field_marquee_image_small }}</div>'
+            make_link: true
+            path: '{{ field_marquee_link }}'
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: image
+          settings:
+            image_link: ''
+            image_style: ''
+            image_loading:
+              attribute: eager
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_marquee_image_medium:
+          id: field_marquee_image_medium
+          table: node__field_marquee_image_medium
+          field: field_marquee_image_medium
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: '<div class="marquee-promotion">{{ field_marquee_image_medium }}</div>'
+            make_link: true
+            path: '{{ field_marquee_link }}'
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: image
+          settings:
+            image_link: ''
+            image_style: ''
+            image_loading:
+              attribute: eager
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
         field_marquee_image:
           id: field_marquee_image
           table: node__field_marquee_image
@@ -2762,7 +2896,7 @@ display:
           admin_label: ''
           plugin_id: field
           label: ''
-          exclude: false
+          exclude: true
           alter:
             alter_text: true
             text: '<div class="marquee-promotion">{{ field_marquee_image }}</div>'
@@ -2949,7 +3083,7 @@ display:
         type: some
         options:
           offset: 0
-          items_per_page: 8
+          items_per_page: 1
       access:
         type: none
         options: {  }
@@ -3257,6 +3391,8 @@ display:
         - 'config:field.storage.node.field_download_link'
         - 'config:field.storage.node.field_event_date'
         - 'config:field.storage.node.field_marquee_image'
+        - 'config:field.storage.node.field_marquee_image_medium'
+        - 'config:field.storage.node.field_marquee_image_small'
         - 'config:field.storage.node.field_marquee_link'
         - 'config:field.storage.node.field_publication_date'
         - 'config:field.storage.node.field_question_or_teaser'

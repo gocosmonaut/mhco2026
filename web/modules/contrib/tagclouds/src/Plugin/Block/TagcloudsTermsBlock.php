@@ -112,8 +112,13 @@ class TagcloudsTermsBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function blockForm($form, FormStateInterface $form_state) {
+    $config = $this->configFactory->get('tagclouds.settings');
+    $global_order = $config->get('sort_order');
+
     $terms_limit = $this->configuration['tags'] ?? 0;
     $vocabulary = $this->configuration['vocabulary'] ?? 'tags';
+    $sort_order = $this->configuration['sort_order'] ?? 'default';
+
     $form['tags'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Tags to show'),
@@ -127,6 +132,19 @@ class TagcloudsTermsBlock extends BlockBase implements ContainerFactoryPluginInt
       '#default_value' => $vocabulary,
     ];
 
+    $default_options = $this->tagService->getSortingOptions();
+    $options = [
+      'default' => $this->t('Global tagclouds sorting (@order)', ['@order' => $default_options[$global_order]]),
+    ] + $default_options;
+
+    $form['sort_order'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Tagclouds sort order'),
+      '#options' => $options,
+      '#default_value' => $sort_order,
+      '#description' => $this->t('Determines the sort order of the tags on the free-tagging page.'),
+    ];
+
     return $form;
   }
 
@@ -136,6 +154,7 @@ class TagcloudsTermsBlock extends BlockBase implements ContainerFactoryPluginInt
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['tags'] = $form_state->getValue('tags');
     $this->configuration['vocabulary'] = $form_state->getValue('vocabulary');
+    $this->configuration['sort_order'] = $form_state->getValue('sort_order');
   }
 
   /**
@@ -144,6 +163,7 @@ class TagcloudsTermsBlock extends BlockBase implements ContainerFactoryPluginInt
   public function build() {
     $tags_limit = $this->configuration['tags'];
     $vocab_name = $this->configuration['vocabulary'];
+    $sort_order = $this->configuration['sort_order'] ?? 'default';
 
     $content = [
       '#attached' => ['library' => 'tagclouds/clouds'],
@@ -151,7 +171,7 @@ class TagcloudsTermsBlock extends BlockBase implements ContainerFactoryPluginInt
     if ($voc = $this->entityTypeManager->getStorage('taxonomy_vocabulary')->load($vocab_name)) {
       $tags = $this->tagService->getTags([$vocab_name], $this->configFactory->getEditable('tagclouds.settings')->get('levels'), $tags_limit);
 
-      $tags = $this->tagService->sortTags($tags);
+      $tags = $this->tagService->sortTags($tags, $sort_order);
 
       $content[] = [
         'tags' => $this->cloudBuilder->build($tags),
@@ -160,7 +180,7 @@ class TagcloudsTermsBlock extends BlockBase implements ContainerFactoryPluginInt
         $content[] = [
           '#type' => 'more_link',
           '#title' => $this->t('more tags'),
-          '#url' => Url::fromRoute('tagclouds.chunk_vocs', ['tagclouds_vocs_str' => $voc->id()]),
+          '#url' => Url::fromRoute('tagclouds.chunk_vocabularies', ['tagclouds_vocabularies_str' => $voc->id()]),
         ];
       }
     }

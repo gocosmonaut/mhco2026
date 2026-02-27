@@ -7,6 +7,7 @@ use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\tagclouds\TagService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -22,6 +23,13 @@ class TagcloudsAdminPage extends ConfigFormBase {
   protected $languageManager;
 
   /**
+   * The tag service.
+   *
+   * @var \Drupal\tagclouds\TagService
+   */
+  protected $tagService;
+
+  /**
    * Constructs a \Drupal\system\ConfigFormBase object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -30,10 +38,18 @@ class TagcloudsAdminPage extends ConfigFormBase {
    *   The typed config manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\tagclouds\TagService $tagService
+   *   The tag service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config_manager, LanguageManagerInterface $language_manager) {
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    TypedConfigManagerInterface $typed_config_manager,
+    LanguageManagerInterface $language_manager,
+    TagService $tagService,
+  ) {
     parent::__construct($config_factory, $typed_config_manager);
     $this->languageManager = $language_manager;
+    $this->tagService = $tagService;
   }
 
   /**
@@ -43,7 +59,8 @@ class TagcloudsAdminPage extends ConfigFormBase {
     return new static(
       $container->get('config.factory'),
       $container->get('config.typed'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('tagclouds.tag')
     );
   }
 
@@ -59,20 +76,13 @@ class TagcloudsAdminPage extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('tagclouds.settings');
-    $options = [
-      'title,asc' => $this->t('by title, ascending'),
-      'title,desc' => $this->t('by title, descending'),
-      'count,asc' => $this->t('by count, ascending'),
-      'count,desc' => $this->t('by count, descending'),
-      'random,none' => $this->t('random'),
-    ];
     $sort_order = $config->get('sort_order');
     $form['sort_order'] = [
       '#type' => 'radios',
       '#title' => $this->t('Tagclouds sort order'),
-      '#options' => $options,
+      '#options' => $this->tagService->getSortingOptions(),
       '#default_value' => (!empty($sort_order)) ? $sort_order : 'title,asc',
-      '#description' => $this->t('Determines the sort order of the tags on the freetagging page.'),
+      '#description' => $this->t('Determines the sort order of the tags on the free-tagging page.'),
     ];
 
     $options_display = [

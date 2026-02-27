@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Controller routines for user routes.
  */
-class TagcloudsListVocs extends ControllerBase {
+class TagcloudsListVocabularies extends ControllerBase {
 
   use CsvToArrayTrait;
 
@@ -67,10 +67,10 @@ class TagcloudsListVocs extends ControllerBase {
   /**
    * Renders a list of vocabularies.
    *
-   * Vocabularys are wrapped in a series of boxes, labeled by name
+   * Vocabularies are wrapped in a series of boxes, labeled by name
    * description.
    *
-   * @param string $tagclouds_vocs_str
+   * @param string $tagclouds_vocabularies_str
    *   A comma separated list of vocabulary ids.
    *
    * @return array
@@ -79,14 +79,14 @@ class TagcloudsListVocs extends ControllerBase {
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    *   Thrown when any vocabulary in the list cannot be found.
    */
-  public function listVocs($tagclouds_vocs_str = NULL) {
-    $vocs = $this->csvToArray($tagclouds_vocs_str);
-    if (empty($vocs)) {
+  public function listVocabularies($tagclouds_vocabularies_str = NULL) {
+    $vocabularies = $this->csvToArray($tagclouds_vocabularies_str);
+    if (empty($vocabularies)) {
       throw new NotFoundHttpException();
     }
 
     $boxes = [];
-    foreach ($vocs as $vid) {
+    foreach ($vocabularies as $vid) {
       $vocabulary = $this->entityTypeManager->getStorage('taxonomy_vocabulary')->load($vid);
 
       if ($vocabulary == FALSE) {

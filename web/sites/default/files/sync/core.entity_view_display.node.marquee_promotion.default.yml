@@ -7,6 +7,8 @@ dependencies:
     - field.field.node.marquee_promotion.field_caption
     - field.field.node.marquee_promotion.field_event_date
     - field.field.node.marquee_promotion.field_marquee_image
+    - field.field.node.marquee_promotion.field_marquee_image_medium
+    - field.field.node.marquee_promotion.field_marquee_image_small
     - field.field.node.marquee_promotion.field_marquee_link
     - field.field.node.marquee_promotion.field_publication_date
     - field.field.node.marquee_promotion.field_should_this_be_featured_in
@@ -56,6 +58,28 @@ content:
         attribute: lazy
     third_party_settings: {  }
     weight: 1
+    region: content
+  field_marquee_image_medium:
+    type: image
+    label: above
+    settings:
+      image_link: ''
+      image_style: ''
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  field_marquee_image_small:
+    type: image
+    label: above
+    settings:
+      image_link: ''
+      image_style: ''
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 11
     region: content
   field_marquee_link:
     type: text_default

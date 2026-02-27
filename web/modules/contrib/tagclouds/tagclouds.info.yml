@@ -7,7 +7,7 @@ configure: tagclouds.admin_page
 dependencies:
   - drupal:taxonomy
 
-# Information added by Drupal.org packaging script on 2024-12-16
-version: '2.0.10'
+# Information added by Drupal.org packaging script on 2026-02-05
+version: '2.0.11'
 project: 'tagclouds'
-datestamp: 1734383059
+datestamp: 1770315197

@@ -1,0 +1,9 @@
+# List of words excluded from cspell validation for the project Tagclouds.
+
+# Custom variable names, ids, keys or identifiers in paths or yaml files.
+mathe
+tagadelic
+tagcloud
+
+# User names: contributors, maintainers, users.
+wittens

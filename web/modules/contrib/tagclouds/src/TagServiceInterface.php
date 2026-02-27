@@ -17,14 +17,14 @@ interface TagServiceInterface {
    * @param string $sort_order
    *   (optional) Contains the sort and the order string.
    *   Possible values:
-   *     "title, asc", "title, desc", "count, asc", "count, desc".
+   *     "title,asc", "title,desc", "count,asc", "count,desc", "random,none".
    *
    * @todo If you feel like making this more modular, please send me patches.
    *
    * @return array
    *   A list of sorted tag objects.
    */
-  public function sortTags(array $tags, $sort_order = NULL);
+  public function sortTags(array $tags, string $sort_order = 'default'): array;
 
   /**
    * Return an array of tags.
@@ -50,5 +50,13 @@ interface TagServiceInterface {
    *   $tag->weight.
    */
   public function getTags(array $vids, $steps = 6, $size = 60, $display = NULL);
+
+  /**
+   * Returns available sorting options for tag clouds.
+   *
+   * @return array
+   *   An associative array of sorting options.
+   */
+  public function getSortingOptions(): array;
 
 }

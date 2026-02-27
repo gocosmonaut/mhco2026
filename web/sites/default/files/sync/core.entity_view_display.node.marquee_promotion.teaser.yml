@@ -8,6 +8,8 @@ dependencies:
     - field.field.node.marquee_promotion.field_caption
     - field.field.node.marquee_promotion.field_event_date
     - field.field.node.marquee_promotion.field_marquee_image
+    - field.field.node.marquee_promotion.field_marquee_image_medium
+    - field.field.node.marquee_promotion.field_marquee_image_small
     - field.field.node.marquee_promotion.field_marquee_link
     - field.field.node.marquee_promotion.field_publication_date
     - field.field.node.marquee_promotion.field_should_this_be_featured_in
@@ -39,6 +41,8 @@ hidden:
   field_caption: true
   field_event_date: true
   field_marquee_image: true
+  field_marquee_image_medium: true
+  field_marquee_image_small: true
   field_marquee_link: true
   field_publication_date: true
   field_should_this_be_featured_in: true

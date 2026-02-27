@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
- * Provides dynamic definitions for tagclouds blocks based on Voacabularies.
+ * Provides dynamic definitions for tagclouds blocks based on Vocabularies.
  *
  * @see \Drupal\tagclouds\Plugin\Block\TagcloudsTermsBlock
  * @see plugin_api

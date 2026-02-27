@@ -1422,7 +1422,7 @@ display:
         type: html_list
         options:
           grouping: {  }
-          row_class: ''
+          row_class: form-download-div
           default_row_class: true
           type: ul
           wrapper_class: item-list

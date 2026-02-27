@@ -36,13 +36,13 @@
         max-height: 450px;
         overflow: hidden;
 
-#views_slideshow_cycle_main_columns-marquee_slideshow {
-// height: 100vh;
-}
+        #views_slideshow_cycle_main_columns-marquee_slideshow {
+            // height: 100vh;
+        }
 
-.views_slideshow_cycle_slide {
-  //  height: 100vh;
-}
+        .views_slideshow_cycle_slide {
+            //  height: 100vh;
+        }
 
         .node__content {
             margin: 0;
@@ -60,12 +60,51 @@
 
             .field--name-field-marquee-image {
                 margin: 0;
+                display: none;
 
-                img {
-                    width: 100%;
-                    height: auto;
+                &.marquee-full {
+
+                    @media (min-width: $bp-xxl) {
+                        display: block;
+                        width: 100%;
+
+                        img {
+                            width: max-content;
+                            height: auto;
+                        }
+                    }
                 }
             }
+
+            .field--name-field-marquee-image-medium {
+                display: none;
+
+                @media (min-width: 1200px) and (max-width: 1399px) {
+                    display: block;
+                    width: 100%;
+
+                    img {
+                        width: max-content;
+                        height: auto;
+                    }
+                }
+            }
+
+            .field--name-field-marquee-image-small {
+                display: none;
+
+               @media (max-width: 1199px) {
+                    display: block;
+                    float: none;
+                    width: 100%;
+
+                    img {
+                        width: max-content;
+                        height: auto;
+                    }
+                }
+            }
+
 
             .field--name-field-marquee-link {
                 display: none;
@@ -98,6 +137,10 @@
                     max-height: 450px;
                     overflow: hidden;
                     height: 100vh;
+
+                    &.node--type-marquee-promotion {
+                        overflow: visible;
+                    }
 
                     .field--name-field-publication-date {
                         margin-top: 1rem;

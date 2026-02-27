@@ -130,7 +130,7 @@
     },
     FormClick: function () {
       // Tell users to wait for download
-
+      $('#F0 .form-button').html("-");
       $(".form-download-div").off('click').on('click', function () {
         var formName = $(this).attr('title');
         var thisFormID = $(this).attr("id");

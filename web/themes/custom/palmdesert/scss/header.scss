@@ -28,8 +28,13 @@
                 color: gold;
                 letter-spacing: 0.025rem;
 
+                 @media (max-width: $bp-lg) {
+               margin-right: 0;
+            }
+
                 @media (max-width: $bp-md) {
-                    font-size: .625rem;
+                    font-size: .75rem;
+                    margin-right: 0;
                 }
 
 
@@ -93,7 +98,7 @@
                 }
             }
 
-            padding: 0rem 0.625rem;
+            padding: 0rem 0.5rem;
             display: inline-flex;
         }
 

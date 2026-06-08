@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <g id="favicon">
+    <rect width="64" height="64" fill="#173056"/>
+    <rect x="7.6072" y="27.6666" width="48" height="32" fill="#004b87"/>
+    <polygon points="39.9813 12 39.9813 27.1858 24.1115 27.1858 24.1115 14.4733 17.7633 12 17.7633 52 24.1115 52 24.1115 33.6701 39.9813 33.6701 39.9813 49.5265 46.2367 52 46.2367 12 39.9813 12" fill="#fff"/>
+  </g>
+</svg>

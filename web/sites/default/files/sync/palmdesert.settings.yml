@@ -31,13 +31,14 @@ features:
   node_user_picture: 1
   comment_user_picture: 1
   comment_user_verification: 1
-  favicon: 0
+  favicon: 1
 logo:
   use_default: 0
   path: ''
 favicon:
   use_default: 0
-  path: ''
+  path: themes/custom/palmdesert/m.svg
+  mimetype: image/svg+xml
 bootstrap_barrio_source: bootstrap_barrio/bootswatch_lumen
 bootstrap_barrio_enable_color: 0
 bootstrap_barrio_table_head: thead-light

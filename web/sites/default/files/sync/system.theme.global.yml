@@ -1,8 +1,8 @@
 _core:
   default_config_hash: 9rAU4Pku7eMBQxauQqAgjzlcicFZ2As6zEa6zvTlCB8
 favicon:
-  mimetype: image/vnd.microsoft.icon
-  path: ''
+  mimetype: image/svg+xml
+  path: themes/custom/palmdesert/images/m.svg
   url: ''
   use_default: false
 features:

@@ -371,11 +371,25 @@ class Theme {
    *   by machine name.
    */
   public function getAncestry($reverse = FALSE) {
-    $ancestry = $this->themeHandler->getBaseThemes($this->themes, $this->getName());
-    foreach (array_keys($ancestry) as $name) {
-      $ancestry[$name] = Bootstrap::getTheme($name, $this->themeHandler);
+    $ancestry = [];
+    $themes = $this->themeHandler->listInfo();
+    $theme_name = $this->getName();
+
+    if (!isset($themes[$theme_name])) {
+      $ancestry[$theme_name] = $this;
+      return $reverse ? array_reverse($ancestry) : $ancestry;
     }
-    $ancestry[$this->getName()] = $this;
+
+    if (!empty($themes[$theme_name]->base_themes) && is_array($themes[$theme_name]->base_themes)) {
+      foreach (array_keys($themes[$theme_name]->base_themes) as $name) {
+        if (isset($themes[$name])) {
+          $ancestry[$name] = Bootstrap::getTheme($name, $this->themeHandler);
+        }
+      }
+    }
+
+    $ancestry[$theme_name] = $this;
+
     return $reverse ? array_reverse($ancestry) : $ancestry;
   }
 

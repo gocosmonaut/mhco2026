@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Serializer\Normalizer;
 
+use Symfony\Component\PropertyAccess\Exception\InvalidArgumentException as PropertyAccessInvalidArgumentException;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -20,6 +21,7 @@ use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Serializer\Exception\LogicException;
+use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Mapping\ClassDiscriminatorResolverInterface;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
 use Symfony\Component\Serializer\Mapping\Loader\AccessorCollisionResolverTrait;
@@ -136,6 +138,8 @@ class ObjectNormalizer extends AbstractObjectNormalizer
             $this->propertyAccessor->setValue($object, $attribute, $value);
         } catch (NoSuchPropertyException) {
             // Properties not found are ignored
+        } catch (PropertyAccessInvalidArgumentException $e) {
+            throw NotNormalizableValueException::createForUnexpectedDataType(\sprintf('Failed to denormalize attribute "%s" value for class "%s": %s', $attribute, $object::class, $e->getMessage()), $value, ['unknown'], $context['deserialization_path'] ?? null, false, $e->getCode(), $e);
         }
     }
 
@@ -161,9 +165,18 @@ class ObjectNormalizer extends AbstractObjectNormalizer
         $context = array_intersect_key($context, ['enable_getter_setter_extraction' => true, 'enable_magic_methods_extraction' => true, 'enable_constructor_extraction' => true, 'enable_adder_remover_extraction' => true]);
         $cacheKey = $class.$attribute.hash('xxh128', serialize($context));
 
-        return self::$isWritableCache[$cacheKey] ??= str_contains($attribute, '.')
-            || $this->propertyInfoExtractor->isWritable($class, $attribute, $context)
-            || !\in_array($this->writeInfoExtractor->getWriteInfo($class, $attribute, $context)?->getType(), [null, PropertyWriteInfo::TYPE_NONE, PropertyWriteInfo::TYPE_PROPERTY], true);
+        if (isset(self::$isWritableCache[$cacheKey])) {
+            return self::$isWritableCache[$cacheKey];
+        }
+
+        if (str_contains($attribute, '.') || $this->propertyInfoExtractor->isWritable($class, $attribute, $context)) {
+            return self::$isWritableCache[$cacheKey] = true;
+        }
+
+        $writeType = $this->writeInfoExtractor->getWriteInfo($class, $attribute, $context)?->getType();
+
+        return self::$isWritableCache[$cacheKey] = !\in_array($writeType, [null, PropertyWriteInfo::TYPE_NONE], true)
+            && (PropertyWriteInfo::TYPE_PROPERTY !== $writeType || !property_exists($class, $attribute));
     }
 
     private function hasAttributeAccessorMethod(string $class, string $attribute): bool

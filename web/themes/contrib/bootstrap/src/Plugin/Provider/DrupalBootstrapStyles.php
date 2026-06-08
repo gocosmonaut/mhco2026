@@ -62,14 +62,36 @@ class DrupalBootstrapStyles extends JsDelivr {
   /**
    * {@inheritdoc}
    */
+  protected function mapVersion($version, $library = NULL) {
+    $mapped = [];
+
+    // Map Bootstrap versions to available drupal-bootstrap-styles versions.
+    // Map newer versions that don't exist to the latest available (3.4.1).
+    $mapped['3.4.2'] = '3.4.1';
+    $mapped['3.4.3'] = '3.4.1';
+    $mapped['3.4.4'] = '3.4.1';
+    $mapped['3.4.5'] = '3.4.1';
+    $mapped['3.4.6'] = '3.4.1';
+    $mapped['3.4.7'] = '3.4.1';
+    $mapped['3.4.8'] = '3.4.1';
+
+    return $mapped[$version] ?? $version;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function parseAssets(array $data, $library, $version, ?CdnAssets $assets = NULL) {
     if (!isset($assets)) {
       $assets = new CdnAssets();
     }
 
-    $files = array_filter($data['files'] ?? [], function ($file) use ($library, $version) {
+    // Use mapped version to find files that actually exist in drupal-bootstrap-styles.
+    $mapped_version = $this->mapVersion($version, $library);
+
+    $files = array_filter($data['files'] ?? [], function ($file) use ($library, $mapped_version) {
       if (isset($file['name'])) {
-        if (str_contains($file['name'], '/dist/' . $version . '/' . Bootstrap::PROJECT_BRANCH . '/')) {
+        if (!str_starts_with($file['name'], '/dist/' . $mapped_version . '/' . Bootstrap::PROJECT_BRANCH . '/')) {
           return FALSE;
         }
         $theme = !!preg_match("`drupal-bootstrap-([\w]+)(\.min)?\.css$`", $file['name']);

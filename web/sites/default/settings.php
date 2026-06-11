@@ -739,7 +739,13 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  *
  * For example:
  * @code
- * $settings['trusted_host_patterns'] = [
+ * $settings['trusted_host_patterns'] = [/**
+ * Override SCRIPT_NAME to fix absolute URL generation and redirect errors 
+ * when routing from public_html to the /web subdirectory.
+ */
+if (isset($GLOBALS['request']) && '/web/index.php' === $GLOBALS['request']->server->get('SCRIPT_NAME')) {
+  $GLOBALS['request']->server->set('SCRIPT_NAME', '/index.php');
+}
  *   '^example\.com$',
  *   '^.+\.example\.com$',
  *   '^example\.org$',
@@ -752,13 +758,21 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  * @see https://www.drupal.org/docs/installing-drupal/trusted-host-settings
  */
 
-$base_url = 'https://darkorchid-seahorse-691577.hostingersite.com'; 
+// $base_url = 'https://darkorchid-seahorse-691577.hostingersite.com'; 
 
 $settings['trusted_host_patterns'] = [
-  '^darkorchid-seahorse-691577\.hostingersite\.com$',
-  '^.+\.darkorchid-seahorse-691577\.hostingersite\.com$',
+  '^darkorchid-seahorse-691577\\.hostingersite\\.com$',
+  '^.+\\.darkorchid-seahorse-691577\\.hostingersite\\.com$',
 ];
 # $settings['trusted_host_patterns'] = [];
+
+/**
+ * Override SCRIPT_NAME to fix absolute URL generation and redirect errors 
+ * when routing from public_html to the /web subdirectory.
+ */
+if (isset($GLOBALS['request']) && '/web/index.php' === $GLOBALS['request']->server->get('SCRIPT_NAME')) {
+  $GLOBALS['request']->server->set('SCRIPT_NAME', '/index.php');
+}
 
 /**
  * The default list of directories that will be ignored by Drupal's file API.

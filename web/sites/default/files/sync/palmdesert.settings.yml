@@ -37,7 +37,7 @@ logo:
   path: ''
 favicon:
   use_default: 0
-  path: themes/custom/palmdesert/m.svg
+  path: themes/custom/palmdesert/images/c.svg
   mimetype: image/svg+xml
 bootstrap_barrio_source: bootstrap_barrio/bootswatch_lumen
 bootstrap_barrio_enable_color: 0

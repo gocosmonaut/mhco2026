@@ -743,29 +743,6 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  * Override SCRIPT_NAME to fix absolute URL generation and redirect errors 
  * when routing from public_html to the /web subdirectory.
  */
-if (isset($GLOBALS['request']) && '/web/index.php' === $GLOBALS['request']->server->get('SCRIPT_NAME')) {
-  $GLOBALS['request']->server->set('SCRIPT_NAME', '/index.php');
-}
- *   '^example\.com$',
- *   '^.+\.example\.com$',
- *   '^example\.org$',
- *   '^.+\.example\.org$',
- * ];
- * @endcode
- * will allow the site to run off of all variants of example.com and
- * example.org, with all subdomains included.
- *
- * @see https://www.drupal.org/docs/installing-drupal/trusted-host-settings
- */
-
-// $base_url = 'https://darkorchid-seahorse-691577.hostingersite.com'; 
-
-$settings['trusted_host_patterns'] = [
-  '^darkorchid-seahorse-691577\\.hostingersite\\.com$',
-  '^.+\\.darkorchid-seahorse-691577\\.hostingersite\\.com$',
-];
-# $settings['trusted_host_patterns'] = [];
-
 /**
  * Override SCRIPT_NAME to fix absolute URL generation and redirect errors 
  * when routing from public_html to the /web subdirectory.
@@ -773,7 +750,6 @@ $settings['trusted_host_patterns'] = [
 if (isset($GLOBALS['request']) && '/web/index.php' === $GLOBALS['request']->server->get('SCRIPT_NAME')) {
   $GLOBALS['request']->server->set('SCRIPT_NAME', '/index.php');
 }
-
 /**
  * The default list of directories that will be ignored by Drupal's file API.
  *
@@ -891,7 +867,7 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
-$databases['default']['default'] = array (
+$databases['default']['default'] = array(
   'database' => 'u840124626_mhco2026',
   'username' => 'u840124626_mhco2026admin',
   'password' => '2k&Fx2yEA&RY',
@@ -903,3 +879,4 @@ $databases['default']['default'] = array (
   'autoload' => 'core/modules/mysql/src/Driver/Database/mysql/',
 );
 $settings['config_sync_directory'] = 'sites/default/files/sync';
+$config['system.logging']['error_level'] = 'verbose';

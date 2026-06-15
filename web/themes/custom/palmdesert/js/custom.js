@@ -12,6 +12,7 @@
 
       var $this = this;
       $this.MarqueeMatchHeight();
+      $this.ArticleTitleCapitalization();
       $this.ArticleSpaces();
       $this.ArticleSearch();
       $this.LinkMarquee();
@@ -35,6 +36,38 @@
       var slideshow_height = $('.view-display-id-marquee_slideshow').height();
       $('.views_slideshow_cycle_slide .views-row article').height(slideshow_height);
     },
+    ArticleTitleCapitalization: function () {
+      // Combine selectors into a single comma-separated string for jQuery
+      var selectors = '.views-field-title h5 a, h1.title span';
+
+      // Define the lowercase exceptions
+      var exceptions = ["to", "the", "and", "or", "for", "of", "in", "on", "with", "a", "an"];
+
+      // Run a single loop over every matching element found on the page
+      $(selectors).each(function () {
+        var currentTitle = $(this).text().toLowerCase();
+
+        // Split the title into an array of individual words
+        var words = currentTitle.split(' ');
+
+        var transformedWords = words.map(function (word, index) {
+          // Always capitalize the first word. 
+          // For other words, only capitalize if they are NOT in the exceptions list.
+          if (index === 0 || !exceptions.includes(word)) {
+            return word.charAt(0).toUpperCase() + word.slice(1);
+          }
+
+          // Otherwise, leave it lowercase
+          return word;
+        });
+
+        // Join the words back into a single string
+        var transformedTitle = transformedWords.join(' ');
+
+        $(this).text(transformedTitle);
+      });
+    },
+
     ArticleSpaces: function () {
       var isArticle = $("#page").hasClass("article");
       if (isArticle) {

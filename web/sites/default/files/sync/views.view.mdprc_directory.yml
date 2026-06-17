@@ -29,7 +29,7 @@ display:
           admin_label: 'Park ID'
           plugin_id: views_json_source_field
           label: 'Park ID'
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -71,57 +71,6 @@ display:
           hide_alter_empty: true
           key: parkId
           trusted_html: 0
-        value_8:
-          id: value_8
-          table: json
-          field: value
-          relationship: none
-          group_type: group
-          admin_label: 'Park Name'
-          plugin_id: views_json_source_field
-          label: 'Park Name'
-          exclude: false
-          alter:
-            alter_text: false
-            text: '{{ value_8 }}'
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          key: name
-          trusted_html: 0
         value:
           id: value
           table: json
@@ -133,7 +82,7 @@ display:
           entity_field: null
           plugin_id: views_json_source_field
           label: 'Park Number'
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -175,6 +124,57 @@ display:
           hide_alter_empty: true
           key: parkNumber
           trusted_html: 0
+        value_6:
+          id: value_6
+          table: json
+          field: value
+          relationship: none
+          group_type: group
+          admin_label: 'Type (Column 1)'
+          plugin_id: views_json_source_field
+          label: 'Park Info'
+          exclude: false
+          alter:
+            alter_text: true
+            text: "<strong>ID:</strong> {{ value_9 }}<br>\r\n<strong>Number:</strong> {{ value }}<br>\r\n<strong>Type:</strong> {{ value_6 }}"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          key: type
+          trusted_html: 0
         value_10:
           id: value_10
           table: json
@@ -184,7 +184,7 @@ display:
           admin_label: 'Park Address > Street'
           plugin_id: views_json_source_field
           label: 'Park Address Street'
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -235,7 +235,7 @@ display:
           admin_label: 'Park Address > City'
           plugin_id: views_json_source_field
           label: 'Park City'
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -286,7 +286,7 @@ display:
           admin_label: 'Park Address > ZIP'
           plugin_id: views_json_source_field
           label: 'Park Address ZIP Code'
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -336,11 +336,11 @@ display:
           group_type: group
           admin_label: County
           plugin_id: views_json_source_field
-          label: County
-          exclude: false
+          label: 'Park Details'
+          exclude: true
           alter:
             alter_text: false
-            text: ''
+            text: "<h3>{{ value_8 }}</h3><br>\r\n{{ value_10 }}<br>\r\n{{ value_1 }}, Oregon {{ value_7 }}<br>\r\nCounty: {{ value_2 }}"
             make_link: false
             path: ''
             absolute: false
@@ -379,16 +379,67 @@ display:
           hide_alter_empty: true
           key: countyName
           trusted_html: 0
-        value_6:
-          id: value_6
+        value_8:
+          id: value_8
           table: json
           field: value
           relationship: none
           group_type: group
-          admin_label: Type
+          admin_label: 'Park Name (Column 2)'
           plugin_id: views_json_source_field
-          label: Type
+          label: 'Park Details'
           exclude: false
+          alter:
+            alter_text: true
+            text: "<h4>{{ value_8 }}</h3><br>\r\n{{ value_10 }}<br>\r\n{{ value_1 }}, Oregon {{ value_7 }}<br>\r\nCounty: {{ value_2 }}"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          key: name
+          trusted_html: 0
+        value_12:
+          id: value_12
+          table: json
+          field: value
+          relationship: none
+          group_type: group
+          admin_label: 'Contact > Address > Street'
+          plugin_id: views_json_source_field
+          label: 'Contact Street Address'
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -428,7 +479,262 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          key: type
+          key: contact/address/street
+          trusted_html: 0
+        value_13:
+          id: value_13
+          table: json
+          field: value
+          relationship: none
+          group_type: group
+          admin_label: 'Contact > Address > City'
+          plugin_id: views_json_source_field
+          label: 'Contact City'
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          key: contact/address/city
+          trusted_html: 0
+        value_14:
+          id: value_14
+          table: json
+          field: value
+          relationship: none
+          group_type: group
+          admin_label: 'Contact > Address > State'
+          plugin_id: views_json_source_field
+          label: 'Contact State'
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          key: contact/address/state
+          trusted_html: 0
+        value_15:
+          id: value_15
+          table: json
+          field: value
+          relationship: none
+          group_type: group
+          admin_label: 'Contact > Address > ZIP'
+          plugin_id: views_json_source_field
+          label: 'Contact ZIP'
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          key: contact/address/zipCode
+          trusted_html: 0
+        value_16:
+          id: value_16
+          table: json
+          field: value
+          relationship: none
+          group_type: group
+          admin_label: 'Contact > Phone'
+          plugin_id: views_json_source_field
+          label: 'Contact Phone'
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          key: contact/phone
+          trusted_html: 0
+        value_11:
+          id: value_11
+          table: json
+          field: value
+          relationship: none
+          group_type: group
+          admin_label: 'Contact > Name (Column 3)'
+          plugin_id: views_json_source_field
+          label: 'Contact Info'
+          exclude: false
+          alter:
+            alter_text: true
+            text: "<h5>{{ value_11 }}</h5><br>\r\n{{ value_12 }}<br>\r\n{{ value_13 }}, {{ value_14 }} {{ value_15 }}<br>\r\n<a href=\"tel:{{ value_16 }}\">{{ value_16 }}</a>"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          key: contact/name
           trusted_html: 0
         value_4:
           id: value_4
@@ -583,312 +889,6 @@ display:
           hide_alter_empty: true
           key: vacancyPercentage
           trusted_html: 0
-        value_11:
-          id: value_11
-          table: json
-          field: value
-          relationship: none
-          group_type: group
-          admin_label: 'Contact > Name'
-          plugin_id: views_json_source_field
-          label: 'Contact Name'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          key: contact/name
-          trusted_html: 0
-        value_12:
-          id: value_12
-          table: json
-          field: value
-          relationship: none
-          group_type: group
-          admin_label: 'Contact > Address > Street'
-          plugin_id: views_json_source_field
-          label: 'Contact Street Address'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          key: contact/address/street
-          trusted_html: 0
-        value_13:
-          id: value_13
-          table: json
-          field: value
-          relationship: none
-          group_type: group
-          admin_label: 'Contact > Address > City'
-          plugin_id: views_json_source_field
-          label: 'Contact City'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          key: contact/address/city
-          trusted_html: 0
-        value_14:
-          id: value_14
-          table: json
-          field: value
-          relationship: none
-          group_type: group
-          admin_label: 'Contact > Address > State'
-          plugin_id: views_json_source_field
-          label: 'Contact State'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          key: contact/address/state
-          trusted_html: 0
-        value_15:
-          id: value_15
-          table: json
-          field: value
-          relationship: none
-          group_type: group
-          admin_label: 'Contact > Address > ZIP'
-          plugin_id: views_json_source_field
-          label: 'Contact ZIP'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          key: contact/address/zipCode
-          trusted_html: 0
-        value_16:
-          id: value_16
-          table: json
-          field: value
-          relationship: none
-          group_type: group
-          admin_label: 'Contact > Phone'
-          plugin_id: views_json_source_field
-          label: 'Contact Phone'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          key: contact/phone
-          trusted_html: 0
       pager:
         type: full
         options:
@@ -931,6 +931,48 @@ display:
       sorts: {  }
       arguments: {  }
       filters:
+        value_6:
+          id: value_6
+          table: json
+          field: value
+          relationship: none
+          group_type: group
+          admin_label: 'Keyword Search'
+          plugin_id: views_json_source_filter
+          operator: contains
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: value_6_op
+            label: 'Park Name, Park Address or Contact Name'
+            description: ''
+            use_operator: false
+            operator: value_6_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: searchIndex
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              content_editor: '0'
+              administrator: '0'
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          key: searchIndex
         value:
           id: value
           table: json
@@ -1057,6 +1099,48 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           key: parkAddress/zipCode
+        value_5:
+          id: value_5
+          table: json
+          field: value
+          relationship: none
+          group_type: group
+          admin_label: Type
+          plugin_id: views_json_source_filter
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: value_5_op
+            label: Type
+            description: ''
+            use_operator: false
+            operator: value_5_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: type
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              content_editor: '0'
+              administrator: '0'
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          key: type
         value_2:
           id: value_2
           table: json
@@ -1141,90 +1225,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           key: vacantSpacesRange
-        value_5:
-          id: value_5
-          table: json
-          field: value
-          relationship: none
-          group_type: group
-          admin_label: Type
-          plugin_id: views_json_source_filter
-          operator: '='
-          value: ''
-          group: 1
-          exposed: true
-          expose:
-            operator_id: value_5_op
-            label: Type
-            description: ''
-            use_operator: false
-            operator: value_5_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: type
-            required: false
-            remember: false
-            multiple: true
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              content_editor: '0'
-              administrator: '0'
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          key: type
-        value_6:
-          id: value_6
-          table: json
-          field: value
-          relationship: none
-          group_type: group
-          admin_label: 'Keyword Search'
-          plugin_id: views_json_source_filter
-          operator: contains
-          value: ''
-          group: 1
-          exposed: true
-          expose:
-            operator_id: value_6_op
-            label: 'Park Name, Park Address or Contact Name'
-            description: ''
-            use_operator: false
-            operator: value_6_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: searchIndex
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              content_editor: '0'
-              administrator: '0'
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          key: searchIndex
       filter_groups:
         operator: OR
         groups:
@@ -1236,17 +1236,47 @@ display:
           row_class: ''
           default_row_class: true
           columns:
+            value_9: value_9
             value: value
+            value_6: value_6
+            value_10: value_10
             value_1: value_1
+            value_7: value_7
             value_2: value_2
-            value_3: value_3
+            value_8: value_8
+            value_12: value_12
+            value_13: value_13
+            value_14: value_14
+            value_15: value_15
+            value_16: value_16
+            value_11: value_11
             value_4: value_4
             value_5: value_5
-            value_6: value_6
-            value_7: value_7
-          default: value_1
+            value_3: value_3
+          default: value_8
           info:
+            value_9:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             value:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            value_6:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            value_10:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -1260,6 +1290,13 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
+            value_7:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             value_2:
               sortable: true
               default_sort_order: asc
@@ -1267,8 +1304,50 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            value_3:
+            value_8:
               sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            value_12:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            value_13:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            value_14:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            value_15:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            value_16:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            value_11:
+              sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
@@ -1288,14 +1367,7 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            value_6:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            value_7:
+            value_3:
               sortable: true
               default_sort_order: asc
               align: ''

@@ -136,7 +136,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<strong>ID:</strong> {{ value_9 }}<br>\r\n<strong>Number:</strong> {{ value }}<br>\r\n<strong>Type:</strong> {{ value_6 }}"
+            text: "<strong>#{{ value }}</strong><br>\r\n<strong>ID:</strong> {{ value_9 }}<br>\r\n<strong>Type:</strong> {{ value_6 }}"
             make_link: false
             path: ''
             absolute: false
@@ -391,7 +391,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<h4>{{ value_8 }}</h3><br>\r\n{{ value_10 }}<br>\r\n{{ value_1 }}, Oregon {{ value_7 }}<br>\r\nCounty: {{ value_2 }}"
+            text: "<h4>{{ value_8|raw }}</h3><br>\r\n{{ value_10 }}<br>\r\n{{ value_1 }}, Oregon {{ value_7 }}<br>\r\nCounty: {{ value_2 }}"
             make_link: false
             path: ''
             absolute: false
@@ -697,7 +697,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<h5>{{ value_11 }}</h5><br>\r\n{{ value_12 }}<br>\r\n{{ value_13 }}, {{ value_14 }} {{ value_15 }}<br>\r\n<a href=\"tel:{{ value_16 }}\">{{ value_16 }}</a>"
+            text: "<h5>{{ value_11|raw }}</h5><br>\r\n{{ value_12 }}<br>\r\n{{ value_13 }}, {{ value_14 }} {{ value_15 }}<br>\r\n<a href=\"tel:{{ value_16 }}\">{{ value_16 }}</a>"
             make_link: false
             path: ''
             absolute: false
@@ -928,7 +928,21 @@ display:
         type: tag
         options: {  }
       empty: {  }
-      sorts: {  }
+      sorts:
+        value:
+          id: value
+          table: json
+          field: value
+          relationship: none
+          group_type: group
+          admin_label: 'Park Name'
+          plugin_id: views_json_source_sort
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+          key: name
       arguments: {  }
       filters:
         value_6:

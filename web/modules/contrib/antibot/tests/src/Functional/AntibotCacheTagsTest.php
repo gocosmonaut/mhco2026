@@ -30,7 +30,7 @@ class AntibotCacheTagsTest extends PageCacheTagsTestBase {
   public function testFormCacheInvalidation() {
     $antibot_settings = $this->config('antibot.settings');
 
-    // Unprotect all forms.
+    // Remove protection from all forms.
     $antibot_settings->set('form_ids', [])->save();
 
     // Warm the page cache.

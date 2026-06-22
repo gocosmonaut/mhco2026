@@ -43,7 +43,7 @@ class AntibotJavaScriptTest extends WebDriverTestBase {
     // a bot even having JavaScript capabilities and no mouse or keyboard were
     // performed.
     $this->assertSession()->waitForText('Submission failed');
-    $this->assertSession()->pageTextContains('You have reached this page because you submitted a form that required JavaScript to be enabled on your browser. This protection is in place to attempt to prevent automated submissions made on forms. Please return to the page that you came from and enable JavaScript on your browser before attempting to submit the form again.');
+    $this->assertSession()->pageTextContains('The Antibot form protection system has detected bot-like behavior and blocked your form submission. This protection is in place to attempt to prevent automated submissions made on forms by bots. Please return to the page that you came from and try to submit again. Also, make sure you have JavaScript enabled on your browser before attempting to submit the form again.');
 
     // Mimic a human behavior.
     $this->drupalGet('/user/password');

@@ -6,11 +6,11 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Implement Class AntibotSettings.
+ * Implement Class Antibot Settings Form.
  *
  * @package Drupal\antibot\Form
  */
-class AntibotSettings extends ConfigFormBase {
+class AntibotSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
@@ -57,9 +57,9 @@ class AntibotSettings extends ConfigFormBase {
       '#default_value' => $config->get('show_form_ids'),
       '#description' => $this->t('When enabled, the form IDs of all forms on every page will be displayed to any user with permission to access these settings. Also displayed will be whether or not Antibot is enabled for each form. This should only be turned on temporarily in order to easily determine the form IDs to use.'),
     ];
+
     return parent::buildForm($form, $form_state);
   }
-
 
   /**
    * {@inheritdoc}

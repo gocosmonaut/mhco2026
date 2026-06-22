@@ -35,11 +35,11 @@ class AntibotNoJavascriptTest extends BrowserTestBase {
       'name' => $this->randomMachineName(),
     ], 'Submit');
 
-    // Check the we reached the antibot closed road when the form is posted by a
-    // bot even having JavaScript capabilities..
+    // Check if we reached the antibot closed road when the form is posted by a
+    // bot even having JavaScript capabilities.
     $this->assertSession()->addressEquals('/antibot');
     $this->assertSession()->pageTextContains('Submission failed');
-    $this->assertSession()->pageTextContains('You have reached this page because you submitted a form that required JavaScript to be enabled on your browser. This protection is in place to attempt to prevent automated submissions made on forms. Please return to the page that you came from and enable JavaScript on your browser before attempting to submit the form again.');
+    $this->assertSession()->pageTextContains('The Antibot form protection system has detected bot-like behavior and blocked your form submission. This protection is in place to attempt to prevent automated submissions made on forms by bots. Please return to the page that you came from and try to submit again. Also, make sure you have JavaScript enabled on your browser before attempting to submit the form again.');
   }
 
 }

@@ -6,10 +6,11 @@
  */
 
 use Drupal\antibot\AntibotFormAlter;
-use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\views\ViewExecutable;
 
@@ -68,14 +69,18 @@ function antibot_form_alter(&$form, FormStateInterface $form_state, $form_id) {
     $included = $pathMatcher->matchPath($form_id, implode("\n", $form_ids)) || $pathMatcher->matchPath($form['#id'], implode("\n", $form_ids));
     $excluded = $pathMatcher->matchPath($form_id, implode("\n", $excluded_form_ids)) || $pathMatcher->matchPath($form['#id'], implode("\n", $excluded_form_ids));
 
-    if ($included && !$excluded) {
+    $protection = $included && !$excluded;
+
+    // Other modules can change the protection of this form.
+    \Drupal::moduleHandler()->alter('antibot_form_status', $form_id, $protection);
+
+    if ($protection) {
       // Enable protection for this form if user doesn't have skip permission.
       if (!$skip_antibot) {
         antibot_protect_form($form);
+        // Track that protection was added.
+        $protection = TRUE;
       }
-
-      // Track that protection was added.
-      $protection = TRUE;
     }
   }
 
@@ -97,6 +102,34 @@ function antibot_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $cache_metadata = CacheableMetadata::createFromRenderArray($form);
   $cache_metadata->addCacheableDependency($config);
   $cache_metadata->applyTo($form);
+
+  if ($form_id == "webform_settings_form") {
+    $antibot_config_settings = \Drupal::getContainer()->get('config.factory')->getEditable('antibot.settings');
+    $form_ids = $antibot_config_settings->get('form_ids');
+    $webform_id = "webform_submission_" . $form_state->getFormObject()->getEntity()->id() . "_add_form";
+
+    // Issue # 3460684: If the form is protected but not added to the list
+    // add it now.
+    if (isset($form['third_party_settings']['antibot']['antibot']['#default_value']) && $form['third_party_settings']['antibot']['antibot']['#default_value']) {
+      if (!in_array($webform_id, $form_ids)) {
+        $form_ids[] = $webform_id;
+        $antibot_config_settings->set('form_ids', $form_ids);
+        $antibot_config_settings->save();
+      }
+    }
+    else {
+      if (in_array($webform_id, $form_ids)) {
+        foreach ($form_ids as $i => $form_id) {
+          if ($form_ids[$i] == $webform_id) {
+            unset($form_ids[$i]);
+          }
+        }
+
+        $antibot_config_settings->set('form_ids', $form_ids);
+        $antibot_config_settings->save();
+      }
+    }
+  }
 }
 
 /**
@@ -106,7 +139,7 @@ function antibot_page_attachments(array &$page) {
   // Adds noscript style to HEAD.
   $noscript_style = [
     '#tag' => 'style',
-    '#value' => 'form.antibot * :not(.antibot-message) { display: none !important; }',
+    '#value' => Markup::create("form.antibot > * { display: none !important; } form.antibot noscript { display: block !important; }"),
     '#noscript' => TRUE,
   ];
   $page['#attached']['html_head'][] = [$noscript_style, 'antibot_style'];
@@ -182,6 +215,7 @@ function antibot_form_validation($form, FormStateInterface $form_state) {
 
   // Check if the key is missing or is not a match.
   if (!$submitted_key || ($submitted_key != $expected_key)) {
+    \Drupal::moduleHandler()->invokeAll('antibot_reject', [$form['#form_id'], \Drupal::currentUser()->id()]);
     $form_state->setErrorByName('', t('Submission failed. Please reload the page, ensure JavaScript is enabled and try again.'));
   }
 }
@@ -201,5 +235,10 @@ function antibot_views_pre_render(ViewExecutable $view) {
  * Helper function to generate a key for a given form.
  */
 function _antibot_generate_key($form_id): string {
-  return Crypt::hmacBase64($form_id, Settings::getHashSalt());
+  $key_encrypted = Crypt::hmacBase64($form_id, Settings::getHashSalt());
+
+  // Alter encrypted key.
+  \Drupal::moduleHandler()->alter('antibot_generate_key', $form_id, $key_encrypted);
+
+  return $key_encrypted;
 }

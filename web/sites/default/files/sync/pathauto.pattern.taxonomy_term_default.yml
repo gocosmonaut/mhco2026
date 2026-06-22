@@ -2,18 +2,30 @@ uuid: 1dacb67f-75bd-4054-88a7-05a4573dbbbd
 langcode: en
 status: true
 dependencies:
+  config:
+    - taxonomy.vocabulary.associate_member_industries
+    - taxonomy.vocabulary.authors
+    - taxonomy.vocabulary.cities
+    - taxonomy.vocabulary.column_icons
+    - taxonomy.vocabulary.column_topics
+    - taxonomy.vocabulary.columnist_company_names
+    - taxonomy.vocabulary.columnist_job_titles
+    - taxonomy.vocabulary.counties_oregon
+    - taxonomy.vocabulary.geographic_tags
+    - taxonomy.vocabulary.slideshow_images
+    - taxonomy.vocabulary.states
+    - taxonomy.vocabulary.tags
+    - taxonomy.vocabulary.topics
   module:
-    - ctools
     - taxonomy
 id: taxonomy_term_default
 label: 'Taxonomy Term Default'
 type: 'canonical_entities:taxonomy_term'
-pattern: '[term:vocabulary]/[term:name]'
+pattern: '/[term:vocabulary]/[term:name]'
 selection_criteria:
   597d8a43-7d90-49c8-ba31-68d2559419b7:
     id: 'entity_bundle:taxonomy_term'
     negate: false
-    uuid: 597d8a43-7d90-49c8-ba31-68d2559419b7
     context_mapping:
       taxonomy_term: taxonomy_term
     bundles:

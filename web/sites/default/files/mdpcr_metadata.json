@@ -474,7 +474,8 @@
         "121+"
     ],
     "vacantSpacesRanges": [
-        "0",
+        "No vacancy",
+        "Has vacancy",
         "1-3",
         "4-10",
         "11+"

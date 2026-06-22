@@ -1,0 +1,56 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_cron().
+ */
+function mdpcr_sync_cron()
+{
+  // Directs the work to your service
+  \Drupal::service('mdpcr_sync.updater')->runSync();
+}
+
+/**
+ * Implements hook_form_views_exposed_form_alter().
+ */
+function mdpcr_sync_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id)
+{
+  $view = $form_state->get('view');
+  if ($view && $view->id() === 'mdprc_directory') {
+
+    $metadata_path = 'public://mdpcr_metadata.json';
+    if (!file_exists($metadata_path)) return;
+
+    $metadata = json_decode(file_get_contents($metadata_path), TRUE);
+    // Ensure $metadata is an array before proceeding
+    if (!is_array($metadata)) return;
+
+    $filter_map = [
+      'park_city'          => 'cities',
+      'county_name'        => 'counties',
+      'type'               => 'types',
+      'totalSpacesRange'   => 'totalSpacesRanges',
+      'vacantSpacesRange'  => 'vacantSpacesRanges',
+      'zipCode'             => 'zips',
+    ];
+
+    foreach ($filter_map as $filter_identifier => $meta_key) {
+      // Added: Only proceed if the meta_key exists and is an array
+      if (isset($form[$filter_identifier]) && isset($metadata[$meta_key]) && is_array($metadata[$meta_key])) {
+
+        $options = ['' => '- Any -'];
+        foreach ($metadata[$meta_key] as $value) {
+          // Added: Only add the value if it's not null/empty
+          if (!empty($value)) {
+            $options[$value] = $value;
+          }
+        }
+
+        $form[$filter_identifier]['#type'] = 'select';
+        $form[$filter_identifier]['#options'] = $options;
+        $form[$filter_identifier]['#size'] = NULL;
+      }
+    }
+  }
+}

@@ -391,7 +391,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<h4>{{ value_8|raw }}</h3><br>\r\n{{ value_10 }}<br>\r\n{{ value_1 }}, Oregon {{ value_7 }}<br>\r\nCounty: {{ value_2 }}"
+            text: "<h5>{{ value_8|raw }}</h5><br>\r\n{{ value_10 }}<br>\r\n{{ value_1 }}, Oregon {{ value_7 }}<br>\r\nCounty: {{ value_2 }}"
             make_link: false
             path: ''
             absolute: false
@@ -697,7 +697,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<h5>{{ value_11|raw }}</h5><br>\r\n{{ value_12 }}<br>\r\n{{ value_13 }}, {{ value_14 }} {{ value_15 }}<br>\r\n<a href=\"tel:{{ value_16 }}\">{{ value_16 }}</a>"
+            text: "<b>{{ value_11|raw }}</b><br>\r\n{{ value_12 }}<br>\r\n{{ value_13 }}, {{ value_14 }} {{ value_15 }}<br>\r\n<a href=\"tel:{{ value_16 }}\">{{ value_16 }}</a>"
             make_link: false
             path: ''
             absolute: false
@@ -1205,7 +1205,7 @@ display:
           group_type: group
           admin_label: 'Vacant Spaces'
           plugin_id: views_json_source_filter
-          operator: '='
+          operator: contains
           value: ''
           group: 1
           exposed: true

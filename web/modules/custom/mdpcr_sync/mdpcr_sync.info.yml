@@ -1,0 +1,7 @@
+name: 'MDPCR Registry Data Sync'
+type: module
+description: 'Periodically downloads the full MDPCR registry via cron and saves it locally for Views consumption.'
+package: Custom
+core_version_requirement: ^9 || ^10 || ^11
+dependencies:
+  - drupal:file

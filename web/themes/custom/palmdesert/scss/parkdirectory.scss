@@ -1,54 +1,187 @@
-#park-directory-form {
-    thead {
-        display: none;
+// Define your breakpoints
+$bp-tablet: 768px;
+$bp-desktop: 992px;
+
+.view-mdprc-directory { 
+
+  // =================================================================
+  // 1. EXPOSED FILTERS (Fluid / Non-Grid Spacing)
+  // =================================================================
+  .views-exposed-form form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px; 
+    align-items: flex-end; 
+    margin-bottom: 2rem;
+    width: 100%;
+
+    // --- DESKTOP/TABLET: Custom Two-Row Split ---
+    @media (min-width: ($bp-tablet + 1px)) {
+
+
+      
+      // ==========================================
+      // ROW 1: Text (46%), City (18%), County (18%), ZIP (18%)
+      // ==========================================
+      
+      // 1st Item (Text Filter): Takes up nearly 50%
+      .js-form-item:nth-child(1) {
+        flex: 0 0 calc(46% - 11.25px); 
+      }
+
+      // 2nd, 3rd, and 4th Items (City, County, ZIP)
+      .js-form-item:nth-child(2),
+      .js-form-item:nth-child(3),
+      .js-form-item:nth-child(4) {
+        flex: 0 0 calc(18% - 11.25px); 
+        padding: 0 1rem 1rem 0;
+      }
+
+      // ==========================================
+      // ROW 2: Type, Total Spaces, Vacant Spaces, Actions
+      // ==========================================
+      
+      // 4 equal columns to neatly fill the bottom row
+      .js-form-item:nth-child(n+5),
+      .form-actions {
+        flex: 0 0 calc(25% - 11.25px); 
+      }
     }
 
-    #DirectoryTable {
+    // --- MOBILE: Full width stacking ---
+    @media (max-width: $bp-tablet) {
+      .js-form-item, 
+      .form-actions {
+        flex: 0 0 100%; 
+      }
+      
+      .form-actions {
+        margin-top: 10px; 
+      }
+    }
+  }
+
+  // =================================================================
+  // 2. DIRECTORY TABLE (Flexbox Override)
+  // =================================================================
+  table.views-table {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-collapse: collapse;
+
+    thead, 
+    tbody {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    tr {
+      display: flex;
+      flex-wrap: wrap; 
+      width: 100%;
+      border-bottom: 1px solid #e0e0e0; 
+    }
+
+    th, 
+    td {
+      padding: 15px 10px;
+      box-sizing: border-box;
+      word-break: break-word; 
+    }
+
+    // --- DESKTOP: 12-Column Grid Proportion (2-4-3-1-1-1) ---
+    @media (min-width: $bp-desktop) {
+      tr {
+        flex-wrap: nowrap; 
+      }
+      
+      // Column 1 (Park Info): 2/12 width
+      th:nth-child(1), 
+      td:nth-child(1) {
+        flex: 0 0 16.6667%;
+        width: 16.6667%;
+      }
+
+      // Column 2 (Park Details): 4/12 width
+      th:nth-child(2), 
+      td:nth-child(2) {
+        flex: 0 0 33.3333%;
+        width: 33.3333%;
+      }
+
+      // Column 3 (Contact Info): 3/12 width
+      th:nth-child(3), 
+      td:nth-child(3) {
+        flex: 0 0 25%;
+        width: 25%;
+      }
+
+      // Columns 4, 5, & 6 (Metrics): 1/12 width each
+      th:nth-child(n+4), 
+      td:nth-child(n+4) {
+        flex: 0 0 8.3333%;
+        width: 8.3333%;
+      }
+    }
+
+    // --- TABLET/MOBILE: Targeted Column Stacking ---
+    @media (max-width: ($bp-desktop - 1px)) {
+      
+      thead {
+        display: none; 
+      }
+
+      // Columns 1, 2, and 3: Full-width rows
+      td:nth-child(-n+3) {
+        flex: 0 0 100%;
         width: 100%;
-        background: none;
-
-        tr {
-            &:nth-child(2) {
-
-                td {
-                    &:nth-child(2) {
-                        display: none;
-                    }
-                }
-            }
-
-            &:nth-child(1),
-            &:nth-child(3) {
-                display: none;
-            }
-
-            &:nth-last-child(2) {
-
-                td {
-                    &:last-child {
-                        display: none;
-                    }
-                }
-            }
-            &:last-child {
-                text-align: center;
-                td {
-                  font-size: .875rem;
-                }
-            }
-
+        border-bottom: none; 
+        
+        &::before {
+          display: block;
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          color: #777;
+          margin-bottom: 4px;
         }
+      }
+      
+      td:nth-child(1)::before { content: "Park Info"; }
+      td:nth-child(2)::before { content: "Park Details"; }
+      td:nth-child(3)::before { content: "Contact Info"; }
 
-        td {
-            font-family: $font-family-regular;
-            font-size: 1rem;
-            padding: .5rem 0;
+      // Columns 4, 5, and 6: 1/3 Metrics Block
+      td:nth-child(n+4):nth-child(-n+6) {
+        flex: 0 0 33.3333%;
+        width: 33.3333%;
+        text-align: center; 
+        background-color: #f9f9f9; 
+        padding-top: 12px;
+        padding-bottom: 15px;
 
-            &.topLink.style1 {
-                b {
-                    font-size: 1.125rem;
-                }
-            }
+        &::before {
+          display: block;
+          font-size: 0.7rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          color: #555;
+          margin-bottom: 8px; 
         }
+      }
+
+      td:nth-child(4)::before { content: "Total Spaces"; }
+      td:nth-child(5)::before { content: "Vacant"; }
+      td:nth-child(6)::before { content: "Vacancy %"; }
+      
+      tr {
+        margin-bottom: 1.5rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        overflow: hidden; 
+      }
     }
+  }
 }

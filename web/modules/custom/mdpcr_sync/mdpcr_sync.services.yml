@@ -1,0 +1,4 @@
+services:
+  mdpcr_sync.updater:
+    class: Drupal\mdpcr_sync\MdpcrDataSync
+    arguments: ['@http_client', '@file.repository', '@logger.factory']

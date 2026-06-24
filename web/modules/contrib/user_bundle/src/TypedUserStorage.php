@@ -27,10 +27,17 @@ class TypedUserStorage extends UserStorage implements TypedUserStorageInterface 
    * {@inheritdoc}
    */
   public function updateType($old_type, $new_type) {
-    return $this->database->update('users')
-      ->fields(['type' => $new_type])
-      ->condition('type', $old_type)
-      ->execute();
+    // The 'type' field is stored in both the base table and the data table, so
+    // update each of them, otherwise the account stays on its old type.
+    $count = 0;
+    foreach ($this->getTableMapping()->getAllFieldTableNames('type') as $table) {
+      $count = $this->database->update($table)
+        ->fields(['type' => $new_type])
+        ->condition('type', $old_type)
+        ->execute();
+    }
+    $this->resetCache();
+    return $count;
   }
 
 }

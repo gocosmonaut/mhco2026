@@ -7,6 +7,12 @@ user_bundle.settings:
     registration_user_type:
       type: string
       label: 'Visitor registration account type'
+    self_registration_types:
+      type: sequence
+      label: 'Account types open to registration'
+      sequence:
+        type: string
+        label: 'Account type'
 
 user_bundle.user_type.*:
   type: config_entity

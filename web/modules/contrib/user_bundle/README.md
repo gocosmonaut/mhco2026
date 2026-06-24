@@ -1,8 +1,7 @@
-User bundle
+# User bundle
 
+## Description
 
-Description
------------
 This module allows for the creation of different types of users, each with their
 own independent fields, form, and display settings.
 
@@ -19,20 +18,29 @@ refers to them as "Account types".  If you're used to working with Content
 types, Block types, Comment types, Vocabularies, or any other entity
 sub-types, you'll be right at home working with Account types.
 
+## Features
 
-Features
---------
-* Define as many Account types as you wish
+- Define as many Account types as you wish
   (Administration > Configuration > People > Account types)
-* Independently set up fields, form, and display config for each account type
-* Indicate which Account type should be used for the new user registration form
+- Independently set up fields, form, and display config for each account type
+- Indicate which Account type should be used for the new user registration form
   (Administration > Configuration > People > Account settings)
-* View, sort, and filter users by Account type on the site's "People" view
+- View, sort, and filter users by Account type on the site's "People" view
   (Administration > People)
 
+## Installation
 
-Comparison with Profile module
-------------------------------
+Install the module as you would any other.  When User bundle is installed on a
+site that already has user accounts, every existing account is assigned the
+default "user" account type.  Existing Views and other configuration that
+reference the user entity keep working.
+
+When the module is uninstalled the account types are removed and every account
+returns to the default "user" type.  Fields that were added to account types
+are moved back onto the default "user" account, so their data is preserved.
+
+## Comparison with Profile module
+
 Profile creates a new Profile entity type, and allows for the creation of
 Profile sub-types called "Profile types".  Each Profile type can have its own
 fields, form, display, status, and role assignment settings.  Users who are
@@ -63,21 +71,12 @@ separate module, Bundle switcher, already exists in this space.
 
 Let the requirements of your particular project guide your decision.
 
+## Bugs, Features, & Patches
 
-Bugs, Features, & Patches
--------------------------
 If you wish to report bugs, add feature requests, or submit patches, you can do
-so on the project page on Drupal.org.
-https://www.drupal.org/project/user_bundle
+so on the [project page on Drupal.org](https://www.drupal.org/project/user_bundle).
 
+## Credits
 
-Authors
--------
-
-8.x-1.x Author
---------------
-Christopher Caldwell (https://www.drupal.org/u/chrisolof) <chrisolof@gmail.com>
-
-7.x-1.x Author
---------------
-Andrei Mateescu (https://www.drupal.org/u/amateescu)
+- [Andrei Mateescu](https://www.drupal.org/u/amateescu) - original author and maintainer
+- [Christopher Caldwell](https://www.drupal.org/u/chrisolof) <chrisolof@gmail.com> - Drupal 8 port

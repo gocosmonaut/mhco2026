@@ -3,3 +3,9 @@ services:
     class: Drupal\user_bundle\Routing\RouteSubscriber
     tags:
       - { name: event_subscriber }
+
+  Drupal\user_bundle\Hook\UserBundleHooks:
+    autowire: true
+
+  Drupal\user_bundle\Hook\UserBundleTokensHooks:
+    autowire: true

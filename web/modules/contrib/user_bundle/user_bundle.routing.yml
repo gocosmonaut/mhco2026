@@ -1,3 +1,17 @@
+user.register.type:
+  path: '/user/register/{user_type}'
+  defaults:
+    _entity_form: 'user.register'
+    _title_callback: '\Drupal\user_bundle\Controller\TypedUserController::registerPageTitle'
+  requirements:
+    _access_user_register: 'TRUE'
+    _custom_access: '\Drupal\user_bundle\Controller\TypedUserController::registerAccess'
+  options:
+    parameters:
+      user_type:
+        type: 'entity:user_type'
+        with_config_overrides: TRUE
+
 user.admin_create_form:
   path: '/admin/people/create/{user_type}'
   defaults:

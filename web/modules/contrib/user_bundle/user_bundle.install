@@ -5,6 +5,8 @@
  * Install, update, and uninstall functions for the user_bundle module.
  */
 
+use Drupal\Component\Utility\DeprecationHelper;
+use Drupal\field\Entity\FieldConfig;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -64,7 +66,7 @@ function user_bundle_install() {
     $view->set('display.default.display_options.filters', $config);
 
     // Save our changes.
-    $view->save(TRUE);
+    DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.4.0', fn() => $view->save(), fn() => $view->save(TRUE));
   }
 }
 
@@ -87,14 +89,102 @@ function user_bundle_uninstall() {
         $view->set($property, $config);
       }
     }
-    $view->save(TRUE);
+    DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.4.0', fn() => $view->save(), fn() => $view->save(TRUE));
   }
 
-  // Delete all configurable fields first, otherwise they are being deleted
-  // in the wrong order.
-  $field_storages = \Drupal::entityTypeManager()->getStorage('field_storage_config')->loadByProperties(['entity_type' => 'user']);
-  foreach ($field_storages as $field_storage) {
-    $field_storage->delete();
+  $config_factory = \Drupal::configFactory();
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $field_configs = [];
+
+  // Migrate everything attached to the additional account types back onto the
+  // default "user" bundle, so no field data is lost when the module goes away.
+  // Uninstalling the module deletes the user_type bundles, and deleting a
+  // bundle deletes the fields attached to it and their data on the next cron
+  // run (see hook_entity_bundle_delete()). Without this migration that would
+  // throw away data, including data on fields shared with the standard user
+  // account such as user_picture. This only applies when the field module is
+  // installed; without it the user entity has no configurable fields.
+  if ($entity_type_manager->hasDefinition('field_config')) {
+    $table_mapping = $entity_type_manager->getStorage('user')->getTableMapping();
+    $database = \Drupal::database();
+    $field_configs = $entity_type_manager->getStorage('field_config')->loadByProperties(['entity_type' => 'user']);
+
+    $migrated = [];
+    foreach ($field_configs as $field_config) {
+      if ($field_config->getTargetBundle() === 'user') {
+        continue;
+      }
+      $field_storage = $field_config->getFieldStorageDefinition();
+      $field_name = $field_storage->getName();
+
+      // Move the stored field data onto the "user" bundle, once per field.
+      if (!isset($migrated[$field_name])) {
+        $migrated[$field_name] = TRUE;
+        $tables = [$table_mapping->getDedicatedDataTableName($field_storage)];
+        if ($field_storage->isRevisionable()) {
+          $tables[] = $table_mapping->getDedicatedRevisionTableName($field_storage);
+        }
+        foreach ($tables as $table) {
+          if ($database->schema()->tableExists($table)) {
+            $database->update($table)
+              ->fields(['bundle' => 'user'])
+              ->condition('bundle', 'user', '<>')
+              ->execute();
+          }
+        }
+      }
+
+      // Keep the field on the "user" bundle so it stays usable.
+      if (!FieldConfig::loadByName('user', 'user', $field_name)) {
+        $new_field_config = $field_config->createDuplicate();
+        $new_field_config->set('bundle', 'user');
+        $new_field_config->save();
+      }
+    }
+  }
+
+  // Delete the user_type config entities directly instead of through the entity
+  // API, so removing them doesn't trigger the bundle field cleanup that would
+  // undo the migration above. The field instances left on the additional
+  // bundles are then deleted on their own; their data has already moved to the
+  // "user" bundle, so nothing of value is purged.
+  foreach ($config_factory->listAll('user_bundle.user_type.') as $config_name) {
+    $config_factory->getEditable($config_name)->delete();
+  }
+  foreach ($field_configs as $field_config) {
+    if ($field_config->getTargetBundle() !== 'user') {
+      $field_config->delete();
+    }
+  }
+
+  // The field instances on the "user" bundle that were created or migrated
+  // while the module was installed carry a dependency on the user_type bundle
+  // config that has just been removed. Drop those dependencies so they don't
+  // dangle. Editing the stored config directly avoids re-adding the dependency,
+  // which an entity save would do while the module's hooks are still active.
+  foreach ($config_factory->listAll('field.field.user.user.') as $config_name) {
+    $config = $config_factory->getEditable($config_name);
+    $dependencies = $config->get('dependencies.config') ?? [];
+    $filtered = array_values(array_filter($dependencies, fn($name) => !str_starts_with($name, 'user_bundle.user_type.')));
+    if ($filtered !== $dependencies) {
+      $config->set('dependencies.config', $filtered)->save();
+    }
+  }
+
+  // Remove the entity_bundle:user condition from block visibility settings.
+  // Core derives that condition only while the user entity is bundleable, so it
+  // disappears once this module is uninstalled. Core's config cleanup leaves it
+  // behind because the condition is provided by the user module, not
+  // user_bundle, and a leftover condition throws a PluginNotFoundException when
+  // block visibility is evaluated. Editing the stored config directly avoids
+  // instantiating the soon-to-vanish condition plugin.
+  foreach ($config_factory->listAll('block.block.') as $config_name) {
+    $config = $config_factory->getEditable($config_name);
+    $visibility = $config->get('visibility');
+    if (isset($visibility['entity_bundle:user'])) {
+      unset($visibility['entity_bundle:user']);
+      $config->set('visibility', $visibility)->save();
+    }
   }
 
   // Remove the 'type' field from the User entity type.

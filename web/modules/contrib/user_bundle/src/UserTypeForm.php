@@ -114,6 +114,8 @@ class UserTypeForm extends BundleEntityFormBase {
     }
 
     $form_state->setRedirectUrl($type->toUrl('collection'));
+
+    return $status;
   }
 
 }

@@ -880,3 +880,7 @@ $databases['default']['default'] = array(
 );
 $settings['config_sync_directory'] = 'sites/default/files/sync';
 $config['system.logging']['error_level'] = 'verbose';
+
+$settings['trusted_host_patterns'] = [
+  '^lightseagreen\-sparrow\-302032\.hostingersite\.com$',
+];

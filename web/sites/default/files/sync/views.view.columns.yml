@@ -3083,7 +3083,7 @@ display:
         type: some
         options:
           offset: 0
-          items_per_page: 1
+          items_per_page: 5
       access:
         type: none
         options: {  }

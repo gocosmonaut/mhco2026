@@ -129,7 +129,7 @@
       var isTermPage = $('');
       if (isArticle) {
         var type = $('.field--name-field-column-category a').html();
-        $('.field--name-field-column-category').addClass(type);
+     //   $('.field--name-field-column-category').addClass(type);
       }
     },
 
@@ -164,7 +164,7 @@
     FormClick: function () {
       // Tell users to wait for download
       $('#F0 .form-button').html("-");
-      $(".form-download-div").off('click').on('click', function () {
+      $(".most-downloaded-forms, .form-download-div").off('click').on('click', function () {
         var formName = $(this).attr('title');
         var thisFormID = $(this).attr("id");
         var waitMessage = "Your form is being generated. Please wait several seconds for your form to load in a browser tab."

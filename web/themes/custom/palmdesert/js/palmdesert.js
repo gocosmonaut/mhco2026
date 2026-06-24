@@ -111,7 +111,7 @@
     // Send information to custom form filler module
     // $('a.form-button').click( function() { // node
     // below is views - other changes would have to be made.
-    $(".form-download-div").click(function () {
+    $(".most-downloaded-forms .form-button.badge, .form-download-div").click(function () {
       var profileName = $(".profile-name").text().trim();
       var profilePark = $(".profile-park").text().trim();
       var profileAddress = $(".profile-address").text().trim();
@@ -126,8 +126,10 @@
       var formDL = $(this).attr("dl");
       var formTitle = $(this).attr("title");
       var formNumber = $(this).attr("id").slice(1);
+                  console.log(formFID + " " + formNID + " " + formDL + " " + formTitle + " " + formNumber);
       // var formnumber = ( $(this).attr('href') ); // use ID but not a pure integer, so F1, F82, etc
       // e.preventDefault();
+
 
       $.ajax({
         method: "POST",

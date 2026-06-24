@@ -9,7 +9,7 @@ dependencies:
     - node.type.article
     - taxonomy.vocabulary.column_topics
     - taxonomy.vocabulary.community_update_topics
-    - user.role.administrator
+    - user.role.anonymous
     - user.role.authenticated
   module:
     - datetime
@@ -243,8 +243,8 @@ display:
         type: role
         options:
           role:
+            anonymous: anonymous
             authenticated: authenticated
-            administrator: administrator
       cache:
         type: tag
         options: {  }

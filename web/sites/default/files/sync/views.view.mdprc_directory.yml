@@ -18,7 +18,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: 'MDPRC Directory'
+      title: 'OHCS Park Directory'
       fields:
         value_9:
           id: value_9
@@ -1435,7 +1435,7 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: mdprc-directory
+      path: ohcs-park-directory
     cache_metadata:
       max-age: -1
       contexts:

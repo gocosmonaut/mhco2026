@@ -1424,7 +1424,7 @@ display:
         type: html_list
         options:
           grouping: {  }
-          row_class: form-download-div
+          row_class: most-downloaded-forms
           default_row_class: true
           type: ul
           wrapper_class: item-list

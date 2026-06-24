@@ -672,6 +672,20 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: "We're sorry. We couldn't find any members in this industry. Please try a different one."
+            format: full_html
+          tokenize: false
       sorts:
         title:
           id: title
@@ -715,6 +729,54 @@ display:
           expose:
             operator_limit_selection: false
             operator_list: {  }
+        field_associate_member_industry_target_id:
+          id: field_associate_member_industry_target_id
+          table: node__field_associate_member_industry
+          field: field_associate_member_industry_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_associate_member_industry_target_id_op
+            label: 'Filter by industry'
+            description: ''
+            use_operator: false
+            operator: field_associate_member_industry_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_associate_member_industry_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              content_editor: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: associate_member_industries
+          type: select
+          hierarchy: true
+          limit: true
+          error_message: true
       filter_groups:
         operator: AND
         groups:
@@ -738,12 +800,15 @@ display:
           separator: ''
           hide_empty: false
       defaults:
+        empty: false
+        use_ajax: false
         style: false
         row: false
         fields: false
         sorts: false
         filters: false
         filter_groups: false
+      use_ajax: true
       display_extenders: {  }
       path: membership/associate-members
     cache_metadata:
@@ -751,6 +816,7 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions

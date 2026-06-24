@@ -1,0 +1,48 @@
+# ==============================================================================
+# Hostinger public_html/.htaccess for Drupal 10 Composer Subdirectory (/web)
+# ==============================================================================
+<IfModule LiteSpeed>
+  RewriteEngine On
+  RewriteCond %{HTTP_COOKIE} SESS [NC,OR]
+  RewriteCond %{HTTP_COOKIE} SSESS [NC]
+  RewriteRule .* - [E=Cache-Control:no-cache]
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  
+php_flag display_errors on
+php_value display_startup_errors 1
+php_value error_reporting E_ALL
+
+  # ----------------------------------------------------------------------------
+  # 1. Force HTTPS
+  # ----------------------------------------------------------------------------
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # ----------------------------------------------------------------------------
+  # 2. Strip index.php from URLs (SEO & Clean Routing)
+  # ----------------------------------------------------------------------------
+  # This aggressively strips index.php from the browser request 
+  # to prevent the "sticky" URL loop.
+  RewriteCond %{THE_REQUEST} \s/index\.php [NC]
+  RewriteRule ^index\.php(?:/(.*))?$ /$1 [R=301,L]
+
+  # ----------------------------------------------------------------------------
+  # 3. Route Traffic to the /web Subdirectory
+  # ----------------------------------------------------------------------------
+
+  # CURRENT DOMAIN: lightseagreen-sparrow-302032.hostingersite.com
+  RewriteCond %{HTTP_HOST} ^(www\.)?lightseagreen-sparrow-302032\.hostingersite\.com$ [NC]
+  RewriteCond %{REQUEST_URI} !^/web/
+  RewriteRule ^(.*)$ /web/$1 [L]
+
+  # FUTURE DOMAIN: mhco.org
+  # When the domain switches, remove the '#' from the beginning of the 3 
+  # lines below, and delete or comment out the current domain block above.
+  # RewriteCond %{HTTP_HOST} ^(www\.)?mhco\.org$ [NC]
+  # RewriteCond %{REQUEST_URI} !^/web/
+  # RewriteRule ^(.*)$ /web/$1 [L]
+
+</IfModule>

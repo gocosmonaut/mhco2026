@@ -1,0 +1,15 @@
+<IfModule LiteSpeed>
+  # Directives required by the LSCache module
+  CacheLookup public on
+  php_flag output_buffering off
+
+  # Session bypass rules to fix the "not logged in" ghost pages
+  RewriteEngine On
+  RewriteCond %{HTTP_COOKIE} SESS [NC,OR]
+  RewriteCond %{HTTP_COOKIE} SSESS [NC]
+  RewriteRule .* - [E=Cache-Control:no-cache]
+</IfModule>
+
+<FilesMatch "\.(docx)$">
+  Header set Content-Disposition attachment
+</FilesMatch>

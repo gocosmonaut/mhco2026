@@ -1,0 +1,4 @@
+administer lscache:
+  title: 'Administer LSCache'
+  description: 'Configure LiteSpeed Cache integration settings.'
+  restrict access: true

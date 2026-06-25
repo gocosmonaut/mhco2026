@@ -1,0 +1,6 @@
+lscache_purger.settings:
+  title: 'LSCache Purger'
+  description: 'Configure how the LSCache submodule sends PURGE requests.'
+  route_name: lscache_purger.settings
+  parent: system.admin_config_development
+  weight: 51

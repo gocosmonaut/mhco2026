@@ -1,0 +1,6 @@
+lscache.settings:
+  title: 'LSCache'
+  description: 'Configure LiteSpeed Cache integration.'
+  route_name: lscache.settings
+  parent: system.admin_config_development
+  weight: 50

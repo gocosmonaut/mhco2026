@@ -1,0 +1,28 @@
+lscache_purger.settings:
+  type: config_object
+  label: 'LSCache Purger settings'
+  mapping:
+    purge_host:
+      type: string
+      label: 'LSCache host URL (blank to use current request host)'
+    purge_host_header:
+      type: string
+      label: 'Override Host header on PURGE requests (set to canonical site host when purge_host is localhost to avoid Host-keyed cache bucket mismatch)'
+    timeout:
+      type: integer
+      label: 'HTTP request timeout in seconds'
+    purge_strategy:
+      type: string
+      label: 'Purge strategy (auto|tag|url)'
+    unmappable_fallback:
+      type: string
+      label: 'Behavior when invalidation tags cannot be resolved to URLs (none|purge_all)'
+    static_url_map:
+      type: sequence
+      label: 'Static tag-to-URL map for listing pages (cold-start guarantee for aggregate tags like node_list)'
+      sequence:
+        type: sequence
+        label: 'URLs evicted when this tag is invalidated'
+        sequence:
+          type: string
+          label: 'Canonical Drupal path'

@@ -1,0 +1,895 @@
+<?php
+
+/**
+ * @file
+ * Install and uninstall hooks for the LSCache Purger submodule.
+ */
+
+use Drupal\Core\Config\ImmutableConfig;
+use Drupal\Core\Url;
+use Symfony\Component\Yaml\Yaml;
+
+/**
+ * Implements hook_schema().
+ *
+ * Defines the tag-affinity table that powers view/listing eviction in
+ * URL-strategy mode. The 1.3.x portal-master post-deploy review
+ * surfaced the gap: URL strategy correctly evicts canonical entity
+ * URLs (node:N -> /node/N + alias), but aggregate tags like node_list
+ * or config:views.view.X have no single canonical URL and were being
+ * silently dropped. The result on the field: a Views-backed
+ * /patch-notes page stayed cached with a stale node list after three
+ * new patch_note nodes were published via the REST endpoint.
+ *
+ * The affinity table records which URLs emitted which X-LiteSpeed-Tag
+ * entries at LSWS-cache-store time, so the resolver can answer "what
+ * URLs need evicting when tag T is invalidated" without operator-
+ * maintained static maps. Pattern borrowed from Varnish's xkey
+ * affinity store and Cloudflare's tag-cache implementation: write on
+ * cacheable response emit, query on invalidation, prune by
+ * last-seen.
+ *
+ * Schema choice: tag + url_hash composite primary key keeps the
+ * unique-row guarantee while staying under InnoDB's 3072-byte index
+ * limit even at utf8mb4 (4 bytes/char). VARCHAR(190) for tag is the
+ * standard Drupal-database safe cap; url_hash is binary SHA1 (20
+ * bytes) of the URL to absorb arbitrary path lengths. The URL itself
+ * is stored alongside for retrieval, capped at 2048 to match common
+ * web server URL limits.
+ */
+function lscache_purger_schema(): array {
+  $schema['lscache_purger_tag_affinity'] = [
+    'description' => 'Tag-to-URL affinity built from X-LiteSpeed-Tag headers emitted on cacheable responses. Drives URL resolution for aggregate tags (node_list, config:*, _view, _esi) that have no single canonical URL.',
+    'fields' => [
+      'tag' => [
+        'description' => 'Prefix-stripped cache tag (e.g. "node:38", "node_list"). VARCHAR(190) caps below the utf8mb4 4-byte-per-char composite-key limit.',
+        'type' => 'varchar',
+        'length' => 190,
+        'not null' => TRUE,
+      ],
+      'url_hash' => [
+        'description' => 'SHA-1 hex hash of the URL (40 chars). Composite key with tag to enforce one row per (tag, url) without storing the full URL in the index. Hex over binary for cross-database portability and indexable cost on every supported backend.',
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ],
+      'url' => [
+        'description' => 'Canonical Drupal path the tag was last observed on. Stored alongside for retrieval by the resolver; not in the index.',
+        'type' => 'varchar',
+        'length' => 2048,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'last_seen' => [
+        'description' => 'Unix timestamp of the most recent observation. Drives both cache-warmth signal and the prune-by-age background job.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'protected' => [
+        'description' => 'Whether the row is seeded from a deterministic source (Views page listing) and must survive prune-by-age. 0 = observed from traffic (prunable at 2×TTL); 1 = seeded by the cron auto-seeder (kept regardless of age). Closes the low-traffic-listing pruning gap.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['tag', 'url_hash'],
+    'indexes' => [
+      'last_seen' => ['last_seen'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_requirements().
+ *
+ * Surfaces the config-presence state on the Drupal status report. The
+ * 1.3.0-rc1 field test caught a silent-failure mode where the
+ * purger's config row was absent in active config; the only signal
+ * was a watchdog warning at invocation time. This row gives
+ * operators visibility into the state at the place they naturally
+ * look when caching seems broken.
+ *
+ * Reports three states:
+ *
+ *   - ERROR: lscache_purger.settings is missing from active config.
+ *     Every tag invalidation will bail at the host check. Operator
+ *     needs to run `drush updb` (triggers the backfill hook) or
+ *     `drush config:set lscache_purger.settings purge_host ...`.
+ *   - WARNING: config exists but purge_host is empty. Only an issue
+ *     for CLI/cron-driven purging where RequestStack returns NULL
+ *     and $base_url is the only remaining fallback; works fine for
+ *     web-context-triggered invalidations.
+ *   - OK: config exists and purge_host is non-empty.
+ *
+ * Runtime phase only; install-phase checks would block install on
+ * the very state this hook is designed to surface.
+ */
+function lscache_purger_requirements(string $phase): array {
+  if ($phase !== 'runtime') {
+    return [];
+  }
+
+  $entry = ['title' => t('LSCache Purger configuration')];
+
+  $config = \Drupal::config('lscache_purger.settings');
+  $raw = $config->getRawData();
+
+  if ($raw === []) {
+    $entry['value'] = t('Missing');
+    $entry['severity'] = REQUIREMENT_ERROR;
+    $entry['description'] = t(
+      '<code>lscache_purger.settings</code> is not present in active configuration. Tag invalidations will fail with no purge host available. Run <code>drush updb</code> to backfill the install defaults, or set the purge host explicitly: <code>drush config:set lscache_purger.settings purge_host "http://127.0.0.1" -y</code>.',
+    );
+    return ['lscache_purger_config' => $entry];
+  }
+
+  $purge_host = (string) ($config->get('purge_host') ?? '');
+  if ($purge_host === '') {
+    $entry['value'] = t('purge_host is empty');
+    $entry['severity'] = REQUIREMENT_WARNING;
+    $entry['description'] = t(
+      'The config row exists but <code>purge_host</code> is empty. Web-context invalidations will fall back to the current request host, but CLI/cron-driven purges (the default with the cron processor) need <code>purge_host</code> set explicitly. Configure at <a href=":form">/admin/config/development/performance/lscache/purger</a>.',
+      [':form' => Url::fromRoute('lscache_purger.settings')->toString()],
+    );
+    return ['lscache_purger_config' => $entry];
+  }
+
+  $entry['value'] = t('OK');
+  $entry['severity'] = REQUIREMENT_OK;
+  $entry['description'] = t('<code>lscache_purger.settings:purge_host</code> is set to <code>@host</code>.', ['@host' => $purge_host]);
+
+  $rows = ['lscache_purger_config' => $entry];
+  $rows += _lscache_purger_check_host_header($purge_host, $config);
+  $rows += _lscache_purger_check_scheme($purge_host);
+  $rows += _lscache_purger_check_strategy($config);
+  $rows += _lscache_purger_check_affinity_store();
+  $rows += _lscache_purger_check_unpinned_list_tags($config);
+  return $rows;
+}
+
+/**
+ * Status report row: warn on listing pages with no durable eviction map.
+ *
+ * Under the URL-purge strategy an aggregate tag (node_list) has no
+ * canonical URL, so a listing page only evicts when the resolver can
+ * map that tag to a URL via static_url_map (durable) or the affinity
+ * table (warm-only, lapses at 2×TTL). A listing that ships with neither
+ * serves stale until a manual PURGE, and nothing tells the operator.
+ * The /help portal incident was exactly this: a new controller-rendered
+ * Help Centre listing shipped with no pin and no signal anywhere.
+ *
+ * This row converts that invisible gap into a self-surfacing WARNING. It
+ * delegates enumeration + classification to the lscache_purger.list_tag_
+ * coverage service (which mirrors the resolver's own lookups, so the row
+ * can never disagree with runtime), then reports:
+ *
+ *   - OK: every Views page listing and every observed list tag is
+ *     pinned in static_url_map (durable).
+ *   - WARNING: at least one listing is uncovered (no pin, no affinity)
+ *     or affinity-only (warm now, will lapse). The description names
+ *     each tag, distinguishes uncovered from affinity-only, and carries
+ *     a copy-pasteable `drush config:set … --input-format=yaml` pin.
+ *
+ * Gated on the active purge strategy resolving to `url` (computed the
+ * same way the purger and _lscache_purger_check_strategy() do): on
+ * builds where tag-PURGE works the static map is not load-bearing, so
+ * the row stays silent rather than nagging.
+ *
+ * @param \Drupal\Core\Config\ImmutableConfig $config
+ *   The lscache_purger.settings config object.
+ *
+ * @return array
+ *   A single-key requirements array, or an empty array when the active
+ *   strategy is not `url` or the coverage service is unavailable.
+ */
+function _lscache_purger_check_unpinned_list_tags(ImmutableConfig $config): array {
+  // Resolve the active strategy exactly as the purger does at runtime.
+  $configured = (string) ($config->get('purge_strategy') ?? 'auto');
+  $tag_purge_effective = \Drupal::state()->get('lscache_purger.tag_purge_effective');
+  $active = match (TRUE) {
+    $configured === 'tag', $configured === 'url' => $configured,
+    $tag_purge_effective === FALSE => 'url',
+    default => 'tag',
+  };
+  if ($active !== 'url') {
+    return [];
+  }
+
+  try {
+    $report = \Drupal::service('lscache_purger.list_tag_coverage')->report();
+  }
+  catch (\Throwable $e) {
+    // Service missing or table absent: the row is a safety net, not a
+    // correctness gate. Stay silent.
+    return [];
+  }
+
+  $problems = array_values(array_filter($report, static fn(array $r): bool => $r['status'] !== 'pinned'));
+  if ($problems === []) {
+    // Quiet when healthy: only surface this row when a listing needs
+    // pinning, so the status report stays uncluttered on a clean site.
+    return [];
+  }
+
+  $uncovered = count(array_filter($problems, static fn(array $r): bool => $r['status'] === 'uncovered'));
+  $affinity_only = count($problems) - $uncovered;
+
+  // Keep this row concise: name the affected tags (capped) and point at
+  // `drush lscache:list-tag-coverage` for the full per-tag pin commands,
+  // rather than dumping a drush command per listing inline, which floods
+  // the status report on sites with many listings.
+  $cap = 8;
+  $tags = array_map(static fn(array $r): string => $r['tag'], $problems);
+  $more = max(0, count($tags) - $cap);
+  $tag_list = implode(', ', array_slice($tags, 0, $cap));
+
+  return [
+    'lscache_purger_list_coverage' => [
+      'title' => t('LSCache purger listing coverage'),
+      'value' => t('@n listing(s) need pinning (@u uncovered, @a affinity-only)', [
+        '@n' => count($problems),
+        '@u' => $uncovered,
+        '@a' => $affinity_only,
+      ]),
+      'severity' => REQUIREMENT_WARNING,
+      'description' => t('These listing tags have no durable <code>static_url_map</code> entry, so under the URL-purge strategy their aggregate-tag invalidation is not guaranteed to evict: uncovered listings serve stale until a manual PURGE; affinity-only listings evict only until the affinity row ages out. Affected: <code>@tags</code>@more. Run <code>drush lscache:list-tag-coverage</code> to see each one with a copy-pasteable pin, then add the durable entry to <code>config/sync/lscache_purger.settings.yml</code> and deploy.', [
+        '@tags' => $tag_list,
+        '@more' => $more > 0 ? ' and ' . $more . ' more' : '',
+      ]),
+    ],
+  ];
+}
+
+/**
+ * Status report row: surface tag-affinity table size.
+ *
+ * The affinity table self-populates from cacheable response
+ * X-LiteSpeed-Tag headers and powers view/listing eviction in URL-
+ * strategy mode. Operators get visibility into the table's size
+ * here so an unbounded growth incident (e.g. a misconfigured TTL
+ * that prevents the prune cron from clearing rows) is spottable
+ * without ad-hoc SQL. Severity stays OK for typical sizes; flips
+ * to INFO above a soft cap so the row reads as informational
+ * rather than alarming until growth is clearly anomalous.
+ */
+function _lscache_purger_check_affinity_store(): array {
+  try {
+    $size = \Drupal::service('lscache_purger.tag_affinity_store')->size();
+  }
+  catch (\Throwable $e) {
+    // Service not registered or table missing: ignore. The row is
+    // a status-report niceness, not a correctness gate.
+    return [];
+  }
+
+  // Quiet when healthy: the table size is only worth surfacing once it
+  // grows past the soft cap (a sign the prune cron may not be running).
+  // 1M rows keeps the row silent on every site we have field data for
+  // (the portal baseline was low five figures after a week).
+  if ($size < 1_000_000) {
+    return [];
+  }
+
+  return [
+    'lscache_purger_affinity' => [
+      'title' => t('LSCache purger tag-affinity table'),
+      'value' => t('@n rows', ['@n' => number_format($size)]),
+      'severity' => REQUIREMENT_INFO,
+      'description' => t(
+        'The affinity table records which URLs emit which X-LiteSpeed-Tag entries, so the URL strategy can evict view/listing pages on aggregate-tag invalidations. Self-populates from cacheable response emissions; pruned on cron by twice the longest configured LSCache TTL. This row appears because the table has grown past 1,000,000 rows; check that cron is running the prune job.',
+      ),
+    ],
+  ];
+}
+
+/**
+ * Status report row: detect scheme mismatch between purge_host and traffic.
+ *
+ * LSWS keys its cache by the request scheme: an entry stored under
+ * https://canonical.host/path is invisible to a PURGE arriving under
+ * http://canonical.host/path, and vice-versa. The two schemes are
+ * separate cache buckets. The 1.3.x portal-dev diagnosis surfaced
+ * this as a silent failure mode: purge_host was set to
+ * http://127.0.0.1 (the value the rc1 onboarding docs suggested
+ * because LSWS-on-loopback historically defaulted to plain HTTP),
+ * but real traffic was HTTPS, so every PURGE evicted the empty HTTP
+ * bucket while the populated HTTPS bucket stayed cached for the full
+ * 24-hour TTL.
+ *
+ * The row WARNS when the purge_host scheme is detectably different
+ * from the canonical traffic scheme, and renders a copy-pasteable
+ * drush command to flip it.
+ *
+ * @param string $purge_host
+ *   The configured purge_host value.
+ *
+ * @return array
+ *   A single-key array suitable for merging into requirements output,
+ *   or an empty array when no mismatch is detected.
+ */
+function _lscache_purger_check_scheme(string $purge_host): array {
+  $purge_scheme = strtolower((string) parse_url($purge_host, PHP_URL_SCHEME));
+  if ($purge_scheme === '') {
+    // Not a parseable URL; the parent config row already flagged the
+    // problem. Nothing to add here.
+    return [];
+  }
+
+  $traffic_scheme = _lscache_purger_canonical_traffic_scheme();
+  if ($traffic_scheme === '') {
+    // Cannot determine traffic scheme (deep CLI, no $base_url, no
+    // current request). Cannot warn; nothing to add.
+    return [];
+  }
+
+  if ($purge_scheme === $traffic_scheme) {
+    // Quiet when healthy: only surface this row on a scheme mismatch.
+    return [];
+  }
+
+  // Mismatch. Synthesise a suggested purge_host with the right
+  // scheme, preserving authority + any base path.
+  $suggested_host = preg_replace('#^[a-z]+://#i', $traffic_scheme . '://', $purge_host) ?? $purge_host;
+
+  return [
+    'lscache_purger_scheme' => [
+      'title' => t('LSCache purger scheme'),
+      'value' => t('Scheme mismatch (@p vs traffic @t)', ['@p' => $purge_scheme, '@t' => $traffic_scheme]),
+      'severity' => REQUIREMENT_WARNING,
+      'description' => t(
+        'PURGE requests target <code>@purge</code> (scheme <code>@p</code>) but real traffic uses scheme <code>@t</code>. LSWS keys cache by scheme, so PURGE will evict an empty <code>@p</code> bucket while the populated <code>@t</code> bucket stays cached until TTL. Update the configured host: <code>drush config:set lscache_purger.settings purge_host "@suggested" -y</code>',
+        [
+          '@purge' => $purge_host,
+          '@p' => $purge_scheme,
+          '@t' => $traffic_scheme,
+          '@suggested' => $suggested_host,
+        ],
+      ),
+    ],
+  ];
+}
+
+/**
+ * Detects the scheme (http or https) that real traffic uses.
+ *
+ * Web context: read the current request's scheme. CLI context:
+ * intentionally return empty string. Drush bootstraps a default
+ * Request whose scheme is "http" (or whatever $base_url is configured
+ * with in settings.php, which on many sites is the bare scheme-less
+ * default and parses as http). Treating that as a signal of real
+ * traffic produced a false-positive WARNING on the 1.3.x portal-
+ * dev validation when the operator had correctly switched purge_host
+ * to https but ran drush lscache:diag from CLI: the check fired even
+ * though real traffic was HTTPS.
+ *
+ * Returning empty in CLI means the caller skips the row entirely,
+ * which is the right outcome: the warning is meant for operators
+ * viewing the status report in a real browser request, where the
+ * scheme is unambiguous.
+ */
+function _lscache_purger_canonical_traffic_scheme(): string {
+  if (PHP_SAPI === 'cli') {
+    return '';
+  }
+
+  $request = \Drupal::requestStack()->getCurrentRequest();
+  if ($request !== NULL) {
+    $scheme = strtolower($request->getScheme());
+    if ($scheme !== '') {
+      return $scheme;
+    }
+  }
+
+  return '';
+}
+
+/**
+ * Status report row: surface active purge strategy + last probe result.
+ *
+ * Background: the 1.3.x LSWS 6.3.4 portal diagnosis showed that
+ * tag-based PURGE is silently ignored on some LSWS builds. The module
+ * now supports an alternate URL-resolving strategy plus an `auto`
+ * mode that picks tag-or-url based on the cached probe result from
+ * the `lscache:diag` drush command. This row tells operators:
+ *   - which strategy is actually active right now
+ *   - when the last probe ran and what it concluded
+ *   - whether the configured strategy contradicts the probe result
+ *     (e.g. strategy=tag but probe says tag-PURGE is ineffective)
+ *
+ * Severities:
+ *   - OK: strategy is consistent with probe (or there is no probe
+ *     result yet AND strategy is `auto` or `tag`, both safe defaults).
+ *   - WARNING: probe says tag-PURGE is ineffective AND the active
+ *     strategy is tag. Operator is purging into a void; recommend
+ *     switching to `url` or `auto`.
+ *
+ * @param \Drupal\Core\Config\ImmutableConfig $config
+ *   The lscache_purger.settings config object.
+ */
+function _lscache_purger_check_strategy(ImmutableConfig $config): array {
+  $configured = (string) ($config->get('purge_strategy') ?? 'auto');
+  $tag_purge_effective = \Drupal::state()->get('lscache_purger.tag_purge_effective');
+  $probed_at = \Drupal::state()->get('lscache_purger.tag_purge_probed_at');
+
+  // Normalise the probe signal exactly as the purger's resolveStrategy()
+  // does, so the status row and the runtime agree even when the state
+  // value has drifted to a falsy non-bool (0, '0', 'false') via a manual
+  // drush sset.
+  $tag_effective_is_false = $tag_purge_effective !== NULL
+    && filter_var($tag_purge_effective, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) === FALSE;
+
+  // Resolve the active strategy the same way the purger does at
+  // runtime so operators see the value the next invalidation will
+  // actually use, not the raw config string.
+  $active = match (TRUE) {
+    $configured === 'tag', $configured === 'url' => $configured,
+    $tag_effective_is_false => 'url',
+    default => 'tag',
+  };
+
+  $probe_line = $probed_at === NULL
+    ? t('Tag-PURGE effectiveness has never been probed; run <code>drush lscache:diag</code> to populate this signal.')
+    : t('Last probe at @ts: tag-PURGE effective = @res.', [
+      '@ts' => \Drupal::service('date.formatter')->format((int) $probed_at, 'short'),
+      '@res' => $tag_purge_effective ? t('YES') : t('NO'),
+    ]);
+
+  $entry = [
+    'title' => t('LSCache purger invalidation strategy'),
+    'value' => t('@active (configured: @configured)', ['@active' => $active, '@configured' => $configured]),
+  ];
+
+  if ($configured === 'tag' && $tag_effective_is_false) {
+    $entry['severity'] = REQUIREMENT_WARNING;
+    $entry['description'] = t(
+      'Strategy is hard-set to <code>tag</code> but the last <code>drush lscache:diag</code> probe found tag-based PURGE has no effect on this LSWS build. Tag invalidations will return HTTP 200 but evict nothing. Switch to <code>url</code> or <code>auto</code>: <code>drush config:set lscache_purger.settings purge_strategy auto -y</code>. @probe',
+      ['@probe' => $probe_line],
+    );
+    return ['lscache_purger_strategy' => $entry];
+  }
+
+  // Quiet once the build has been probed and the strategy is healthy.
+  // Keep a one-time nudge only while tag-PURGE effectiveness is unknown,
+  // so a new install is reminded to run the probe but an established,
+  // healthy site shows nothing here.
+  if ($probed_at !== NULL) {
+    return [];
+  }
+
+  $entry['severity'] = REQUIREMENT_OK;
+  $entry['description'] = t('@probe Re-run with <code>drush lscache:diag</code> after server config changes.', ['@probe' => $probe_line]);
+  return ['lscache_purger_strategy' => $entry];
+}
+
+/**
+ * Status report row: detect Host header mismatch on PURGE requests.
+ *
+ * LSWS keys cache entries by the HTTP Host header. When `purge_host`
+ * targets localhost (the form's own guidance for single-host installs)
+ * Guzzle derives the Host header from the URL and sends
+ * `Host: localhost`, so LSWS evicts a phantom localhost bucket while
+ * real traffic cached under the canonical site host stays live until
+ * max-age expires. The 1.3.0-rc2 portal-master diagnosis surfaced
+ * this as chronic "cache doesn't clear after node edits" reports.
+ *
+ * The row warns when:
+ *   - purge_host resolves to a localhost-shaped value, AND
+ *   - purge_host_header is unset, AND
+ *   - the site's canonical host (from $base_url or the current
+ *     request) is non-localhost.
+ *
+ * Renders a copy-pasteable drush command with the suggested host
+ * value pre-filled so operators can act without reading docs.
+ *
+ * @param string $purge_host
+ *   The configured purge_host value, used to decide whether the
+ *   localhost-shape trigger applies.
+ * @param \Drupal\Core\Config\ImmutableConfig $config
+ *   The lscache_purger.settings config object, used to read the
+ *   purge_host_header value.
+ *
+ * @return array
+ *   A single-key array suitable for merging into the requirements
+ *   return value, or an empty array when the row should not render.
+ */
+function _lscache_purger_check_host_header(string $purge_host, ImmutableConfig $config): array {
+  $host_header = trim((string) ($config->get('purge_host_header') ?? ''));
+
+  $purge_host_lower = strtolower($purge_host);
+  $purge_targets_localhost = (
+    str_contains($purge_host_lower, '://localhost')
+    || str_contains($purge_host_lower, '://127.0.0.1')
+    || str_contains($purge_host_lower, '://[::1]')
+  );
+
+  $canonical_host = _lscache_purger_canonical_site_host();
+  $canonical_is_localhost = (
+    $canonical_host === ''
+    || $canonical_host === 'localhost'
+    || $canonical_host === '127.0.0.1'
+    || $canonical_host === '[::1]'
+  );
+
+  // Validate the configured Host header value when present, even if
+  // there is no mismatch to warn about; an invalid value is its own
+  // operator trap.
+  if ($host_header !== '' && (str_contains($host_header, '://') || str_contains($host_header, '/'))) {
+    return [
+      'lscache_purger_host_header' => [
+        'title' => t('LSCache purger Host header configuration'),
+        'value' => t('Malformed Host header override'),
+        'severity' => REQUIREMENT_WARNING,
+        'description' => t(
+          '<code>lscache_purger.settings:purge_host_header</code> is set to <code>@v</code>, which is not a bare hostname. The Host header is a hostname, not a URL. Edit the value at <a href=":form">/admin/config/development/performance/lscache/purger</a> to remove the scheme and any trailing path.',
+          [
+            '@v' => $host_header,
+            ':form' => Url::fromRoute('lscache_purger.settings')->toString(),
+          ],
+        ),
+      ],
+    ];
+  }
+
+  // Quiet when healthy: no mismatch to warn about (the Host header is
+  // correctly set, or purge_host is not localhost, or the canonical host
+  // is localhost too). The malformed-value case above still warns, and
+  // the mismatch case below still warns.
+  if (!$purge_targets_localhost || $host_header !== '' || $canonical_is_localhost) {
+    return [];
+  }
+
+  // Mismatch: purge_host is localhost-shaped, purge_host_header is
+  // unset, and the site's canonical host is non-localhost. PURGE
+  // requests evict the phantom localhost bucket instead of the real
+  // entries.
+  $suggested = $canonical_host;
+  return [
+    'lscache_purger_host_header' => [
+      'title' => t('LSCache purger Host header configuration'),
+      'value' => t('Host header mismatch'),
+      'severity' => REQUIREMENT_WARNING,
+      'description' => t(
+        'PURGE requests to <code>@h</code> will carry <code>Host: localhost</code>, but real traffic is cached under <code>Host: @canon</code>. LSWS keys cache by Host, so invalidations will evict a phantom localhost bucket and the canonical-host entries will stay live until max-age expires. Set the Host header override at <a href=":form">/admin/config/development/performance/lscache/purger</a> or run: <code>drush config:set lscache_purger.settings purge_host_header "@canon" -y</code>',
+        [
+          '@h' => $purge_host,
+          '@canon' => $suggested,
+          ':form' => Url::fromRoute('lscache_purger.settings')->toString(),
+        ],
+      ),
+    ],
+  ];
+}
+
+/**
+ * Resolves the site's canonical hostname for Host header suggestions.
+ *
+ * Tries the current request first (web context), then $base_url
+ * (frequently set in settings.php for drush). Returns a bare hostname
+ * suitable for a Host header value, or the empty string if neither
+ * source is available.
+ */
+function _lscache_purger_canonical_site_host(): string {
+  $request = \Drupal::requestStack()->getCurrentRequest();
+  if ($request !== NULL) {
+    $host = $request->getHttpHost();
+    if ($host !== '' && stripos($host, 'localhost') === FALSE && $host !== '127.0.0.1') {
+      // getHttpHost includes the port when non-standard; strip it for
+      // the Host header suggestion. Operators are very unlikely to
+      // need a port here in production.
+      $colon = strpos($host, ':');
+      return $colon === FALSE ? $host : substr($host, 0, $colon);
+    }
+  }
+
+  $base_url = $GLOBALS['base_url'] ?? '';
+  if (is_string($base_url) && $base_url !== '') {
+    $parsed = parse_url($base_url, PHP_URL_HOST);
+    if (is_string($parsed) && $parsed !== '') {
+      return $parsed;
+    }
+  }
+
+  return '';
+}
+
+/**
+ * Implements hook_install().
+ *
+ * Two responsibilities, both of which Drupal's standard module-install
+ * flow already attempts but which we backstop explicitly because the
+ * 1.3.0-rc1 field test surfaced an install where one of them quietly
+ * did not happen:
+ *
+ *   1. Wire the `lscache` purger plugin into the Purge framework so
+ *      tag invalidations from Drupal reach LiteSpeed automatically.
+ *      The queuer (`coretags`) and processors (`cron` and
+ *      `lateruntime`) come from the required submodule dependencies
+ *      in info.yml (`purge_queuer_coretags`, `purge_processor_cron`,
+ *      `purge_processor_lateruntime`) and auto-enable their own
+ *      plugins on install. Lateruntime drains the queue at the end
+ *      of each Drupal request, so editor invalidations reach LSWS
+ *      within the same request rather than waiting on the next cron
+ *      run.
+ *
+ *   2. Ensure `lscache_purger.settings` exists in active config with
+ *      its install defaults. Drupal's ConfigInstaller normally reads
+ *      `config/install/lscache_purger.settings.yml` on `drush en` and
+ *      writes it to active config; in practice we have seen at least
+ *      one install where it did not (likely a partial config-sync
+ *      round-trip on the operator side). When the config is missing,
+ *      the purger's `purge_host` reads as NULL, the host fallback
+ *      chain collapses to empty in CLI/cron context, and every tag
+ *      invalidation bails with FAILED. The failure mode is silent
+ *      enough that operators do not notice until cache eviction
+ *      visibly stops working.
+ *
+ * On failure of either step we log actionable guidance so the
+ * operator can still wire things up manually, then let the module
+ * install succeed. A separate `hook_requirements()` row surfaces the
+ * end state for visibility post-install.
+ */
+function lscache_purger_install(): void {
+  try {
+    /** @var \Drupal\purge\Plugin\Purge\Purger\PurgersServiceInterface $purgers */
+    $purgers = \Drupal::service('purge.purgers');
+    $enabled = $purgers->getPluginsEnabled();
+    if (!in_array('lscache', $enabled, TRUE)) {
+      $enabled[$purgers->createId()] = 'lscache';
+      $purgers->setPluginsEnabled($enabled);
+      \Drupal::logger('lscache_purger')->info(
+        'Auto-configured Purge pipeline: purger=lscache, queuer=coretags, processors=cron+lateruntime. Review at /admin/config/development/performance/purge.',
+      );
+    }
+  }
+  catch (\Throwable $e) {
+    \Drupal::logger('lscache_purger')->warning(
+      'Auto-configuration of the Purge pipeline failed: @msg. Run manually: drush p:purger-add lscache; drush cr',
+      ['@msg' => $e->getMessage()],
+    );
+  }
+
+  _lscache_purger_ensure_settings_exist();
+}
+
+/**
+ * Writes lscache_purger.settings install defaults if the config is missing.
+ *
+ * Drupal's ConfigInstaller normally handles this on `drush en`, but
+ * the 1.3.0-rc1 field test caught an install where the config row was
+ * simply absent in active config. When that happens, the purger has
+ * no `purge_host` to read, host resolution collapses to empty in
+ * CLI context, and every invalidation bails silently with FAILED.
+ *
+ * This function reads `config/install/lscache_purger.settings.yml`
+ * and writes any keys not already present in active config, without
+ * overwriting operator-set values. Idempotent: calling it on a
+ * complete config is a no-op.
+ */
+function _lscache_purger_ensure_settings_exist(): void {
+  $config = \Drupal::configFactory()->getEditable('lscache_purger.settings');
+  $module_path = \Drupal::service('extension.list.module')->getPath('lscache_purger');
+  $install_yaml_path = DRUPAL_ROOT . '/' . $module_path . '/config/install/lscache_purger.settings.yml';
+
+  if (!is_readable($install_yaml_path)) {
+    \Drupal::logger('lscache_purger')->warning(
+      'Could not read install YAML at @p to backfill lscache_purger.settings; skipping.',
+      ['@p' => $install_yaml_path],
+    );
+    return;
+  }
+
+  $install_defaults = Yaml::parseFile($install_yaml_path);
+  if (!is_array($install_defaults)) {
+    return;
+  }
+
+  $changed = FALSE;
+  foreach ($install_defaults as $key => $value) {
+    if ($config->get($key) === NULL) {
+      $config->set($key, $value);
+      $changed = TRUE;
+    }
+  }
+
+  if ($changed) {
+    $config->save(TRUE);
+    \Drupal::logger('lscache_purger')->info(
+      'Backfilled missing default keys in lscache_purger.settings from the install YAML. Configure purge_host at /admin/config/development/performance/lscache/purger.',
+    );
+  }
+}
+
+/**
+ * Backfills missing lscache_purger.settings keys for sites already on 1.3.x.
+ *
+ * Parallel to lscache_update_8103 in the parent module: catches sites
+ * where the active config has drifted (partial config-sync,
+ * accidental drush cdel, or the install-time gap the 1.3.0-rc1 field
+ * test surfaced) by re-applying the install YAML's defaults without
+ * overwriting operator-set values.
+ *
+ * Idempotent on complete config; reports the keys backfilled
+ * otherwise.
+ */
+function lscache_purger_update_8101(): string {
+  $module_path = \Drupal::service('extension.list.module')->getPath('lscache_purger');
+  $install_yaml_path = DRUPAL_ROOT . '/' . $module_path . '/config/install/lscache_purger.settings.yml';
+
+  if (!is_readable($install_yaml_path)) {
+    return t('Skipped: install YAML not readable at @p.', ['@p' => $install_yaml_path])->render();
+  }
+
+  $install_defaults = Yaml::parseFile($install_yaml_path);
+  if (!is_array($install_defaults)) {
+    return t('Skipped: install YAML did not parse as a mapping.')->render();
+  }
+
+  $config = \Drupal::configFactory()->getEditable('lscache_purger.settings');
+  $changes = [];
+  foreach ($install_defaults as $key => $value) {
+    if ($config->get($key) === NULL) {
+      $config->set($key, $value);
+      $changes[] = $key;
+    }
+  }
+
+  if ($changes !== []) {
+    $config->save(TRUE);
+    return t('Backfilled missing default config keys from the install YAML: @keys.', ['@keys' => implode(', ', $changes)])->render();
+  }
+  return t('All install-time defaults already present in active config; no change.')->render();
+}
+
+/**
+ * Installs purge_processor_lateruntime on sites already on 1.3.x.
+ *
+ * Beta6 adds `purge_processor_lateruntime` to the submodule's
+ * dependencies so the queue drains at the end of each Drupal request
+ * rather than only on cron runs. Existing installs (beta1-beta5)
+ * already have the queuer + cron processor, but lateruntime would
+ * not be auto-installed by a dependency change alone; this hook
+ * installs the module explicitly so editor invalidations reach LSWS
+ * within the same request, closing the "purger works, queue grows,
+ * nothing drains in real time" class of report.
+ *
+ * Idempotent: a no-op when the module is already installed.
+ */
+function lscache_purger_update_8102(): string {
+  if (\Drupal::moduleHandler()->moduleExists('purge_processor_lateruntime')) {
+    return t('purge_processor_lateruntime already installed; no change.')->render();
+  }
+
+  try {
+    \Drupal::service('module_installer')->install(['purge_processor_lateruntime']);
+    return t('Installed purge_processor_lateruntime so the Purge queue drains at the end of each Drupal request. Review the processor configuration at /admin/config/development/performance/purge.')->render();
+  }
+  catch (\Throwable $e) {
+    return t('Could not auto-install purge_processor_lateruntime: @msg. Install manually with: drush en purge_processor_lateruntime -y', ['@msg' => $e->getMessage()])->render();
+  }
+}
+
+/**
+ * Backfills purge_strategy + unmappable_fallback for existing installs.
+ *
+ * Parallel to lscache_purger_update_8101: re-applies install YAML
+ * defaults for the keys introduced alongside the URL-strategy work.
+ * Surfaced on the 1.3.x LSWS 6.3.4 portal diagnosis, which
+ * exposed that tag-based PURGE is silently ignored on some LSWS
+ * builds; the new keys let operators opt into URL-resolving PURGE
+ * (or let `auto` mode pick automatically based on the diag probe).
+ *
+ * Idempotent: a no-op if both keys are already present.
+ */
+function lscache_purger_update_8103(): string {
+  $module_path = \Drupal::service('extension.list.module')->getPath('lscache_purger');
+  $install_yaml_path = DRUPAL_ROOT . '/' . $module_path . '/config/install/lscache_purger.settings.yml';
+
+  if (!is_readable($install_yaml_path)) {
+    return t('Skipped: install YAML not readable at @p.', ['@p' => $install_yaml_path])->render();
+  }
+
+  $install_defaults = Yaml::parseFile($install_yaml_path);
+  if (!is_array($install_defaults)) {
+    return t('Skipped: install YAML did not parse as a mapping.')->render();
+  }
+
+  $config = \Drupal::configFactory()->getEditable('lscache_purger.settings');
+  $changes = [];
+  foreach (['purge_strategy', 'unmappable_fallback'] as $key) {
+    if ($config->get($key) === NULL && array_key_exists($key, $install_defaults)) {
+      $config->set($key, $install_defaults[$key]);
+      $changes[] = $key;
+    }
+  }
+
+  if ($changes !== []) {
+    $config->save(TRUE);
+    return t('Backfilled new strategy config keys (defaulting purge_strategy to <code>auto</code> so the next drush lscache:diag run can pick tag-or-url based on the probe): @keys.', ['@keys' => implode(', ', $changes)])->render();
+  }
+  return t('Strategy config keys already present; no change.')->render();
+}
+
+/**
+ * Installs the tag-affinity table for the URL-strategy view eviction path.
+ *
+ * Surfaced on the 1.3.x portal-master post-deploy review: URL
+ * strategy correctly evicts canonical entity URLs but silently
+ * dropped aggregate tags like node_list, so view/listing pages
+ * stayed cached after content changes. The affinity table records
+ * which URLs emit which X-LiteSpeed-Tag entries on the response
+ * side, so InvalidationUrlResolver can answer "what URLs evict
+ * tag T" without operator-maintained static maps. See
+ * TagAffinityStore docblock for full design.
+ *
+ * Reads the table definition from lscache_purger_schema() and
+ * creates the table via the schema manager so the install path
+ * matches a fresh-install. Idempotent; a no-op when the table
+ * already exists.
+ */
+function lscache_purger_update_8104(): string {
+  $schema_definition = lscache_purger_schema();
+  $table_name = 'lscache_purger_tag_affinity';
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists($table_name)) {
+    return t('Table @t already exists; no change.', ['@t' => $table_name])->render();
+  }
+  $schema->createTable($table_name, $schema_definition[$table_name]);
+  return t('Created the tag-affinity table @t. The URL-strategy resolver will start consulting it on the next invalidation; rows will populate as cacheable responses are emitted.', ['@t' => $table_name])->render();
+}
+
+/**
+ * Backfills the static_url_map config key for existing installs.
+ *
+ * The static_url_map key is the cold-start guarantee added alongside
+ * the affinity recorder's switch to unfiltered cache-metadata tags
+ * (1.3.x portal-stage review): it lets operators pin known
+ * listing pages (e.g. node_list -> /patch-notes) so those evict the
+ * instant their aggregate tag is invalidated, without waiting for the
+ * affinity table to warm. Defaults to an empty map; operators add
+ * their listings via config. Idempotent.
+ */
+function lscache_purger_update_8105(): string {
+  $config = \Drupal::configFactory()->getEditable('lscache_purger.settings');
+  if ($config->get('static_url_map') !== NULL) {
+    return t('static_url_map already present; no change.')->render();
+  }
+  $config->set('static_url_map', [])->save(TRUE);
+  return t('Added empty static_url_map to lscache_purger.settings. Pin listing pages (e.g. node_list: ["/patch-notes"]) to guarantee cold-start eviction.')->render();
+}
+
+/**
+ * Adds the affinity table's `protected` column for seeded listings.
+ *
+ * The cron auto-seeder writes Views page-display listings into the
+ * affinity table as protected rows (protected=1) so they survive the
+ * prune-by-age job and give low-traffic listings a durable floor that
+ * does not depend on traffic re-observing them within the 2×TTL prune
+ * window. Existing installs (created before this column) need the
+ * column added; new rows default to 0 (observed/prunable), matching
+ * the previous all-prunable behaviour. Idempotent.
+ */
+function lscache_purger_update_8106(): string {
+  $schema = \Drupal::database()->schema();
+  $table = 'lscache_purger_tag_affinity';
+  if (!$schema->tableExists($table)) {
+    return t('Table @t does not exist; nothing to alter (update_8104 creates it on the next run).', ['@t' => $table])->render();
+  }
+  if ($schema->fieldExists($table, 'protected')) {
+    return t('Column @t.protected already exists; no change.', ['@t' => $table])->render();
+  }
+  $schema->addField($table, 'protected', [
+    'description' => 'Whether the row is seeded from a deterministic source (Views page listing) and must survive prune-by-age. 0 = observed from traffic; 1 = seeded by the cron auto-seeder (kept regardless of age).',
+    'type' => 'int',
+    'size' => 'tiny',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+  ]);
+  return t('Added the @t.protected column. The cron auto-seeder will start writing protected rows for Views page listings on the next cron run.', ['@t' => $table])->render();
+}

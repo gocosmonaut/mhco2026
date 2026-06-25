@@ -1,0 +1,59 @@
+services:
+  logger.channel.lscache_purger:
+    parent: logger.channel_base
+    arguments: ['lscache_purger']
+
+  # URL-based invalidation resolver. Surfaced on the 1.3.x portal
+  # diagnosis where LSWS Enterprise 6.3.4 was found to silently ignore
+  # tag-based PURGE; the URL strategy in LscachePurger leans on this
+  # service to translate cache tags into the canonical paths LSWS
+  # will reliably evict.
+  lscache_purger.url_resolver:
+    class: Drupal\lscache_purger\Resolver\InvalidationUrlResolver
+    arguments:
+      - '@entity_type.manager'
+      - '@path_alias.manager'
+      - '@lscache_purger.tag_affinity_store'
+      - '@config.factory'
+      - '@logger.channel.lscache_purger'
+
+  # Tag-affinity store: persists (tag, url) observations harvested
+  # from cacheable response emissions. Powers view/listing eviction
+  # in URL-strategy mode, which would otherwise drop aggregate tags
+  # like node_list with no canonical URL. Surfaced on the
+  # 1.3.x portal-master diagnosis (/patch-notes view staying
+  # cached after patch_note REST publish).
+  lscache_purger.tag_affinity_store:
+    class: Drupal\lscache_purger\Affinity\TagAffinityStore
+    arguments:
+      - '@database'
+
+  # List-tag coverage computation. Enumerates the listing universe
+  # (entity-type list tags, Views page displays, observed affinity
+  # tags) and classifies each against static_url_map + affinity, so
+  # the Status Report warning, the lscache:list-tag-coverage drush
+  # command, and the cron auto-seeder all share one source of truth
+  # that mirrors the resolver. Surfaced by the /help portal incident:
+  # a new listing shipped with no pin and no signal anywhere.
+  lscache_purger.list_tag_coverage:
+    class: Drupal\lscache_purger\Coverage\ListTagCoverage
+    arguments:
+      - '@entity_type.manager'
+      - '@entity_type.bundle.info'
+      - '@config.factory'
+      - '@lscache_purger.tag_affinity_store'
+
+  # Affinity recorder: kernel.response subscriber that captures the
+  # X-LiteSpeed-Tag header set by LscacheResponseSubscriber and
+  # writes one row per (tag, url) into the affinity store. Runs at
+  # priority -1000, one step after the parent at -999, so the tag
+  # set we read is the finalised one LSWS will store with the
+  # cached entry.
+  lscache_purger.tag_affinity_recorder:
+    class: Drupal\lscache_purger\EventSubscriber\TagAffinityRecorder
+    arguments:
+      - '@lscache_purger.tag_affinity_store'
+      - '@lscache.tag_header_builder'
+      - '@datetime.time'
+    tags:
+      - { name: event_subscriber }

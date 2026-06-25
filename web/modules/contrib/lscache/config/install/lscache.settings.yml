@@ -1,0 +1,14 @@
+enabled: false
+default_ttl: 3600
+tag_prefix: ''
+tag_filter: true
+debug: false
+private_cache:
+  enabled: false
+  ttl: 600
+  contexts:
+    - user
+    - user.permissions
+    - user.roles
+    - session
+vary_cookies: {  }

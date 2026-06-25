@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Adds LiteSpeed Cache response headers and tag invalidation hooks.
+ *
+ * The header logic lives in the LscacheResponseSubscriber event
+ * subscriber (see src/EventSubscriber/LscacheResponseSubscriber.php),
+ * which fires on every main-request response rather than through a
+ * hook. This file exists only because Drupal requires a .module file
+ * for every module and as the conventional place to land any
+ * procedural hooks we add in future releases.
+ */

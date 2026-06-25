@@ -1,0 +1,349 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and requirements hooks for the LSCache module.
+ */
+
+use Symfony\Component\Yaml\Yaml;
+
+/**
+ * Implements hook_requirements().
+ *
+ * Reports the state of the .htaccess directives that LSCache requires
+ * on the Drupal status report page (/admin/reports/status). Without
+ * `CacheLookup public on` LSWS will not consult its cache for this
+ * vhost; without `php_flag output_buffering off` LSWS often misses the
+ * X-LiteSpeed-* headers and refuses to cache. Both are the leading
+ * cause of "module is enabled but nothing is cached" reports.
+ *
+ * If private-cache mode is enabled, the directive must additionally
+ * include `private on`, otherwise LSWS will not consult its private
+ * cache for authenticated requests.
+ *
+ * Only fires on the runtime phase. The check is best-effort: if the
+ * .htaccess file is unreadable, in a non-standard location, or the
+ * webserver clearly is not LiteSpeed, we surface a NEUTRAL status
+ * rather than guessing.
+ */
+function lscache_requirements(string $phase): array {
+  if ($phase !== 'runtime') {
+    return [];
+  }
+
+  $requirements = [];
+  $requirements['lscache_htaccess'] = _lscache_check_htaccess();
+
+  $vary_check = _lscache_check_vary_cookies();
+  if ($vary_check !== []) {
+    $requirements['lscache_vary_cookies'] = $vary_check;
+  }
+  return $requirements;
+}
+
+/**
+ * Checks that emitted vary cookies have matching CacheVary directives.
+ *
+ * The 1.3.0-beta4 portal-master retest surfaced a class of cache-
+ * poisoning bug where the module emits `X-LiteSpeed-Vary: cookie=NAME`
+ * but the LSWS server / vhost / .htaccess lacks the matching
+ * `CacheVary cookie=NAME` directive that tells LSWS to actually key
+ * its cache entries by that cookie's value. The header is necessary
+ * but not sufficient. Without the directive, LSWS hashes all requests
+ * for a given URL to the same cache key and serves whichever response
+ * was cached first to every subsequent requester, regardless of
+ * cookie state.
+ *
+ * Surfacing this check at the status report row gives operators
+ * direct visibility into the module's half of the chain (the
+ * header it emits) versus the server's half (the directive LSWS
+ * is honouring). When they don't agree, the row warns with a
+ * copy-pasteable directive line ready to add.
+ *
+ * Returns the empty array when there's nothing to surface (no vary
+ * cookies emitted at all, or .htaccess unreadable in which case
+ * _lscache_check_htaccess() already covers the case).
+ *
+ * @return array
+ *   Either an empty array, or a hook_requirements() entry.
+ */
+function _lscache_check_vary_cookies(): array {
+  $config = \Drupal::config('lscache.settings');
+  $configured_vary = (array) ($config->get('vary_cookies') ?? []);
+  $private_enabled = (bool) $config->get('private_cache.enabled');
+
+  // Build the list of cookies the response subscriber would emit on
+  // a cacheable response right now. Mirrors emitVaryCookies()'s logic
+  // so the status row reflects what the module is actually doing.
+  $expected = $configured_vary;
+  if ($private_enabled) {
+    $request = \Drupal::requestStack()->getCurrentRequest();
+    if ($request !== NULL) {
+      $session_name = (string) (\Drupal::service('session_configuration')->getOptions($request)['name'] ?? '');
+      if ($session_name !== '') {
+        $expected[] = $session_name;
+      }
+    }
+  }
+  $expected = array_values(array_unique(array_filter(
+    $expected,
+    static fn(string $c): bool => $c !== '',
+  )));
+
+  // Nothing to vary on: no row needed.
+  if ($expected === []) {
+    return [];
+  }
+
+  $entry = ['title' => t('LSCache vary-cookie configuration')];
+
+  $htaccess_path = DRUPAL_ROOT . '/.htaccess';
+  if (!is_readable($htaccess_path)) {
+    // The companion _lscache_check_htaccess() already reports this
+    // case; avoid duplicating the noise.
+    return [];
+  }
+
+  $contents = (string) @file_get_contents($htaccess_path);
+
+  // Parse every `CacheVary cookie=NAME[,NAME,...]` directive. Each
+  // match contributes one or more cookie names to the present-set.
+  $present = [];
+  if (preg_match_all('/^\s*CacheVary\s+cookie=([\S]+)/im', $contents, $matches)) {
+    foreach ($matches[1] as $list) {
+      foreach (explode(',', $list) as $cookie) {
+        $cookie = trim($cookie);
+        if ($cookie !== '') {
+          $present[] = $cookie;
+        }
+      }
+    }
+  }
+
+  $missing = array_values(array_diff($expected, $present));
+  if ($missing === []) {
+    // Quiet when healthy: every emitted vary cookie has a matching
+    // CacheVary directive, so there is nothing to surface. The caller
+    // skips an empty return.
+    return [];
+  }
+
+  $suggested = 'CacheVary cookie=' . implode(',', $expected);
+  $entry['value'] = t('Missing CacheVary directive for: @missing', ['@missing' => implode(', ', $missing)]);
+  $entry['severity'] = REQUIREMENT_WARNING;
+  $entry['description'] = t(
+    'The response subscriber emits these vary cookies on cacheable responses: <code>@expected</code>. The .htaccess <code>CacheVary cookie=</code> directives currently name: <code>@present</code>. Without a matching server-side directive, LSWS will not differentiate cache entries by the missing cookies, and shared cache entries can be served to requests with different cookie values (the cache-poisoning trap from the 1.3.0-beta4 field test). Add the following line inside the <code>&lt;IfModule LiteSpeed&gt;</code> block in @path:<br><br><code>@suggested</code>',
+    [
+      '@expected' => implode(', ', $expected),
+      '@present' => $present === [] ? '(none)' : implode(', ', $present),
+      '@path' => $htaccess_path,
+      '@suggested' => $suggested,
+    ],
+  );
+  return $entry;
+}
+
+/**
+ * Inspects the site's .htaccess for the directives LSCache requires.
+ *
+ * @return array
+ *   A single hook_requirements() entry: title, value, severity,
+ *   description.
+ */
+function _lscache_check_htaccess(): array {
+  $entry = [
+    'title' => t('LSCache .htaccess directives'),
+  ];
+
+  $htaccess_path = DRUPAL_ROOT . '/.htaccess';
+  if (!is_readable($htaccess_path)) {
+    $entry['value'] = t('Skipped');
+    $entry['severity'] = REQUIREMENT_INFO;
+    $entry['description'] = t('Could not read @path. The directive check is skipped. If your site uses a non-standard .htaccess location or a different web server config, you can ignore this row.', ['@path' => $htaccess_path]);
+    return $entry;
+  }
+
+  // Read the full file. The 8KB cap that alpha3 used missed directives
+  // appended past offset 8KB by drupal-scaffold's `append` feature, which
+  // is the recommended way to manage LSCache .htaccess additions under
+  // drupal/recommended-project. .htaccess files rarely exceed 20-30KB
+  // even with extensive customisation.
+  $contents = (string) @file_get_contents($htaccess_path);
+
+  $has_cachelookup_public = (bool) preg_match('/^\s*CacheLookup\s+public\s+on\b/im', $contents);
+  $has_cachelookup_private = (bool) preg_match('/^\s*CacheLookup\s+(public\s+on\s+private\s+on|private\s+on\s+public\s+on)\b/im', $contents);
+  $has_outbuf = (bool) preg_match('/^\s*php_flag\s+output_buffering\s+off\b/im', $contents);
+
+  $private_cache_enabled = (bool) \Drupal::config('lscache.settings')->get('private_cache.enabled');
+
+  // When private mode is on, the operator needs the combined directive
+  // form. The two checks are independent because some operators run
+  // private-only or public-only deployments, and the regex above
+  // requires both keywords to be present in either order.
+  $needs_private_directive = $private_cache_enabled;
+
+  if ($has_cachelookup_public && $has_outbuf && (!$needs_private_directive || $has_cachelookup_private)) {
+    $entry['value'] = $needs_private_directive
+      ? t('All required directives present (public + private)')
+      : t('All required directives present');
+    $entry['severity'] = REQUIREMENT_OK;
+    $entry['description'] = $needs_private_directive
+      ? t('Both <code>CacheLookup public on private on</code> and <code>php_flag output_buffering off</code> were found in @path.', ['@path' => $htaccess_path])
+      : t('Both <code>CacheLookup public on</code> and <code>php_flag output_buffering off</code> were found in @path.', ['@path' => $htaccess_path]);
+    return $entry;
+  }
+
+  $missing = [];
+  if (!$has_cachelookup_public) {
+    $missing[] = 'CacheLookup public on';
+  }
+  if ($needs_private_directive && !$has_cachelookup_private) {
+    $missing[] = 'private on (private cache mode)';
+  }
+  if (!$has_outbuf) {
+    $missing[] = 'php_flag output_buffering off';
+  }
+
+  $entry['value'] = t('Missing: @missing', ['@missing' => implode(', ', $missing)]);
+  // CacheLookup public absent means caching cannot work at all; treat
+  // as ERROR. private absent when needed is also ERROR (private cache
+  // mode is enabled but LSWS will not look up private entries).
+  // output_buffering absent often causes intermittent miss-on-every-
+  // request but is technically not fatal; treat as WARNING when it's
+  // the only issue.
+  if (!$has_cachelookup_public || ($needs_private_directive && !$has_cachelookup_private)) {
+    $entry['severity'] = REQUIREMENT_ERROR;
+  }
+  else {
+    $entry['severity'] = REQUIREMENT_WARNING;
+  }
+  $entry['description'] = t(
+    'LSCache requires the directives in @path inside an <code>&lt;IfModule LiteSpeed&gt;</code> block. Without them, LSWS will not cache responses despite the module emitting LSCache headers. See <a href=":docs">.htaccess gotchas guide</a> for the full block to add and notes on managing it under composer-scaffolded sites.',
+    [
+      '@path' => $htaccess_path,
+      ':docs' => 'https://git.drupalcode.org/project/lscache/-/blob/1.3.x/docs/htaccess-gotchas.md',
+    ]
+  );
+  return $entry;
+}
+
+/**
+ * Adds private-cache configuration defaults for sites upgrading to 1.1.x.
+ */
+function lscache_update_8101(): string {
+  $config = \Drupal::configFactory()->getEditable('lscache.settings');
+  $defaults = [
+    'private_cache.enabled' => FALSE,
+    'private_cache.ttl' => 600,
+    'private_cache.contexts' => ['user', 'user.permissions', 'user.roles', 'session'],
+  ];
+  $changed = FALSE;
+  foreach ($defaults as $key => $value) {
+    if ($config->get($key) === NULL) {
+      $config->set($key, $value);
+      $changed = TRUE;
+    }
+  }
+  if ($changed) {
+    $config->save(TRUE);
+    return t('Added private-cache defaults to lscache.settings (off by default; enable at /admin/config/development/performance/lscache).')->render();
+  }
+  return t('Private-cache defaults already present in lscache.settings; no change.')->render();
+}
+
+/**
+ * Adds vary-cookies configuration default for sites upgrading to 1.3.x.
+ */
+function lscache_update_8102(): string {
+  $config = \Drupal::configFactory()->getEditable('lscache.settings');
+  if ($config->get('vary_cookies') === NULL) {
+    $config->set('vary_cookies', []);
+    $config->save(TRUE);
+    return t('Added vary-cookies default (empty list) to lscache.settings. Configure cookie names at /admin/config/development/performance/lscache.')->render();
+  }
+  return t('Vary-cookies default already present in lscache.settings; no change.')->render();
+}
+
+/**
+ * Backfills any missing default config keys from the install YAML.
+ *
+ * 1.3.0-beta1 field testing surfaced sites running with partial
+ * lscache.settings, typically operators who had bumped through
+ * several versions and used drush config:set to flip individual
+ * keys, occasionally replacing entire mappings (private_cache or
+ * vary_cookies) and dropping siblings. The settings form crashed
+ * on render whenever the keys it expected were missing, because
+ * the ConfigTarget closures had strict array parameter types.
+ *
+ * Both the WSOD and the underlying drift are addressed:
+ *
+ *   - The form's closures now declare nullable parameter types and
+ *     fall back to empty defaults so a missing key doesn't crash.
+ *   - This update walks the install YAML and writes any missing
+ *     keys to active config without overwriting operator changes.
+ *
+ * Defensive belt-and-braces. After this hook runs, any subsequent
+ * config drift gets caught by the closures' nullable defaults
+ * rather than a fatal.
+ */
+function lscache_update_8103(): string {
+  $config = \Drupal::configFactory()->getEditable('lscache.settings');
+  $module_path = \Drupal::service('extension.list.module')->getPath('lscache');
+  $install_yaml_path = DRUPAL_ROOT . '/' . $module_path . '/config/install/lscache.settings.yml';
+
+  if (!is_readable($install_yaml_path)) {
+    return t('Skipped: install YAML not readable at @p.', ['@p' => $install_yaml_path])->render();
+  }
+
+  $install_defaults = Yaml::parseFile($install_yaml_path);
+  if (!is_array($install_defaults)) {
+    return t('Skipped: install YAML did not parse as a mapping.')->render();
+  }
+
+  $changes = [];
+  foreach (_lscache_flatten_install_defaults($install_defaults) as $key => $value) {
+    if ($config->get($key) === NULL) {
+      $config->set($key, $value);
+      $changes[] = $key;
+    }
+  }
+
+  if ($changes !== []) {
+    $config->save(TRUE);
+    return t('Backfilled missing default config keys from the install YAML: @keys.', ['@keys' => implode(', ', $changes)])->render();
+  }
+  return t('All install-time defaults already present in active config; no change.')->render();
+}
+
+/**
+ * Flattens a nested install-config array into dotted-path key/value pairs.
+ *
+ * Mappings are recursed into with a `<parent>.<key>` prefix; sequences
+ * (numeric-indexed lists) are kept whole as values, since dotted-path
+ * `set()` on a sequence stores the entire list. Empty arrays are
+ * preserved as-is so an empty `vary_cookies: {}` install default
+ * round-trips correctly.
+ *
+ * @param array $config
+ *   The config tree to flatten.
+ * @param string $prefix
+ *   Internal recursion prefix; callers pass the empty string.
+ *
+ * @return array<string, mixed>
+ *   Map of dotted-path key to leaf value.
+ */
+function _lscache_flatten_install_defaults(array $config, string $prefix = ''): array {
+  $flat = [];
+  foreach ($config as $key => $value) {
+    $full_key = $prefix === '' ? $key : $prefix . '.' . $key;
+    // Only recurse into non-empty associative arrays. Empty arrays and
+    // numeric-indexed lists are leaf values stored whole.
+    if (is_array($value) && $value !== [] && !array_is_list($value)) {
+      $flat = array_merge($flat, _lscache_flatten_install_defaults($value, $full_key));
+    }
+    else {
+      $flat[$full_key] = $value;
+    }
+  }
+  return $flat;
+}

@@ -1,0 +1,11 @@
+name: LSCache
+type: module
+description: 'Drupal.org-native LiteSpeed Cache integration. Emits X-LiteSpeed-Tag and X-LiteSpeed-Cache-Control headers on cacheable responses so LSCache can cache Drupal pages keyed by Drupal cache tag. Ships an lscache_purger submodule that plugs into the Purge framework for tag-based invalidation when content changes.'
+package: Performance and scalability
+core_version_requirement: ^10.3 || ^11
+configure: lscache.settings
+
+# Information added by Drupal.org packaging script on 2026-06-07
+version: '1.3.3'
+project: 'lscache'
+datestamp: 1780845107

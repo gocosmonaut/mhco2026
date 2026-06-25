@@ -1,0 +1,20 @@
+lscache.settings:
+  path: '/admin/config/development/performance/lscache'
+  defaults:
+    _form: '\Drupal\lscache\Form\LscacheSettingsForm'
+    _title: 'LSCache'
+  requirements:
+    _permission: 'administer lscache'
+  options:
+    _admin_route: TRUE
+
+lscache.fragment:
+  path: '/lscache-fragment/{token}'
+  defaults:
+    _controller: '\Drupal\lscache\Controller\LscacheFragmentController::render'
+    _title: 'LSCache fragment'
+  requirements:
+    _access: 'TRUE'
+    _method: 'GET'
+  options:
+    no_cache: TRUE

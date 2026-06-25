@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "90a6fa3501d6c3b84cad1cb29bff6213",
+    "content-hash": "7f87365d2dc6c3531c852bcf6671858d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3205,6 +3205,60 @@
                 "source": "https://git.drupalcode.org/project/libraries",
                 "issues": "http://drupal.org/project/issues/libraries",
                 "irc": "irc://irc.freenode.org/drupal-contribute"
+            }
+        },
+        {
+            "name": "drupal/lscache",
+            "version": "1.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/lscache.git",
+                "reference": "1.3.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/lscache-1.3.3.zip",
+                "reference": "1.3.3",
+                "shasum": "28271d0e88bed5726db9d663203b05d08836ce4a"
+            },
+            "require": {
+                "drupal/core": "^10.3 || ^11"
+            },
+            "require-dev": {
+                "drupal/purge": "^3.6",
+                "drupal/purge_processor_cron": "*",
+                "drupal/purge_processor_lateruntime": "*",
+                "drupal/purge_queuer_coretags": "*"
+            },
+            "suggest": {
+                "drupal/purge": "Required to use the bundled lscache_purger submodule for tag-based invalidation."
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.3.3",
+                    "datestamp": "1780845105",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "dinis",
+                    "homepage": "https://www.drupal.org/user/75012"
+                }
+            ],
+            "description": "LiteSpeed Cache integration for Drupal. Cache-tag headers plus a Purge framework plugin for invalidation.",
+            "homepage": "https://www.drupal.org/project/lscache",
+            "support": {
+                "source": "https://git.drupalcode.org/project/lscache",
+                "issues": "https://www.drupal.org/project/issues/lscache"
             }
         },
         {

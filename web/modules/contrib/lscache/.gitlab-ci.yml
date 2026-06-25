@@ -1,0 +1,14 @@
+################
+# Drupal.org GitLab CI. Contains all three required template includes:
+# variables, workflows, and main. Removing any of them breaks the image
+# resolution or pipeline triggers.
+# See https://project.pages.drupalcode.org/gitlab_templates/
+################
+
+include:
+  - project: $_GITLAB_TEMPLATES_REPO
+    ref: $_GITLAB_TEMPLATES_REF
+    file:
+      - /includes/include.drupalci.variables.yml
+      - /includes/include.drupalci.workflows.yml
+      - /includes/include.drupalci.main.yml

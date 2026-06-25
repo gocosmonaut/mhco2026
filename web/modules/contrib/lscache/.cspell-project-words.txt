@@ -1,0 +1,102 @@
+# Project-specific words for CSpell.
+# See https://project.pages.drupalcode.org/gitlab_templates/jobs/cspell/
+
+# Module maintainer surname
+Hallett
+
+# LiteSpeed-specific terms
+lscache
+LSCache
+litespeedtech
+OpenLiteSpeed
+LSWS
+lsws
+lshttpd
+lscpurgeall
+CacheLookup
+cachelookup
+
+# Hosting platforms commonly running LSWS
+Jelastic
+Virtuozzo
+Cloudways
+UKHost4U
+
+# CDN brand names referenced in CDN-incompatibility docs
+Fastly
+
+# Performance / web vocabulary used in docs
+TTFB
+
+# Purge framework plugin IDs
+coretags
+lateruntime
+
+# URL-strategy / affinity vocabulary (1.3.x purger rework)
+unmappable
+vmod
+dedup
+noops
+reprimed
+spottable
+unconfigured
+evictable
+prunable
+purgeable
+purgeability
+unpinned
+unioning
+shoppinglist
+disqualifier
+
+# British spellings used in the URL-strategy docblocks
+synthesise
+synthesises
+characterise
+normalise
+normalised
+normalises
+
+# Drush state:set alias referenced in hardening comments
+sset
+
+# Drupal and Drush documentation terms
+autodiscovered
+autodiscovery
+
+# Purge plugin annotation property name
+configform
+
+# British English spellings used in docblocks and docs
+finalised
+behaviour
+customisation
+defence
+recognises
+recognised
+unrecognised
+misbehaviour
+authorised
+serialise
+centralised
+personalisation
+personalised
+containerised
+
+# Operator-experience vocabulary (status report messages, docs)
+pasteable
+
+# Project terms (acronyms, drush command names) used in docblocks and docs
+WSOD
+updb
+cdel
+handback
+
+# Drupal contrib module name appearing in test fixtures and examples
+webform
+
+# Test fixture values
+weirdtag
+
+# Field-report attribution: example hostname from beta6 portal-master diagnosis
+tubespanner

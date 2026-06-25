@@ -1,0 +1,41 @@
+lscache.settings:
+  type: config_object
+  label: 'LSCache settings'
+  mapping:
+    enabled:
+      type: boolean
+      label: 'Enable LSCache header injection'
+    default_ttl:
+      type: integer
+      label: 'Default TTL in seconds'
+    tag_prefix:
+      type: string
+      label: 'Cache tag prefix (blank to auto-derive)'
+    tag_filter:
+      type: boolean
+      label: 'Filter low-value cache tags to reduce header size'
+    debug:
+      type: boolean
+      label: 'Enable debug mode'
+    private_cache:
+      type: mapping
+      label: 'Private cache mode for authenticated users'
+      mapping:
+        enabled:
+          type: boolean
+          label: 'Enable private-cache mode'
+        ttl:
+          type: integer
+          label: 'Private-cache TTL in seconds'
+        contexts:
+          type: sequence
+          label: 'Cache contexts that trigger private mode'
+          sequence:
+            type: string
+            label: 'Cache context name'
+    vary_cookies:
+      type: sequence
+      label: 'Cookies the cache varies on'
+      sequence:
+        type: string
+        label: 'Cookie name'

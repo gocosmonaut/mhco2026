@@ -1,0 +1,20 @@
+{
+  "name": "drupal/lscache",
+  "description": "LiteSpeed Cache integration for Drupal. Cache-tag headers plus a Purge framework plugin for invalidation.",
+  "type": "drupal-module",
+  "license": "GPL-2.0-or-later",
+  "homepage": "https://www.drupal.org/project/lscache",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/lscache",
+    "source": "https://git.drupalcode.org/project/lscache"
+  },
+  "require": {
+    "drupal/core": "^10.3 || ^11"
+  },
+  "require-dev": {
+    "drupal/purge": "^3.6"
+  },
+  "suggest": {
+    "drupal/purge": "Required to use the bundled lscache_purger submodule for tag-based invalidation."
+  }
+}

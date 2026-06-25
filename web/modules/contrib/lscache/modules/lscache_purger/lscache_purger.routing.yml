@@ -1,0 +1,9 @@
+lscache_purger.settings:
+  path: '/admin/config/development/performance/lscache/purger'
+  defaults:
+    _form: '\Drupal\lscache_purger\Form\LscachePurgerSettingsForm'
+    _title: 'LSCache Purger settings'
+  requirements:
+    _permission: 'administer lscache'
+  options:
+    _admin_route: TRUE

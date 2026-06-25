@@ -1,0 +1,25 @@
+services:
+  logger.channel.lscache:
+    parent: logger.channel_base
+    arguments: ['lscache']
+
+  lscache.tag_header_builder:
+    class: Drupal\lscache\TagHeaderBuilder
+    arguments:
+      - '@config.factory'
+
+  lscache.response_subscriber:
+    class: Drupal\lscache\EventSubscriber\LscacheResponseSubscriber
+    arguments:
+      - '@config.factory'
+      - '@lscache.tag_header_builder'
+      - '@logger.channel.lscache'
+      - '@router.admin_context'
+      - '@session_configuration'
+      - '@request_stack'
+    tags:
+      - { name: event_subscriber }
+
+  lscache.token_signer:
+    class: Drupal\lscache\Service\LscacheTokenSigner
+    factory: ['Drupal\lscache\Service\LscacheTokenSigner', 'fromSiteSettings']

@@ -1,0 +1,16 @@
+purge_host: ''
+purge_host_header: ''
+timeout: 4
+purge_strategy: auto
+unmappable_fallback: none
+# Static tag-to-URL map. Guarantees a listing page evicts the moment
+# its aggregate tag is invalidated, even before the affinity table has
+# observed that page (cold-start, e.g. immediately after a deploy and
+# before the listing has been re-cached). Keyed by bare cache tag;
+# value is a list of canonical Drupal paths. Empty by default; operators
+# add their high-value listings. Example:
+#   static_url_map:
+#     node_list:
+#       - /patch-notes
+#       - /blog
+static_url_map: {}

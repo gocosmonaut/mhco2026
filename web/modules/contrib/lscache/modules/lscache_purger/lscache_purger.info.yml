@@ -1,0 +1,17 @@
+name: 'LSCache Purger'
+type: module
+description: 'Purge framework plugin that invalidates LiteSpeed Cache entries by Drupal cache tag. Enable this submodule to wire LSCache into the Purge queue and processor pipeline.'
+package: Performance and scalability
+core_version_requirement: ^10.3 || ^11
+configure: lscache_purger.settings
+dependencies:
+  - lscache:lscache
+  - purge:purge
+  - purge:purge_queuer_coretags
+  - purge:purge_processor_cron
+  - purge:purge_processor_lateruntime
+
+# Information added by Drupal.org packaging script on 2026-06-07
+version: '1.3.3'
+project: 'lscache'
+datestamp: 1780845107

@@ -1,0 +1,106 @@
+<?php
+
+/**
+ * @file
+ * Module-level hooks for the LSCache Purger submodule.
+ *
+ * Most of the submodule's behaviour lives in services + the
+ * LscachePurger plugin; this file exists for the small handful of
+ * hooks that have no service-side counterpart.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_cron().
+ *
+ * Two affinity-table maintenance steps, in this order:
+ *
+ *   1. Seed Views page listings as PROTECTED affinity rows. Each Views
+ *      `page` display with list-shaped cache tags and a concrete path
+ *      is recorded as (list-tag, path, protected=1) so the resolver can
+ *      map its aggregate tag (node_list) to the listing URL without any
+ *      operator pin, and so the row never ages out. This makes the
+ *      common case - a Views listing - genuinely self-maintaining: no
+ *      static_url_map pin, no reliance on traffic re-warming it.
+ *
+ *   2. Prune stale rows so storage stays bounded by the site's
+ *      cacheable footprint rather than the lifetime aggregate of every
+ *      URL ever visited. The cutoff is twice the longest configured
+ *      LSCache TTL (public vs private, whichever is longer). Doubling
+ *      gives a safety margin for visit-cadence variance: a URL hit once
+ *      per TTL + jitter keeps its row alive, but a URL that dropped off
+ *      the navigation pattern ages out within two TTL cycles. Protected
+ *      (seeded) rows are exempt from pruning. The prune is bounded per
+ *      cron run (10k rows) so the first prune on a runaway table does
+ *      not stall cron.
+ *
+ * Seeding runs before pruning and re-stamps each seeded row's last_seen
+ * every run; combined with prune() skipping protected rows outright,
+ * seeded listings are guaranteed to survive. (Ordinary traffic
+ * observation leaves the protected flag untouched, so it never demotes
+ * a seed.)
+ *
+ * Surfaced on the 1.3.x portal-master design pass for the
+ * URL-strategy view eviction problem, extended by the portal /help
+ * self-maintaining-map work; see TagAffinityStore for the broader
+ * background.
+ */
+function lscache_purger_cron(): void {
+  $store = \Drupal::service('lscache_purger.tag_affinity_store');
+
+  // Step 1: seed Views page listings as protected rows.
+  try {
+    $now = \Drupal::time()->getCurrentTime();
+    $seeded = 0;
+    foreach (\Drupal::service('lscache_purger.list_tag_coverage')->viewsPageListings() as $listing) {
+      $store->recordTagsForUrl($listing['path'], $listing['tags'], $now, TRUE);
+      $seeded++;
+    }
+    if ($seeded > 0) {
+      \Drupal::logger('lscache_purger')->info(
+        'Seeded @n Views page listing(s) into the tag-affinity table as protected rows.',
+        ['@n' => $seeded],
+      );
+    }
+  }
+  catch (\Throwable $e) {
+    // Seeding is a convenience floor, not a correctness gate; a Views
+    // config read failure must not stall the prune below.
+    \Drupal::logger('lscache_purger')->warning(
+      'Affinity auto-seed of Views listings failed: @msg',
+      ['@msg' => $e->getMessage()],
+    );
+  }
+
+  // Step 2: prune stale (non-protected) rows. Wrapped because prune()
+  // filters on the `protected` column, which only exists once
+  // update_8106 has run; on an existing install in the window between
+  // deploying this code and running drush updb the column is absent, and
+  // a prune failure must not stall cron.
+  try {
+    $config = \Drupal::config('lscache.settings');
+    $public_ttl = (int) ($config->get('default_ttl') ?? 0);
+    $private_ttl = (int) ($config->get('private_cache.ttl') ?? 0);
+    $max_ttl = max($public_ttl, $private_ttl, 3600);
+    $cutoff = \Drupal::time()->getCurrentTime() - (2 * $max_ttl);
+
+    $removed = $store->prune($cutoff, 10000);
+
+    if ($removed > 0) {
+      \Drupal::logger('lscache_purger')->info(
+        'Pruned @n stale rows from the tag-affinity table (last_seen older than @cutoff).',
+        [
+          '@n' => $removed,
+          '@cutoff' => gmdate('c', $cutoff),
+        ],
+      );
+    }
+  }
+  catch (\Throwable $e) {
+    \Drupal::logger('lscache_purger')->warning(
+      'Affinity table prune failed (run drush updb if update_8106 has not applied the protected column yet): @msg',
+      ['@msg' => $e->getMessage()],
+    );
+  }
+}

@@ -391,7 +391,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<h5>{{ value_8|raw }}</h5><br>\r\n{{ value_10 }}<br>\r\n{{ value_1 }}, Oregon {{ value_7 }}<br>\r\nCounty: {{ value_2 }}"
+            text: "<h5>{{ value_8|raw }}</h5>\r\n{{ value_10 }}<br>\r\n{{ value_1 }}, Oregon {{ value_7 }}<br>\r\nCounty: {{ value_2 }}"
             make_link: false
             path: ''
             absolute: false

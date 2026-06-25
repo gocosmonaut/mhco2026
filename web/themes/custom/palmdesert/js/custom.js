@@ -36,12 +36,13 @@
       var slideshow_height = $('.view-display-id-marquee_slideshow').height();
       $('.views_slideshow_cycle_slide .views-row article').height(slideshow_height);
     },
+    
     ArticleTitleCapitalization: function () {
       // Combine selectors into a single comma-separated string for jQuery
       var selectors = '.views-field-title h5 a, h1.title span';
 
       // Define the lowercase exceptions
-      var exceptions = ["to", "the", "and", "or", "for", "of", "in", "on", "with", "a", "an"];
+      var exceptions = ["to", "the", "and", "or", "for", "of", "in", "on", "with", "an"];
 
       // Run a single loop over every matching element found on the page
       $(selectors).each(function () {
@@ -51,16 +52,22 @@
         var words = currentTitle.split(' ');
 
         var transformedWords = words.map(function (word, index) {
-          // Always capitalize the first word. 
+
+          // 1. Check if the word CONTAINS "q&a" to catch cases with punctuation (e.g., "Q&A:")
+          if (word.toLowerCase().includes('q&a')) {
+            // Replace 'q&a' with 'Q&A' but leave the punctuation intact
+            return word.replace(/q&a/i, 'Q&A');
+          }
+
+          // 2. Always capitalize the first word. 
           // For other words, only capitalize if they are NOT in the exceptions list.
           if (index === 0 || !exceptions.includes(word)) {
             return word.charAt(0).toUpperCase() + word.slice(1);
           }
 
-          // Otherwise, leave it lowercase
+          // 3. Otherwise, leave it lowercase
           return word;
         });
-
         // Join the words back into a single string
         var transformedTitle = transformedWords.join(' ');
 
@@ -129,7 +136,7 @@
       var isTermPage = $('');
       if (isArticle) {
         var type = $('.field--name-field-column-category a').html();
-     //   $('.field--name-field-column-category').addClass(type);
+        //   $('.field--name-field-column-category').addClass(type);
       }
     },
 

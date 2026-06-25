@@ -2,67 +2,86 @@
 $bp-tablet: 768px;
 $bp-desktop: 992px;
 
+// Note: $font-family-condensed is assumed to be imported or defined globally
+
 .view-mdprc-directory { 
 
   // =================================================================
-  // 1. EXPOSED FILTERS (Fluid / Non-Grid Spacing)
+  // 1. EXPOSED FILTERS (12-Column Grid with Background & Panel Styling)
   // =================================================================
-  .views-exposed-form form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px; 
-    align-items: flex-end; 
-    margin-bottom: 2rem;
-    width: 100%;
+  #views-exposed-form-mdprc-directory-mdpcr {
+    background-color: #f6f6f6;
+    padding: 1rem 1.25rem;
+    border-radius: 6px;
+    margin: 1rem 0 2rem;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, .15);
 
-    // --- DESKTOP/TABLET: Custom Two-Row Split ---
-    @media (min-width: ($bp-tablet + 1px)) {
+    // Filter element labels updated to Roboto condensed variable
+    label {
+      font-family: $font-family-condensed;
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+      display: inline-block;
+      color: #333;
+      letter-spacing: .0125rem;
+    }
 
-
+    // Grid Container
+    > div {
+      display: grid !important; 
+      gap: 1.5rem; 
+      grid-template-columns: repeat(12, 1fr);
       
-      // ==========================================
-      // ROW 1: Text (46%), City (18%), County (18%), ZIP (18%)
-      // ==========================================
-      
-      // 1st Item (Text Filter): Takes up nearly 50%
-      .js-form-item:nth-child(1) {
-        flex: 0 0 calc(46% - 11.25px); 
-      }
+      // Explicit 2-row layout tracking configuration
+      grid-template-areas: 
+        "name name name name name city city city county county county zip"
+        "type type type total total vacant vacant actions actions actions actions actions";
 
-      // 2nd, 3rd, and 4th Items (City, County, ZIP)
-      .js-form-item:nth-child(2),
-      .js-form-item:nth-child(3),
-      .js-form-item:nth-child(4) {
-        flex: 0 0 calc(18% - 11.25px); 
-        padding: 0 1rem 1rem 0;
-      }
+      align-items: end;
 
-      // ==========================================
-      // ROW 2: Type, Total Spaces, Vacant Spaces, Actions
-      // ==========================================
+      // Map components to assigned grid zones
+      .js-form-item:has([name*="combine" i]), 
+      .js-form-item:has([name*="search" i]), 
+      .js-form-item:has([name*="keys" i]) { grid-area: name; }
+
+      .js-form-item:has([name*="city" i]) { grid-area: city; }
+      .js-form-item:has([name*="county" i]) { grid-area: county; }
+      .js-form-item:has([name*="zip" i]) { grid-area: zip; }
+      .js-form-item:has([name*="type" i]) { grid-area: type; }
       
-      // 4 equal columns to neatly fill the bottom row
-      .js-form-item:nth-child(n+5),
-      .form-actions {
-        flex: 0 0 calc(25% - 11.25px); 
+      // Total Spaces and Vacant Spaces constrained to half-size column width tracks (span 2)
+      .js-form-item:has([name*="total" i]) { grid-area: total; }
+      .js-form-item:has([name*="vacant" i]) { grid-area: vacant; }
+      
+      .form-actions { grid-area: actions; }
+
+      input[type="hidden"] { display: none !important; }
+
+      // Mobile Breakpoint Layout Resolution
+      @media (max-width: $bp-tablet) {
+        // Override Grid with Flexbox Column to prevent Z-axis overlapping
+        display: flex !important; 
+        flex-direction: column;
+        gap: 1.25rem; 
+        
+        .js-form-item, .form-actions { 
+          width: 100%; // Ensure form items stretch 100% across the mobile container
+          margin: 0;   // Strip any stray margins so the flex 'gap' controls spacing perfectly
+        }
       }
     }
 
-    // --- MOBILE: Full width stacking ---
-    @media (max-width: $bp-tablet) {
-      .js-form-item, 
-      .form-actions {
-        flex: 0 0 100%; 
-      }
-      
-      .form-actions {
-        margin-top: 10px; 
-      }
+    input[type="text"], select {
+      width: 100% !important;
+      box-sizing: border-box;
     }
   }
 
   // =================================================================
-  // 2. DIRECTORY TABLE (Flexbox Override)
+  // 2. RESULTS TABLE (Untouched from Desktop fix)
   // =================================================================
   table.views-table {
     width: 100%;
@@ -70,118 +89,113 @@ $bp-desktop: 992px;
     flex-direction: column;
     border-collapse: collapse;
 
-    thead, 
-    tbody {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
+    // Header updated to Roboto condensed variable
+    thead, thead a { 
+      display: flex; 
+      flex-direction: column; 
+      width: 100%; 
+      font-family: $font-family-condensed;
     }
+    
+    tbody { 
+      display: flex; 
+      flex-direction: column; 
+      width: 100%; 
 
-    tr {
-      display: flex;
-      flex-wrap: wrap; 
-      width: 100%;
-      border-bottom: 1px solid #e0e0e0; 
-    }
+      // Alternating row background colors configuration
+      tr:nth-child(odd) td {
+        background-color: #f0f0f0;
 
-    th, 
-    td {
-      padding: 15px 10px;
-      box-sizing: border-box;
-      word-break: break-word; 
-    }
-
-    // --- DESKTOP: 12-Column Grid Proportion (2-4-3-1-1-1) ---
-    @media (min-width: $bp-desktop) {
-      tr {
-        flex-wrap: nowrap; 
-      }
-      
-      // Column 1 (Park Info): 2/12 width
-      th:nth-child(1), 
-      td:nth-child(1) {
-        flex: 0 0 16.6667%;
-        width: 16.6667%;
-      }
-
-      // Column 2 (Park Details): 4/12 width
-      th:nth-child(2), 
-      td:nth-child(2) {
-        flex: 0 0 33.3333%;
-        width: 33.3333%;
-      }
-
-      // Column 3 (Contact Info): 3/12 width
-      th:nth-child(3), 
-      td:nth-child(3) {
-        flex: 0 0 25%;
-        width: 25%;
-      }
-
-      // Columns 4, 5, & 6 (Metrics): 1/12 width each
-      th:nth-child(n+4), 
-      td:nth-child(n+4) {
-        flex: 0 0 8.3333%;
-        width: 8.3333%;
-      }
-    }
-
-    // --- TABLET/MOBILE: Targeted Column Stacking ---
-    @media (max-width: ($bp-desktop - 1px)) {
-      
-      thead {
-        display: none; 
-      }
-
-      // Columns 1, 2, and 3: Full-width rows
-      td:nth-child(-n+3) {
-        flex: 0 0 100%;
-        width: 100%;
-        border-bottom: none; 
-        
-        &::before {
-          display: block;
-          font-size: 0.75rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          color: #777;
-          margin-bottom: 4px;
+        &.is-active {
+          background-color: lightcyan; 
+          filter: brightness(.9); 
         }
       }
+      tr:nth-child(even) td {
+        background-color: #fafafa;
+        &.is-active {
+          background-color: lightcyan; 
+        }
+      }
+    }
+
+    tr { 
+      display: flex; 
+      flex-wrap: wrap; 
+      width: 100%; 
+      border-bottom: 1px solid #e0e0e0;
       
+      td:nth-child(n+4) {
+        text-align: center;
+        font-size: 1.25rem;
+      }
+    }
+    th, td { padding: 15px 10px; box-sizing: border-box; word-break: break-word; }
+
+    // Active column header or cell highlight updates
+    td.is-active, th.is-active {
+      background-color: lightcyan;
+    }
+
+    // Force active sorting indicators to render blue
+    th.is-active {
+      a {
+        color: #0056b3 !important;
+        display: inline;
+      }
+      
+      img, 
+      svg, 
+      .tablesort,
+      [class*="tablesort"] {
+        filter: invert(34%) sepia(87%) saturate(2421%) hue-rotate(201deg) brightness(95%) contrast(101%) !important;
+        fill: #0056b3 !important;
+      }
+    }
+
+    h5 {
+      margin-bottom: .25rem;
+    }
+
+    // --- DESKTOP: 12-Column Grid Proportion ---
+    @media (min-width: $bp-desktop) {
+      tr { flex-wrap: nowrap; }
+      th:nth-child(1), td:nth-child(1) { flex: 0 0 16.6667%; width: 16.6667%; }
+      th:nth-child(2), td:nth-child(2) { flex: 0 0 33.3333%; width: 33.3333%; }
+      th:nth-child(3), td:nth-child(3) { flex: 0 0 25%; width: 25%; }
+      
+      th:nth-child(n+4), td:nth-child(n+4) { 
+        flex: 0 0 8.3333%; 
+        width: 8.3333%; 
+        display: flex;           
+        justify-content: center; 
+        align-items: center;     
+      }
+    }
+
+    // --- TABLET/MOBILE: Stacked Card Conversions ---
+    @media (max-width: ($bp-desktop - 1px)) {
+      .flex-wrap {display: contents;}
+      thead { display: none; }
+      
+      td:nth-child(-n+3) {
+        flex: 0 0 100%; width: 100%; border-bottom: none; 
+        &::before { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #777; margin-bottom: 0px; }
+      }
       td:nth-child(1)::before { content: "Park Info"; }
       td:nth-child(2)::before { content: "Park Details"; }
       td:nth-child(3)::before { content: "Contact Info"; }
 
-      // Columns 4, 5, and 6: 1/3 Metrics Block
       td:nth-child(n+4):nth-child(-n+6) {
-        flex: 0 0 33.3333%;
-        width: 33.3333%;
-        text-align: center; 
-        background-color: #f9f9f9; 
-        padding-top: 12px;
-        padding-bottom: 15px;
-
-        &::before {
-          display: block;
-          font-size: 0.7rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          color: #555;
-          margin-bottom: 8px; 
-        }
+        flex: 0 0 33.3333%; width: 33.3333%; text-align: center; background-color: #f9f9f9; padding: 12px 0 15px;       
+        display: block;   border-top: 1px solid #ccc; 
+        &::before { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #555; margin-bottom: 0px; }
       }
-
       td:nth-child(4)::before { content: "Total Spaces"; }
       td:nth-child(5)::before { content: "Vacant"; }
       td:nth-child(6)::before { content: "Vacancy %"; }
       
-      tr {
-        margin-bottom: 1.5rem;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        overflow: hidden; 
-      }
+      tr { margin-bottom: 1.5rem; border: 1px solid #ccc; border-radius: 6px; overflow: hidden; }
     }
   }
 }

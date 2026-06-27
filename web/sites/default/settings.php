@@ -882,5 +882,11 @@ $settings['config_sync_directory'] = 'sites/default/files/sync';
 $config['system.logging']['error_level'] = 'verbose';
 
 $settings['trusted_host_patterns'] = [
-  '^lightseagreen\-sparrow\-302032\.hostingersite\.com$',
+  '^mhco\.org$',
+  '^www\.mhco\.org$',
 ];
+
+$settings['cookie_domain'] = '.mhco.org';
+
+$settings['omit_vary_cookie'] = FALSE;   // make sure this is not TRUE
+$settings['cache']['bins']['page'] = 'cache.backend.null'; // temporary, for testing only

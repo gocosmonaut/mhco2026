@@ -51,12 +51,10 @@
 				<div id="home-col-2">
 					<div id="site-introduction">
 						{% if logged_in %}
-							<p>Logged in: MHCO is the foremost advocate for your interests in advocating for owners of...</p>
+							<p>Welcome back, {{ user.getDisplayName() }}! You are an important member of the Manufactured Housing Communities of Oregon family.</p>
 						{% endif %}
 						{% if not logged_in %}
-							<p>Not logged in: MHCO is the foremost advocate for your interests in advocating for owners of manufactured housing communities.
-								<a href="/membership/become-community-member">Register</a>
-								now to join.</p>
+							<p>MHCO is the foremost advocate of your interests as owners and managers of Mobile Home, Marina & RV Parks.</p>
 						{% endif %}
 					</div>
 					{{ drupal_view('advertisements', 'block_2') }}

@@ -3,9 +3,12 @@
 # ==============================================================================
 <IfModule LiteSpeed>
   RewriteEngine On
+  
+  # Strong bypass for homepage + sessions (outer CDN protection)
+  RewriteCond %{REQUEST_URI} ^/?$ [OR]
   RewriteCond %{HTTP_COOKIE} SESS [NC,OR]
   RewriteCond %{HTTP_COOKIE} SSESS [NC]
-  RewriteRule .* - [E=Cache-Control:no-cache]
+  RewriteRule .* - [E=Cache-Control:no-cache,private,no-store,E=no-store]
 </IfModule>
 
 <IfModule mod_rewrite.c>
@@ -33,16 +36,16 @@ php_value error_reporting E_ALL
   # 3. Route Traffic to the /web Subdirectory
   # ----------------------------------------------------------------------------
 
-  # CURRENT DOMAIN: lightseagreen-sparrow-302032.hostingersite.com
-  RewriteCond %{HTTP_HOST} ^(www\.)?lightseagreen-sparrow-302032\.hostingersite\.com$ [NC]
-  RewriteCond %{REQUEST_URI} !^/web/
-  RewriteRule ^(.*)$ /web/$1 [L]
+  # CURRENT DOMAIN: mhco.org
+  # RewriteCond %{HTTP_HOST} ^(www\.)?lightseagreen-sparrow-302032\.hostingersite\.com$ [NC]
+  # RewriteCond %{REQUEST_URI} !^/web/
+  # RewriteRule ^(.*)$ /web/$1 [L]
 
   # FUTURE DOMAIN: mhco.org
   # When the domain switches, remove the '#' from the beginning of the 3 
   # lines below, and delete or comment out the current domain block above.
-  # RewriteCond %{HTTP_HOST} ^(www\.)?mhco\.org$ [NC]
-  # RewriteCond %{REQUEST_URI} !^/web/
-  # RewriteRule ^(.*)$ /web/$1 [L]
+  RewriteCond %{HTTP_HOST} ^(www\.)?mhco\.org$ [NC]
+  RewriteCond %{REQUEST_URI} !^/web/
+  RewriteRule ^(.*)$ /web/$1 [L]
 
 </IfModule>

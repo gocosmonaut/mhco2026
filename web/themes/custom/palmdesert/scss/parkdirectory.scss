@@ -4,7 +4,7 @@ $bp-desktop: 992px;
 
 // Note: $font-family-condensed is assumed to be imported or defined globally
 
-.view-mdprc-directory { 
+.view-mdprc-directory {
 
   // =================================================================
   // 1. EXPOSED FILTERS (12-Column Grid with Background & Panel Styling)
@@ -30,51 +30,75 @@ $bp-desktop: 992px;
     }
 
     // Grid Container
-    > div {
-      display: grid !important; 
-      gap: 1.5rem; 
+    >div {
+      display: grid !important;
+      gap: 1.5rem;
       grid-template-columns: repeat(12, 1fr);
-      
+
       // Explicit 2-row layout tracking configuration
-      grid-template-areas: 
+      grid-template-areas:
         "name name name name name city city city county county county zip"
         "type type type total total vacant vacant actions actions actions actions actions";
 
       align-items: end;
 
       // Map components to assigned grid zones
-      .js-form-item:has([name*="combine" i]), 
-      .js-form-item:has([name*="search" i]), 
-      .js-form-item:has([name*="keys" i]) { grid-area: name; }
+      .js-form-item:has([name*="combine"i]),
+      .js-form-item:has([name*="search"i]),
+      .js-form-item:has([name*="keys"i]) {
+        grid-area: name;
+      }
 
-      .js-form-item:has([name*="city" i]) { grid-area: city; }
-      .js-form-item:has([name*="county" i]) { grid-area: county; }
-      .js-form-item:has([name*="zip" i]) { grid-area: zip; }
-      .js-form-item:has([name*="type" i]) { grid-area: type; }
-      
+      .js-form-item:has([name*="city"i]) {
+        grid-area: city;
+      }
+
+      .js-form-item:has([name*="county"i]) {
+        grid-area: county;
+      }
+
+      .js-form-item:has([name*="zip"i]) {
+        grid-area: zip;
+      }
+
+      .js-form-item:has([name*="type"i]) {
+        grid-area: type;
+      }
+
       // Total Spaces and Vacant Spaces constrained to half-size column width tracks (span 2)
-      .js-form-item:has([name*="total" i]) { grid-area: total; }
-      .js-form-item:has([name*="vacant" i]) { grid-area: vacant; }
-      
-      .form-actions { grid-area: actions; }
+      .js-form-item:has([name*="total"i]) {
+        grid-area: total;
+      }
 
-      input[type="hidden"] { display: none !important; }
+      .js-form-item:has([name*="vacant"i]) {
+        grid-area: vacant;
+      }
+
+      .form-actions {
+        grid-area: actions;
+      }
+
+      input[type="hidden"] {
+        display: none !important;
+      }
 
       // Mobile Breakpoint Layout Resolution
       @media (max-width: $bp-tablet) {
         // Override Grid with Flexbox Column to prevent Z-axis overlapping
-        display: flex !important; 
+        display: flex !important;
         flex-direction: column;
-        gap: 1.25rem; 
-        
-        .js-form-item, .form-actions { 
+        gap: 1.25rem;
+
+        .js-form-item,
+        .form-actions {
           width: 100%; // Ensure form items stretch 100% across the mobile container
-          margin: 0;   // Strip any stray margins so the flex 'gap' controls spacing perfectly
+          margin: 0; // Strip any stray margins so the flex 'gap' controls spacing perfectly
         }
       }
     }
 
-    input[type="text"], select {
+    input[type="text"],
+    select {
       width: 100% !important;
       box-sizing: border-box;
     }
@@ -90,50 +114,60 @@ $bp-desktop: 992px;
     border-collapse: collapse;
 
     // Header updated to Roboto condensed variable
-    thead, thead a { 
-      display: flex; 
-      flex-direction: column; 
-      width: 100%; 
+    thead,
+    thead a {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
       font-family: $font-family-condensed;
     }
-    
-    tbody { 
-      display: flex; 
-      flex-direction: column; 
-      width: 100%; 
+
+    tbody {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
 
       // Alternating row background colors configuration
       tr:nth-child(odd) td {
         background-color: #f0f0f0;
 
         &.is-active {
-          background-color: lightcyan; 
-          filter: brightness(.9); 
+          background-color: lightcyan;
+          filter: brightness(.9);
         }
       }
+
       tr:nth-child(even) td {
         background-color: #fafafa;
+
         &.is-active {
-          background-color: lightcyan; 
+          background-color: lightcyan;
         }
       }
     }
 
-    tr { 
-      display: flex; 
-      flex-wrap: wrap; 
-      width: 100%; 
+    tr {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
       border-bottom: 1px solid #e0e0e0;
-      
+
       td:nth-child(n+4) {
         text-align: center;
         font-size: 1.25rem;
       }
     }
-    th, td { padding: 15px 10px; box-sizing: border-box; word-break: break-word; }
+
+    th,
+    td {
+      padding: 15px 10px;
+      box-sizing: border-box;
+      word-break: break-word;
+    }
 
     // Active column header or cell highlight updates
-    td.is-active, th.is-active {
+    td.is-active,
+    th.is-active {
       background-color: lightcyan;
     }
 
@@ -143,9 +177,9 @@ $bp-desktop: 992px;
         color: #0056b3 !important;
         display: inline;
       }
-      
-      img, 
-      svg, 
+
+      img,
+      svg,
       .tablesort,
       [class*="tablesort"] {
         filter: invert(34%) sepia(87%) saturate(2421%) hue-rotate(201deg) brightness(95%) contrast(101%) !important;
@@ -159,43 +193,112 @@ $bp-desktop: 992px;
 
     // --- DESKTOP: 12-Column Grid Proportion ---
     @media (min-width: $bp-desktop) {
-      tr { flex-wrap: nowrap; }
-      th:nth-child(1), td:nth-child(1) { flex: 0 0 16.6667%; width: 16.6667%; }
-      th:nth-child(2), td:nth-child(2) { flex: 0 0 33.3333%; width: 33.3333%; }
-      th:nth-child(3), td:nth-child(3) { flex: 0 0 25%; width: 25%; }
-      
-      th:nth-child(n+4), td:nth-child(n+4) { 
-        flex: 0 0 8.3333%; 
-        width: 8.3333%; 
-        display: flex;           
-        justify-content: center; 
-        align-items: center;     
+      tr {
+        flex-wrap: nowrap;
+      }
+
+      th:nth-child(1),
+      td:nth-child(1) {
+        flex: 0 0 16.6667%;
+        width: 16.6667%;
+      }
+
+      th:nth-child(2),
+      td:nth-child(2) {
+        flex: 0 0 33.3333%;
+        width: 33.3333%;
+      }
+
+      th:nth-child(3),
+      td:nth-child(3) {
+        flex: 0 0 25%;
+        width: 25%;
+      }
+
+      th:nth-child(n+4),
+      td:nth-child(n+4) {
+        flex: 0 0 8.3333%;
+        width: 8.3333%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     }
 
     // --- TABLET/MOBILE: Stacked Card Conversions ---
     @media (max-width: ($bp-desktop - 1px)) {
-      .flex-wrap {display: contents;}
-      thead { display: none; }
-      
-      td:nth-child(-n+3) {
-        flex: 0 0 100%; width: 100%; border-bottom: none; 
-        &::before { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #777; margin-bottom: 0px; }
+      .flex-wrap {
+        display: contents;
       }
-      td:nth-child(1)::before { content: "Park Info"; }
-      td:nth-child(2)::before { content: "Park Details"; }
-      td:nth-child(3)::before { content: "Contact Info"; }
+
+      thead {
+        display: none;
+      }
+
+      td:nth-child(-n+3) {
+        flex: 0 0 100%;
+        width: 100%;
+        border-bottom: none;
+
+        &::before {
+          display: block;
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          color: #777;
+          margin-bottom: 0px;
+        }
+      }
+
+      td:nth-child(1)::before {
+        content: "Park Info";
+      }
+
+      td:nth-child(2)::before {
+        content: "Park Details";
+      }
+
+      td:nth-child(3)::before {
+        content: "Contact Info";
+      }
 
       td:nth-child(n+4):nth-child(-n+6) {
-        flex: 0 0 33.3333%; width: 33.3333%; text-align: center; background-color: #f9f9f9; padding: 12px 0 15px;       
-        display: block;   border-top: 1px solid #ccc; 
-        &::before { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #555; margin-bottom: 0px; }
+        flex: 0 0 33.3333%;
+        width: 33.3333%;
+        text-align: center;
+        background-color: #f9f9f9;
+        padding: 12px 0 15px;
+        display: block;
+        border-top: 1px solid #ccc;
+
+        &::before {
+          display: block;
+          font-size: 0.7rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          color: #555;
+          margin-bottom: 0px;
+        }
       }
-      td:nth-child(4)::before { content: "Total Spaces"; }
-      td:nth-child(5)::before { content: "Vacant"; }
-      td:nth-child(6)::before { content: "Vacancy %"; }
-      
-      tr { margin-bottom: 1.5rem; border: 1px solid #ccc; border-radius: 6px; overflow: hidden; }
+
+      td:nth-child(4)::before {
+        content: "Total Spaces";
+      }
+
+      td:nth-child(5)::before {
+        content: "Vacant";
+      }
+
+      td:nth-child(6)::before {
+        content: "Vacancy %";
+      }
+
+      tr {
+        margin-bottom: 1.5rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        overflow: hidden;
+      }
     }
   }
 }

@@ -81,14 +81,14 @@
         $('p').each(function (index, value) {
           var extraSpaces = $(this).html();
           if (extraSpaces.length <= 19) {
-            // $(this).remove();
+            $(this).remove();
           }
         })
       }
       $('.field-content').each(function (index, value) {
         var extraSpaces = $(this).html();
         if (extraSpaces.length <= 19) {
-          $(this).remove();
+          // $(this).remove();
         }
       })
 
@@ -129,7 +129,7 @@
           "background-size": "cover",
           "background-repeat": "no-repeat",
         });
-      });;
+      });
     },
     ArticleColumnCategoryHighlighting: function () {
       var isArticle = $("#page").hasClass("article");

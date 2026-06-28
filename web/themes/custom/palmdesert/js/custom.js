@@ -81,7 +81,7 @@
         $('p').each(function (index, value) {
           var extraSpaces = $(this).html();
           if (extraSpaces.length <= 19) {
-            $(this).remove();
+            // $(this).remove();
           }
         })
       }

@@ -66,7 +66,6 @@
     setTimeout(function () {
       if (onHomePage == true) {
         $(".home-article-search input#edit-tid").attr("placeholder", "Enter an article topic.");
-        $(".home-article-search input#edit-tid").addClass("shitballs");
       }
     }, 5000);
   });

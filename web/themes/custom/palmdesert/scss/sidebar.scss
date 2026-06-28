@@ -1,9 +1,9 @@
 #sidebar_second {
     padding: 0 1rem 0 1.5rem;
 
-       @media (max-width: $bp-lg) {
-           width: 100%;
-        }
+    @media (max-width: $bp-lg) {
+        width: 100%;
+    }
 
     #block-palmdesert-articlecontainer--2 {
         padding: 0;
@@ -20,7 +20,7 @@
                 box-shadow: 3px 3px 5px rgba(0, 0, 0, .25);
 
                 .view-article-search .view-content.row {
-                   display: none;
+                    display: none;
                 }
 
                 h4 {
@@ -59,9 +59,9 @@
                 width: 100%;
                 height: auto;
 
-                     @media (max-width: $bp-lg) {
-           width: auto;
-        }
+                @media (max-width: $bp-lg) {
+                    width: auto;
+                }
 
             }
         }
@@ -71,10 +71,10 @@
             border-left: 1px solid #ddd;
             margin: 2rem 0;
 
-                 @media (max-width: $bp-lg) {
-          border: 0;
-          padding: 0;
-        }
+            @media (max-width: $bp-lg) {
+                border: 0;
+                padding: 0;
+            }
 
 
             .views-row {

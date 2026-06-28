@@ -1,6 +1,12 @@
 .view-id-article_search,
 .node--type-article article .views-view-grid.horizontal {
 
+    #views-exposed-form-article-search-articles-page {
+        button {
+            margin-left: 1rem;
+        }
+    }
+
 
     .views-row {
         border-bottom: 1px solid #ccc;

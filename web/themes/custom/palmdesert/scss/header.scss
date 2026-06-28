@@ -28,9 +28,9 @@
                 color: gold;
                 letter-spacing: 0.025rem;
 
-                 @media (max-width: $bp-lg) {
-               margin-right: 0;
-            }
+                @media (max-width: $bp-lg) {
+                    margin-right: 0;
+                }
 
                 @media (max-width: $bp-md) {
                     font-size: .75rem;

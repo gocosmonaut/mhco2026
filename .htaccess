@@ -4,8 +4,9 @@
 <IfModule LiteSpeed>
   RewriteEngine On
   
-  # Strong bypass for homepage + sessions (outer CDN protection)
-  RewriteCond %{REQUEST_URI} ^/?$ [OR]
+  # Strong bypass for homepage + authenticated/user pages (helps outer CDN)
+  RewriteCond %{REQUEST_URI} ^/?$ [OR]  
+  RewriteCond %{REQUEST_URI} ^/(login|user|account) [NC]
   RewriteCond %{HTTP_COOKIE} SESS [NC,OR]
   RewriteCond %{HTTP_COOKIE} SSESS [NC]
   RewriteRule .* - [E=Cache-Control:no-cache,private,no-store,E=no-store]

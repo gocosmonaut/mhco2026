@@ -9,9 +9,6 @@ function mdpcr_sync_cron()
 {
   // Directs the work to your service
   \Drupal::service('mdpcr_sync.updater')->runSync();
-  \Drupal::service('router.builder')->rebuild();
-  \Drupal::service('cache.entity')->deleteAll();
-  \Drupal::logger('mdpcr_sync')->notice('Cleared router and entity cache via cron.');
 }
 
 /**

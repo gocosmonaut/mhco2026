@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @file
+ * MHCO Caching Fixes.
+ */
+
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * Implements hook_user_login().
+ */
+function mhco_caching_user_login(AccountInterface $account)
+{
+  // Clear cache for this user on login
+  $tags = [
+    'user:' . $account->id(),
+    'user_list',
+    'route_match',
+  ];
+
+  \Drupal::service('cache_tags.invalidator')->invalidateTags($tags);
+
+  \Drupal::logger('mhco_caching')->notice('Cleared cache tags for user @uid on login.', ['@uid' => $account->id()]);
+}
+
+/**
+ * Implements hook_user_logout().
+ */
+function mhco_caching_user_logout(AccountInterface $account)
+{
+  // Clear cache for this user on logout
+  $tags = [
+    'user:' . $account->id(),
+    'user_list',
+  ];
+
+  \Drupal::service('cache_tags.invalidator')->invalidateTags($tags);
+
+  \Drupal::logger('mhco_caching')->notice('Cleared cache tags for user @uid on logout.', ['@uid' => $account->id()]);
+}
+
+/**
+ * Implements hook_cron().
+ */
+function mhco_caching_cron()
+{
+  // Periodically rebuild router cache
+  \Drupal::service('router.builder')->rebuild();
+  \Drupal::logger('mhco_caching')->notice('Rebuilt router cache via cron.');
+}

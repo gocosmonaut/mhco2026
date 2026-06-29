@@ -1,0 +1,5 @@
+name: MHCO Caching Fixes
+type: module
+description: Custom cache invalidation for user profiles and routing.
+core_version_requirement: ^10
+package: Custom

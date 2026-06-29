@@ -496,7 +496,7 @@ display:
               empty_column: false
               responsive: ''
             field_park_form_downloads:
-              sortable: false
+              sortable: true
               default_sort_order: desc
               align: ''
               separator: ''

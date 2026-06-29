@@ -886,7 +886,9 @@ $settings['trusted_host_patterns'] = [
   '^www\.mhco\.org$',
 ];
 
-$settings['cookie_domain'] = '.mhco.org';
+// Removed cookie_domain to prevent browser session collisions
 
-$settings['omit_vary_cookie'] = FALSE;   // make sure this is not TRUE
-$settings['cache']['bins']['page'] = 'cache.backend.null'; // temporary, for testing only
+$settings['omit_vary_cookie'] = FALSE;
+
+// Temporary: Forces Drupal to never cache pages while we isolate the server cache
+$settings['cache']['bins']['page'] = 'cache.backend.null';

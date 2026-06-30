@@ -12,40 +12,22 @@ use Drupal\Core\Session\AccountInterface;
  */
 function mhco_caching_user_login(AccountInterface $account)
 {
-  // Clear cache for this user on login
+  // 1. Invalidate Drupal's internal cache tags for this specific user
   $tags = [
     'user:' . $account->id(),
     'user_list',
     'route_match',
   ];
-
   \Drupal::service('cache_tags.invalidator')->invalidateTags($tags);
 
-  \Drupal::logger('mhco_caching')->notice('Cleared cache tags for user @uid on login.', ['@uid' => $account->id()]);
-}
+  // 2. Safely force the redirect by setting the destination query parameter
+  $request = \Drupal::request();
+  // Ensure we don't override an existing destination if they are logging in from a specific protected page, 
+  // or remove the 'has' check if you want to force this 100% of the time regardless of where they logged in from.
+  if (!$request->query->has('destination')) {
+    $request->query->set('destination', '/user/' . $account->id());
+  }
 
-/**
- * Implements hook_user_logout().
- */
-function mhco_caching_user_logout(AccountInterface $account)
-{
-  // Clear cache for this user on logout
-  $tags = [
-    'user:' . $account->id(),
-    'user_list',
-  ];
-
-  \Drupal::service('cache_tags.invalidator')->invalidateTags($tags);
-
-  \Drupal::logger('mhco_caching')->notice('Cleared cache tags for user @uid on logout.', ['@uid' => $account->id()]);
-}
-
-/**
- * Implements hook_cron().
- */
-function mhco_caching_cron()
-{
-  // Periodically rebuild router cache
-  \Drupal::service('router.builder')->rebuild();
-  \Drupal::logger('mhco_caching')->notice('Rebuilt router cache via cron.');
+  // 3. Log the action
+  \Drupal::logger('mhco_caching')->notice('User @uid logged in. Cleared cache and set redirect to profile.', ['@uid' => $account->id()]);
 }

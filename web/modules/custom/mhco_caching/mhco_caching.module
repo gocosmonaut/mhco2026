@@ -6,28 +6,31 @@
  */
 
 use Drupal\Core\Session\AccountInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_user_login().
  */
-function mhco_caching_user_login(AccountInterface $account)
+function mhco_caching_user_login(UserInterface $account)
 {
-  // 1. Invalidate Drupal's internal cache tags for this specific user
-  $tags = [
-    'user:' . $account->id(),
+  // 1. Clear the specific cache tags for the user
+  $uid = $account->id();
+  \Drupal::service('cache_tags.invalidator')->invalidateTags([
+    "user:$uid",
     'user_list',
-    'route_match',
-  ];
-  \Drupal::service('cache_tags.invalidator')->invalidateTags($tags);
+    'route_match'
+  ]);
 
-  // 2. Safely force the redirect by setting the destination query parameter
-  $request = \Drupal::request();
-  // Ensure we don't override an existing destination if they are logging in from a specific protected page, 
-  // or remove the 'has' check if you want to force this 100% of the time regardless of where they logged in from.
-  if (!$request->query->has('destination')) {
-    $request->query->set('destination', '/user/' . $account->id());
-  }
+  // 2. Log the event for debugging
+  \Drupal::logger('mhco_caching')->info('Global login hook fired for User @uid (@name). Cache cleared.', [
+    '@uid' => $uid,
+    '@name' => $account->getAccountName(),
+  ]);
 
-  // 3. Log the action
-  \Drupal::logger('mhco_caching')->notice('User @uid logged in. Cleared cache and set redirect to profile.', ['@uid' => $account->id()]);
+  // 3. Optional: Trigger a redirect
+  // If you want to force a redirect to the clean profile path,
+  // do it using a session response or a simple redirect logic.
+  $response = new \Symfony\Component\HttpFoundation\RedirectResponse('/users/' . $uid);
+  $response->send();
+  exit;
 }

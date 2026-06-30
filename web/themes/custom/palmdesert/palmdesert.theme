@@ -121,14 +121,12 @@ function palmdesert_theme_suggestions_page_title_alter(array &$suggestions, arra
  */
 function palmdesert_preprocess_block(&$variables)
 {
-  // Existing cache rule
-  $current_user = \Drupal::currentUser();
-  if (!$current_user->hasPermission('administer site configuration')) {
-    $variables['elements']['#cache']['max-age'] = 0;
-  }
-
+  $variables['#cache']['contexts'][] = 'user';
   // Target your specific block
   if ($variables['plugin_id'] === 'block_content:palmdesert_utilitynavauthenticateduser') {
+
+    // 1. Tell Drupal this block varies based on the current user.
+    // This replaces the need for max-age = 0.
 
     $account = \Drupal::currentUser();
 
@@ -136,11 +134,11 @@ function palmdesert_preprocess_block(&$variables)
       $user = \Drupal\user\Entity\User::load($account->id());
 
       $variables['user'] = $user;
-      $variables['user_display_name'] = $user->getDisplayName();   // ← Most reliable
-      $variables['user_account_name'] = $user->getAccountName();   // username
+      $variables['user_display_name'] = $user->getDisplayName();
+      $variables['user_account_name'] = $user->getAccountName();
     } else {
       $variables['user'] = NULL;
-      $variables['user_display_name'] = "jack";
+      $variables['user_display_name'] = "Temporary";
     }
   }
 }

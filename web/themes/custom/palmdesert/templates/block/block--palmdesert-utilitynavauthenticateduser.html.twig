@@ -49,8 +49,8 @@
         <img src="{{ file_url(user.user_picture.entity.fileuri) }}" alt="{{ user_display_name }}">
       {% else %}
         <img src="{{ site.url }}/sites/default/files/profile-placeholder.png" alt="{{ user.getDisplayName() }}">
+          {{ user.getDisplayName() }}
       {% endif %}
-      {{ user.getDisplayName() }}
     </span>
   </a>
 

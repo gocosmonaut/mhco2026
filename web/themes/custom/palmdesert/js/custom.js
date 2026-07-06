@@ -23,6 +23,7 @@
       $this.NavAnimate();
       $this.FormClick();
       $this.TermBodyTrim();
+      $this.RemoveAnonArticles();
     },
     MarqueeMatchHeight: function () {
       var slideshow_height = $('.view-display-id-marquee_slideshow').height();
@@ -36,7 +37,7 @@
       var slideshow_height = $('.view-display-id-marquee_slideshow').height();
       $('.views_slideshow_cycle_slide .views-row article').height(slideshow_height);
     },
-    
+
     ArticleTitleCapitalization: function () {
       // Combine selectors into a single comma-separated string for jQuery
       var selectors = '.views-field-title h5 a, h1.title span';
@@ -209,6 +210,15 @@
             $(this).remove();
           }
         });
+      }
+    },
+    RemoveAnonArticles: function () {
+      var auth = $('body').hasClass("user-not-logged-in");
+      var column = $('body').hasClass("node--type-column");
+      var cu = $('body').hasClass("node--type-community-updates");
+
+      if (auth && (column || cu)) {
+        $('article').remove();
       }
     },
   };

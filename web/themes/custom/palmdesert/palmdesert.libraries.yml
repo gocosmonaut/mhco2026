@@ -5,7 +5,6 @@ global-styling:
     js/bootstrap.min.js: { weight: -48 }
     js/barrio.js: {}
     js/custom.js: {}
-    js/palmdesert.js: {}
   css:
     component:
       css/style.css: {}

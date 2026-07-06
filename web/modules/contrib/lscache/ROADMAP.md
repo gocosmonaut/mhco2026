@@ -272,7 +272,61 @@ because the per-user variation is pushed out to the fragment.
 - Fragments carry an `lscache_esi` cache tag so a single tag
   invalidation can purge every ESI fragment site-wide.
 
-## 1.3.3 (in progress)
+## 1.3.4 (in progress)
+
+Two fixes, both aimed at the failure the field kept hitting: edits that
+return HTTP 200 but never evict.
+
+**`auto` strategy is now safe by default and self-probing.** This is the
+real fix for the "saves do not clear the cache" class of report. `auto`
+used to assume tag-based PURGE worked until someone ran
+`drush lscache:diag`; on the many LiteSpeed builds that silently ignore
+tag-PURGE, a fresh install therefore purged by tag into a void and
+nothing ever cleared, with no signal anywhere. Now:
+
+- `auto` resolves to the always-works URL strategy until a probe has
+  positively confirmed tag-PURGE evicts on this build. A fresh install
+  evicts correctly out of the box, with no drush command and no config.
+- A cron auto-probe (StrategyProber) runs once while `auto` is unprobed,
+  so builds where tag-PURGE does work upgrade themselves to the more
+  efficient tag strategy automatically, still with no operator action.
+- Resolution is centralised in StrategyResolver, so the runtime purger
+  and the status report can never disagree about the active strategy.
+- The invalidation-strategy status row is reworked to say plainly which
+  strategy is active and why: URL as the safe default pending a probe,
+  URL because tag-PURGE is ineffective here, or a warning only when
+  `tag` is pinned onto a build where it does not evict.
+
+Behaviour note: on upgrade an `auto` site briefly uses URL until the
+next cron probe; on builds where tag-PURGE works it then returns to tag.
+URL evicts correctly throughout, so this is safe, not a regression.
+
+**Shared-hosting and loopback purge-host fixes**, prompted by issue
+#3594469 (purge test passes but content does not evict on a single-server
+LiteSpeed host). Three rough edges that sent the reporter down a dead
+end:
+
+- **Test purge host no longer fails on an https loopback host.** The
+  real purger already skips TLS verification for loopback addresses (a
+  bare 127.0.0.1 or ::1 cannot carry a trusted certificate), but the
+  settings-form Test button did not, so it reported a certificate error
+  for an https loopback host that production would PURGE fine. The test
+  now mirrors the purger.
+- **The Test button success message is now accurate.** A 200 response
+  proves only that the host accepts the PURGE method, not that tag-based
+  eviction works on that LiteSpeed build. The message now says so and
+  points at drush lscache:diag.
+- **The scheme-mismatch status row is loopback-aware.** It no longer
+  warns against the http://127.0.0.1 the onboarding recommends, which
+  used to nudge operators toward https on a bare IP (a guaranteed TLS
+  failure). For loopback hosts the row stays silent; the Host header row
+  and drush lscache:diag cover the real eviction concerns.
+
+The loopback definition is centralised in a new PurgeHost helper shared
+by the purger, the test button, and the status row, with unit coverage.
+No schema change, and no behaviour change for non-loopback purge hosts.
+
+## 1.3.3 (shipped)
 
 Operator-experience polish: a calmer status report and a steadier
 diag probe. No behaviour change to caching or invalidation.

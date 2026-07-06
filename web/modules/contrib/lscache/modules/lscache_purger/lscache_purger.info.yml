@@ -11,7 +11,7 @@ dependencies:
   - purge:purge_processor_cron
   - purge:purge_processor_lateruntime
 
-# Information added by Drupal.org packaging script on 2026-06-07
-version: '1.3.3'
+# Information added by Drupal.org packaging script on 2026-06-29
+version: '1.3.4'
 project: 'lscache'
-datestamp: 1780845107
+datestamp: 1782773203

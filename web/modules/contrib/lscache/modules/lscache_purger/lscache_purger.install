@@ -7,6 +7,8 @@
 
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Url;
+use Drupal\lscache_purger\PurgeHost;
+use Drupal\lscache_purger\StrategyResolver;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -191,12 +193,7 @@ function lscache_purger_requirements(string $phase): array {
 function _lscache_purger_check_unpinned_list_tags(ImmutableConfig $config): array {
   // Resolve the active strategy exactly as the purger does at runtime.
   $configured = (string) ($config->get('purge_strategy') ?? 'auto');
-  $tag_purge_effective = \Drupal::state()->get('lscache_purger.tag_purge_effective');
-  $active = match (TRUE) {
-    $configured === 'tag', $configured === 'url' => $configured,
-    $tag_purge_effective === FALSE => 'url',
-    default => 'tag',
-  };
+  $active = StrategyResolver::resolve($configured, \Drupal::state()->get('lscache_purger.tag_purge_effective'));
   if ($active !== 'url') {
     return [];
   }
@@ -321,6 +318,16 @@ function _lscache_purger_check_scheme(string $purge_host): array {
     return [];
   }
 
+  // Loopback purge hosts are the standard single-server setup. For a
+  // loopback PURGE the scheme is just how PHP reaches the local server;
+  // it does not need to match public traffic, and recommending https on
+  // a bare IP would only break TLS verification. Suppress the scheme row
+  // here. The Host header row and drush lscache:diag cover the real
+  // eviction concerns for loopback hosts.
+  if (PurgeHost::isLoopback($purge_host)) {
+    return [];
+  }
+
   $traffic_scheme = _lscache_purger_canonical_traffic_scheme();
   if ($traffic_scheme === '') {
     // Cannot determine traffic scheme (deep CLI, no $base_url, no
@@ -394,20 +401,21 @@ function _lscache_purger_canonical_traffic_scheme(): string {
  *
  * Background: the 1.3.x LSWS 6.3.4 portal diagnosis showed that
  * tag-based PURGE is silently ignored on some LSWS builds. The module
- * now supports an alternate URL-resolving strategy plus an `auto`
- * mode that picks tag-or-url based on the cached probe result from
- * the `lscache:diag` drush command. This row tells operators:
- *   - which strategy is actually active right now
- *   - when the last probe ran and what it concluded
- *   - whether the configured strategy contradicts the probe result
- *     (e.g. strategy=tag but probe says tag-PURGE is ineffective)
+ * supports an alternate URL-resolving strategy plus an `auto` mode that
+ * is safe by default: it uses the always-works URL strategy until a
+ * probe (the cron auto-probe or `lscache:diag`) confirms tag-PURGE
+ * evicts on this build, then upgrades to the more efficient tag
+ * strategy. This row tells operators which strategy is active and why.
  *
  * Severities:
- *   - OK: strategy is consistent with probe (or there is no probe
- *     result yet AND strategy is `auto` or `tag`, both safe defaults).
- *   - WARNING: probe says tag-PURGE is ineffective AND the active
- *     strategy is tag. Operator is purging into a void; recommend
- *     switching to `url` or `auto`.
+ *   - WARNING: strategy is hard-set to `tag` but the probe found
+ *     tag-PURGE ineffective on this build. Invalidations return 200 and
+ *     evict nothing; recommend switching to `auto` or `url`.
+ *   - INFO: `auto` is using the safe URL default, either pending the
+ *     first probe or because the probe found tag-PURGE ineffective.
+ *     Eviction is working; the row just explains what is active.
+ *   - silent: everything else is healthy and self-explanatory (explicit
+ *     url, a working tag build, or auto resolved to a working tag).
  *
  * @param \Drupal\Core\Config\ImmutableConfig $config
  *   The lscache_purger.settings config object.
@@ -417,54 +425,59 @@ function _lscache_purger_check_strategy(ImmutableConfig $config): array {
   $tag_purge_effective = \Drupal::state()->get('lscache_purger.tag_purge_effective');
   $probed_at = \Drupal::state()->get('lscache_purger.tag_purge_probed_at');
 
-  // Normalise the probe signal exactly as the purger's resolveStrategy()
-  // does, so the status row and the runtime agree even when the state
-  // value has drifted to a falsy non-bool (0, '0', 'false') via a manual
-  // drush sset.
+  // Coerce the probe signal exactly as StrategyResolver does, so this
+  // row's wording can never contradict the strategy the runtime purger
+  // actually uses (a drifted falsy value reads as "tag ineffective").
   $tag_effective_is_false = $tag_purge_effective !== NULL
     && filter_var($tag_purge_effective, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) === FALSE;
 
-  // Resolve the active strategy the same way the purger does at
-  // runtime so operators see the value the next invalidation will
-  // actually use, not the raw config string.
-  $active = match (TRUE) {
-    $configured === 'tag', $configured === 'url' => $configured,
-    $tag_effective_is_false => 'url',
-    default => 'tag',
-  };
+  $title = t('LSCache purger invalidation strategy');
 
-  $probe_line = $probed_at === NULL
-    ? t('Tag-PURGE effectiveness has never been probed; run <code>drush lscache:diag</code> to populate this signal.')
-    : t('Last probe at @ts: tag-PURGE effective = @res.', [
-      '@ts' => \Drupal::service('date.formatter')->format((int) $probed_at, 'short'),
-      '@res' => $tag_purge_effective ? t('YES') : t('NO'),
-    ]);
-
-  $entry = [
-    'title' => t('LSCache purger invalidation strategy'),
-    'value' => t('@active (configured: @configured)', ['@active' => $active, '@configured' => $configured]),
-  ];
-
+  // WARNING: the operator pinned `tag`, but the probe found tag-PURGE
+  // evicts nothing on this build. Invalidations return HTTP 200 and
+  // clear nothing. This is the one state that needs action.
   if ($configured === 'tag' && $tag_effective_is_false) {
-    $entry['severity'] = REQUIREMENT_WARNING;
-    $entry['description'] = t(
-      'Strategy is hard-set to <code>tag</code> but the last <code>drush lscache:diag</code> probe found tag-based PURGE has no effect on this LSWS build. Tag invalidations will return HTTP 200 but evict nothing. Switch to <code>url</code> or <code>auto</code>: <code>drush config:set lscache_purger.settings purge_strategy auto -y</code>. @probe',
-      ['@probe' => $probe_line],
-    );
-    return ['lscache_purger_strategy' => $entry];
+    return [
+      'lscache_purger_strategy' => [
+        'title' => $title,
+        'value' => t('tag (ineffective on this build)'),
+        'severity' => REQUIREMENT_WARNING,
+        'description' => t('Strategy is hard-set to <code>tag</code>, but the last probe found tag-based PURGE has no effect on this LiteSpeed build: invalidations return HTTP 200 but evict nothing, so edits will not clear. Switch to <code>auto</code> (recommended) or <code>url</code>: <code>drush config:set lscache_purger.settings purge_strategy auto -y</code>.'),
+      ],
+    ];
   }
 
-  // Quiet once the build has been probed and the strategy is healthy.
-  // Keep a one-time nudge only while tag-PURGE effectiveness is unknown,
-  // so a new install is reminded to run the probe but an established,
-  // healthy site shows nothing here.
-  if ($probed_at !== NULL) {
-    return [];
+  // INFO: `auto` and not yet probed. The safe URL default is in effect,
+  // so eviction is already working; the row explains what is active and
+  // that it refines itself, to head off "which strategy am I on" doubt.
+  if ($configured === 'auto' && $probed_at === NULL) {
+    return [
+      'lscache_purger_strategy' => [
+        'title' => $title,
+        'value' => t('URL (auto, probe pending)'),
+        'severity' => REQUIREMENT_INFO,
+        'description' => t('Strategy <code>auto</code> uses the URL strategy by default, which evicts on every LiteSpeed build, so content invalidation is working now. Tag-PURGE effectiveness has not been probed yet; the probe runs automatically on the next cron, or run <code>drush lscache:diag</code> to do it immediately. If tag-PURGE works on this build, <code>auto</code> upgrades to the more efficient tag strategy on its own.'),
+      ],
+    ];
   }
 
-  $entry['severity'] = REQUIREMENT_OK;
-  $entry['description'] = t('@probe Re-run with <code>drush lscache:diag</code> after server config changes.', ['@probe' => $probe_line]);
-  return ['lscache_purger_strategy' => $entry];
+  // INFO: `auto`, probed, tag-PURGE found ineffective. Running on URL and
+  // evicting correctly; surfaced so the operator knows tag-PURGE is simply
+  // not available on this build, rather than wondering why it is on URL.
+  if ($configured === 'auto' && $tag_effective_is_false) {
+    return [
+      'lscache_purger_strategy' => [
+        'title' => $title,
+        'value' => t('URL (auto, tag-PURGE ineffective on this build)'),
+        'severity' => REQUIREMENT_INFO,
+        'description' => t('Strategy <code>auto</code> resolved to the URL strategy because the last probe found tag-based PURGE has no effect on this LiteSpeed build. URL invalidation evicts correctly, so no action is needed. Re-probe after server changes with <code>drush lscache:diag</code>.'),
+      ],
+    ];
+  }
+
+  // Healthy and self-explanatory (explicit url, a working tag build, or
+  // auto resolved to a working tag): stay quiet to keep the report tidy.
+  return [];
 }
 
 /**

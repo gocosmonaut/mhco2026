@@ -57,3 +57,19 @@ services:
       - '@datetime.time'
     tags:
       - { name: event_subscriber }
+
+  # Strategy prober: the headless tag-PURGE effectiveness probe behind
+  # the `auto` strategy's self-correction. hook_cron calls maybeAutoProbe()
+  # so a fresh `auto` install upgrades from the safe URL default to the
+  # more efficient tag strategy automatically on builds where tag-PURGE
+  # works, with no operator action. Mirrors the lscache:diag probe.
+  lscache_purger.strategy_prober:
+    class: Drupal\lscache_purger\StrategyProber
+    arguments:
+      - '@http_client'
+      - '@config.factory'
+      - '@lscache.tag_header_builder'
+      - '@state'
+      - '@entity_type.manager'
+      - '@datetime.time'
+      - '@logger.channel.lscache_purger'

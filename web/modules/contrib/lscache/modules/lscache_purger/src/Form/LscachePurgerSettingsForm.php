@@ -7,6 +7,7 @@ use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\lscache_purger\PurgeHost;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -190,12 +191,22 @@ class LscachePurgerSettingsForm extends ConfigFormBase {
       $test_headers['Host'] = $host_header_override;
     }
 
+    $request_options = [
+      'headers' => $test_headers,
+      'timeout' => $timeout,
+      'http_errors' => FALSE,
+    ];
+    // Mirror the runtime purger: skip TLS verification for loopback
+    // hosts. A bare 127.0.0.1 or ::1 cannot carry a publicly trusted TLS
+    // certificate, so without this the test reports a TLS certificate
+    // error for an https loopback host that the real purger would PURGE
+    // successfully.
+    if (PurgeHost::isLoopback($url)) {
+      $request_options['verify'] = FALSE;
+    }
+
     try {
-      $response = $this->httpClient->request('PURGE', $url, [
-        'headers' => $test_headers,
-        'timeout' => $timeout,
-        'http_errors' => FALSE,
-      ]);
+      $response = $this->httpClient->request('PURGE', $url, $request_options);
     }
     catch (GuzzleException $e) {
       $this->messenger()->addError($this->t('PURGE request to @url failed at the network layer: @msg. Check that the host is reachable from the Drupal application server and that the URL is correct.', [
@@ -210,7 +221,7 @@ class LscachePurgerSettingsForm extends ConfigFormBase {
     $server = $response->getHeaderLine('Server');
 
     if ($status === 200 || $status === 204) {
-      $this->messenger()->addStatus($this->t('PURGE request to @url succeeded (HTTP @status, server: @server). Tag-based invalidation will work end-to-end with this configuration.', [
+      $this->messenger()->addStatus($this->t('PURGE request to @url was accepted (HTTP @status, server: @server). This confirms the host is reachable and accepts the PURGE method. It does not by itself confirm that tag-based eviction works on this LiteSpeed build: run <code>drush lscache:diag</code> to verify content actually evicts, and switch <code>purge_strategy</code> to <code>url</code> if it reports tag-PURGE as ineffective.', [
         '@url' => $url,
         '@status' => $status,
         '@server' => $server ?: 'unknown',

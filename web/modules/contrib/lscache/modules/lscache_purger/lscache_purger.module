@@ -14,7 +14,7 @@ declare(strict_types=1);
 /**
  * Implements hook_cron().
  *
- * Two affinity-table maintenance steps, in this order:
+ * Three maintenance steps, in this order:
  *
  *   1. Seed Views page listings as PROTECTED affinity rows. Each Views
  *      `page` display with list-shaped cache tags and a concrete path
@@ -34,6 +34,12 @@ declare(strict_types=1);
  *      (seeded) rows are exempt from pruning. The prune is bounded per
  *      cron run (10k rows) so the first prune on a runaway table does
  *      not stall cron.
+ *
+ *   3. Auto-probe tag-PURGE effectiveness when the strategy is `auto`
+ *      and has never been probed, then persist the result so the `auto`
+ *      strategy upgrades from its safe URL default to the more efficient
+ *      tag strategy on builds where tag-PURGE works, with no operator
+ *      action. A no-op once probed, and self-throttled while unprobed.
  *
  * Seeding runs before pruning and re-stamps each seeded row's last_seen
  * every run; combined with prune() skipping protected rows outright,
@@ -100,6 +106,21 @@ function lscache_purger_cron(): void {
   catch (\Throwable $e) {
     \Drupal::logger('lscache_purger')->warning(
       'Affinity table prune failed (run drush updb if update_8106 has not applied the protected column yet): @msg',
+      ['@msg' => $e->getMessage()],
+    );
+  }
+
+  // Step 3: auto-probe tag-PURGE effectiveness when the strategy is
+  // `auto` and has never been probed, so the safe URL default upgrades
+  // itself to the more efficient tag strategy on builds where tag-PURGE
+  // works, with no operator action. maybeAutoProbe() is a no-op on the
+  // common path and self-throttles, so this is cheap on every run.
+  try {
+    \Drupal::service('lscache_purger.strategy_prober')->maybeAutoProbe();
+  }
+  catch (\Throwable $e) {
+    \Drupal::logger('lscache_purger')->warning(
+      'Auto-probe of tag-PURGE effectiveness failed: @msg',
       ['@msg' => $e->getMessage()],
     );
   }

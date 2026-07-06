@@ -7,7 +7,9 @@ namespace Drupal\lscache_purger\Plugin\Purge\Purger;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\lscache\TagHeaderBuilder;
+use Drupal\lscache_purger\PurgeHost;
 use Drupal\lscache_purger\Resolver\InvalidationUrlResolver;
+use Drupal\lscache_purger\StrategyResolver;
 use Drupal\purge\Plugin\Purge\Invalidation\InvalidationInterface;
 use Drupal\purge\Plugin\Purge\Purger\PurgerBase;
 use GuzzleHttp\ClientInterface;
@@ -38,19 +40,21 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *    whatever tag= value rides the header. Surfaced on the 1.3.x
  *    portal-master diagnosis.
  *
- *  - `auto`: reads the cached probe result written by `drush
- *    lscache:diag` from state (`lscache_purger.tag_purge_effective`)
- *    and picks `tag` or `url` accordingly. The default for new
- *    installs so the module self-corrects when tag-PURGE turns out
- *    not to work on the target LSWS build.
+ *  - `auto` (the default): reads the probe result from state
+ *    (`lscache_purger.tag_purge_effective`) via StrategyResolver and
+ *    picks `tag` or `url` accordingly, so the module self-corrects to
+ *    whatever actually evicts on the target LSWS build.
  *
- * Auto-default-to-tag rationale: until the diag command runs the
- * state value is NULL. The module treats NULL as `tag` so the
- * behaviour is identical to the pre-URL-strategy module on first
- * install; operators have to either run diag or flip the strategy
- * explicitly to opt into URL-based PURGE. This is the conservative
- * default; the alternative (default to URL) would silently change
- * eviction semantics on installs where tag-PURGE works fine.
+ * Auto is safe by default. Until a probe has run the state value is
+ * NULL, and StrategyResolver treats NULL (and any ineffective result)
+ * as `url`, the strategy that evicts on every LiteSpeed build. Only a
+ * probe that positively confirms tag-PURGE works selects `tag`. This
+ * means a fresh install evicts correctly out of the box even on builds
+ * that silently ignore tag-PURGE, instead of purging by tag into a void
+ * and serving stale content until someone runs diag. The probe runs
+ * automatically on cron (StrategyProber) or on demand via
+ * `drush lscache:diag`; once it confirms tag-PURGE works, auto upgrades
+ * to the more efficient tag strategy on its own.
  *
  * Tag format, including the auto-derived per-install prefix and the
  * default filter list, must match what the parent `lscache` module
@@ -103,14 +107,7 @@ class LscachePurger extends PurgerBase {
       'http_errors' => FALSE,
     ];
 
-    $host = (string) parse_url($target, PHP_URL_HOST);
-    $is_loopback = (
-      $host === 'localhost'
-      || $host === '127.0.0.1'
-      || $host === '::1'
-      || $host === '[::1]'
-    );
-    if ($is_loopback) {
+    if (PurgeHost::isLoopback($target)) {
       $options['verify'] = FALSE;
     }
 
@@ -462,28 +459,16 @@ class LscachePurger extends PurgerBase {
   /**
    * Resolves the configured strategy to a concrete 'tag' or 'url'.
    *
-   * `auto` consults state for the diag command's last probe result.
-   * NULL is treated as 'tag' so first-install behaviour is identical
-   * to the pre-strategy module (see class docblock). TRUE in state
-   * means tag-PURGE was last seen working; FALSE means it was not.
+   * Delegates to StrategyResolver so the runtime and the status report
+   * row can never disagree. `auto` is safe by default: it resolves to
+   * the always-works URL strategy until a probe (drush lscache:diag or
+   * the automatic cron probe) confirms tag-PURGE evicts on this build.
    */
   private function resolveStrategy(string $configured): string {
-    if ($configured === 'tag' || $configured === 'url') {
-      return $configured;
-    }
-    // `auto` (or any unknown value): read the probe state.
-    $effective = $this->state->get('lscache_purger.tag_purge_effective');
-    // NULL = never probed -> tag (identical to pre-strategy behaviour).
-    // Otherwise coerce loosely: a drifted state value such as 0, '0',
-    // or 'false' (e.g. from a manual `drush sset`) must read as
-    // "tag-PURGE ineffective" and select url, not slip through a strict
-    // === FALSE check into the very tag strategy the probe found broken.
-    if ($effective === NULL) {
-      return 'tag';
-    }
-    return filter_var($effective, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) === FALSE
-      ? 'url'
-      : 'tag';
+    return StrategyResolver::resolve(
+      $configured,
+      $this->state->get('lscache_purger.tag_purge_effective'),
+    );
   }
 
   /**

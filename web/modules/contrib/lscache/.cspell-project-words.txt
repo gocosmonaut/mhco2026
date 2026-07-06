@@ -85,6 +85,8 @@ containerised
 
 # Operator-experience vocabulary (status report messages, docs)
 pasteable
+unprobed
+prober
 
 # Project terms (acronyms, drush command names) used in docblocks and docs
 WSOD

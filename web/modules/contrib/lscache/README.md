@@ -361,24 +361,29 @@ From 1.3.0 the purger supports three strategies, set with
 - `url`: resolve each invalidated cache tag to its canonical Drupal
   paths and send one PURGE per URL. Required on builds that ignore
   tag-PURGE.
-- `auto` (default): pick `tag` or `url` based on the result of
-  `drush lscache:diag`. With no probe recorded yet it behaves as
-  `tag`, so a fresh install is unchanged until you run the probe.
+- `auto` (default): safe by default. Resolves to `url`, which evicts on
+  every LiteSpeed build, until a probe has positively confirmed that
+  tag-PURGE works on this build, then upgrades to the more efficient
+  `tag`. The probe runs automatically on cron, so a fresh install
+  evicts correctly out of the box with no action, even on builds that
+  silently ignore tag-PURGE, and upgrades itself to `tag` where it is
+  available.
 
 **Diagnose your LSWS with `drush lscache:diag`.** The command primes
 a known URL, fires URL- and tag-scoped PURGEs, observes whether each
 actually evicts (HIT vs MISS), records the verdict, and prints a
-recommendation. Run it after install and after any server-config
-change:
+recommendation. With `auto` you do not normally need to run it: cron
+auto-probes the first time the strategy is unprobed. Run it by hand to
+probe immediately, or to re-probe after a server-config change:
 
 ```bash
 drush lscache:diag
 ```
 
-The status report at *Reports > Status report* shows the active
-strategy and the last probe result, and warns if the strategy is
-hard-set to `tag` on a build where the probe found tag-PURGE
-ineffective.
+The status report at *Reports > Status report* says which strategy is
+active and why (URL as the safe default pending the probe, URL because
+tag-PURGE is ineffective here, or a warning only when `tag` is pinned
+onto a build where tag-PURGE does not evict).
 
 #### Evicting listing pages (views, blocks)
 

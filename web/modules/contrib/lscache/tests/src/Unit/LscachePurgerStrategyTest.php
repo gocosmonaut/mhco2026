@@ -255,21 +255,28 @@ final class LscachePurgerStrategyTest extends UnitTestCase {
   /**
    * @covers ::invalidate
    */
-  public function testAutoStrategyDefaultsToTagWhenProbeNeverRan(): void {
-    // NULL state means lscache:diag has not run; default to legacy
-    // tag behaviour so first-install semantics are unchanged.
+  public function testAutoStrategyDefaultsToUrlWhenProbeNeverRan(): void {
+    // NULL state means no probe has run yet. `auto` is safe by default:
+    // it uses the URL strategy (which evicts on every LiteSpeed build)
+    // until a probe confirms tag-PURGE works, so a fresh install never
+    // purges by tag into a build that silently ignores it and serves
+    // stale content.
     $history = [];
     $purger = $this->makePurger(
       strategy: 'auto',
       unmappable_fallback: 'none',
       history: $history,
       tag_purge_effective: NULL,
+      resolver_results: [
+        'node:38' => new UrlResolverResult(['/node/38'], FALSE, 'ok'),
+      ],
     );
 
     $purger->invalidate([$this->makeInvalidation('node:38')]);
 
     $this->assertCount(1, $history);
-    $this->assertSame('p:node:38', $history[0]['request']->getHeaderLine('X-LiteSpeed-Purge'));
+    $this->assertSame('http://localhost/node/38', (string) $history[0]['request']->getUri());
+    $this->assertSame('', $history[0]['request']->getHeaderLine('X-LiteSpeed-Purge'));
   }
 
   /**

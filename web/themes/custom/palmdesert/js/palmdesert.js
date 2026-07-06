@@ -9,7 +9,6 @@
    */
   Drupal.behaviors.exampleBehavior = {
     attach: function (context, settings) {
-      //alert("I'm alive!");
     },
   };
 
@@ -43,23 +42,25 @@
   // Safari detection for form downloads
 
   $(document).ready(function () {
-  var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
- if (formsPage == true && isSafari == true) {
-  console.log("Forms page on Safari!");
-  $('h4.safari-warning').removeClass("warning-off");
- }});
- 
+    var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
+    if (formsPage == true && isSafari == true) {
+      console.log("Forms page on Safari!");
+      $('h4.safari-warning').removeClass("warning-off");
+    }
+  });
+
 
   // Remove articles from anonymous users
   $(document).ready(function () {
-    var auth = $('body').hasClass("user-not-logged-in"); 
+    var auth = $('body').hasClass("user-not-logged-in");
     var column = $('body').hasClass("node--type-column");
     var cu = $('body').hasClass("node--type-community-updates");
     if (auth == true) {
       if (column == true || cu == true) {
-      console.log("anon user " + auth);
-      $('article').remove();
-    }}
+        console.log("anon user " + auth);
+        $('article').remove();
+      }
+    }
   });
 
   $(document).ready(function () {
@@ -72,84 +73,12 @@
 
   // Hide home page article search help text after search occurs
   $(document).ready(function () {
-  $(".success").click(function () {
-    setTimeout(function () {
-      $(".assist").css('display', 'none');
-      $(".js-form-type-entity-autocomplete").css('float', 'none !important');
-    }, 5000);
-  });
-  });
-
-
-
-  // Fade in menu and content areas because of weird loading hiccups
-  $(document).ready(function () {
-    setTimeout(function () {
-      $("#block-salem-main-menu").addClass("fade-in");
-    }, 200);
-    setTimeout(function () {
-      $("main").addClass("fade-in");
-    }, 300);
-  });
-
-  // Remove extra spaces from columns and community updates
-  $(document).ready(function () {
-    if (isNews) {
-      $('p').each(function (index, value) {
-        var extraSpaces = $(this).html();
-        if (extraSpaces.length <= 19) {
-          $(this).remove();
-        }
-      })
-    }
-  });
-
-  $(document).ready(function () {
-    console.log("Ready");
-
-    // Send information to custom form filler module
-    // $('a.form-button').click( function() { // node
-    // below is views - other changes would have to be made.
-    $(".most-downloaded-forms .form-button.badge, .form-download-div").click(function () {
-      var profileName = $(".profile-name").text().trim();
-      var profilePark = $(".profile-park").text().trim();
-      var profileAddress = $(".profile-address").text().trim();
-      var profileLocation = $(".profile-location").text().trim();
-      var profileState = $(".profile-state").text().trim();
-      var profileZIP = $(".profile-zip").text().trim();
-      var profilePhone = $(".profile-phone").text().trim();
-      var profileCombined = $(".profile-combined").text().trim();
-      var profileUID = $(".profile-uid").text().trim();
-      var formFID = $(this).attr("id");
-      var formNID = $(this).attr("nid");
-      var formDL = $(this).attr("dl");
-      var formTitle = $(this).attr("title");
-      var formNumber = $(this).attr("id").slice(1);
-                  console.log(formFID + " " + formNID + " " + formDL + " " + formTitle + " " + formNumber);
-      // var formnumber = ( $(this).attr('href') ); // use ID but not a pure integer, so F1, F82, etc
-      // e.preventDefault();
-
-
-      $.ajax({
-        method: "POST",
-        url: "/web/modules/custom/mhco_form_filler/mhco_form_filter.module",
-        data: {
-          park: profilePark,
-          parkName: profileName,
-          parkAddress: profileAddress,
-          parkLocation: profileLocation,
-          parkState: profileState,
-          parkZIP: profileZIP,
-          parkPhone: profilePhone,
-          parkCombined: profileCombined,
-          parkUID: profileUID,
-          formID: formFID,
-          formNID: formNID,
-          downloadLink: formDL,
-          formName: formTitle,
-          formNo: formNumber,
-        },
-      });
+    $(".success").click(function () {
+      setTimeout(function () {
+        $(".assist").css('display', 'none');
+        $(".js-form-type-entity-autocomplete").css('float', 'none !important');
+      }, 5000);
     });
   });
+
 })(jQuery, Drupal);

@@ -1,7 +1,12 @@
-mhco_form_filler:
-  version: 1.0
+form-filler-js:
+  version: 1.x
+  css:
+    theme:
+      css/mhco_admin_block.css: {}
   js:
-    fark.js: {}
+    js/mhco_forms.js: {}
   dependencies:
     - core/jquery
     - core/drupalSettings
+    - core/drupal
+    - core/once

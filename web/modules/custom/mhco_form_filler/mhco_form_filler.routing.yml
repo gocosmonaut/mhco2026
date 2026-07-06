@@ -1,0 +1,7 @@
+mhco_form_filler.generate:
+  path: '/mhco-forms/generate-pdf'
+  defaults:
+    _controller: '\Drupal\mhco_form_filler\Controller\FormFillerController::generatePdf'
+    _title: 'Generating Form...'
+  requirements:
+    _access: 'TRUE'

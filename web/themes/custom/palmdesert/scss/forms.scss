@@ -204,3 +204,7 @@
         line-height: 1.5;
     }
 }
+
+.form-required:after {
+    background-image: url(../images/required.svg) !important;
+}

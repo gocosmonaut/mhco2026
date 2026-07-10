@@ -39,7 +39,7 @@ class LscacheSettingsForm extends ConfigFormBase {
     $form['default_ttl'] = [
       '#type' => 'number',
       '#title' => $this->t('Default TTL'),
-      '#description' => $this->t('Cache lifetime in seconds sent via <code>X-LiteSpeed-Cache-Control: public,max-age=N</code>. Set to 0 to omit the Cache-Control header and let Drupal-emitted caching directives take over.'),
+      '#description' => $this->t("LSCache <strong>server-side</strong> cache lifetime in seconds, sent as <code>X-LiteSpeed-Cache-Control: public,max-age=N</code>. This is the copy LiteSpeed serves from RAM; the purger evicts it the instant content changes, so it can safely be long (a day or more). It is separate from Drupal's <strong>browser</strong> page-cache TTL (<code>system.performance:cache.page.max_age</code>, under Configuration &rsaquo; Development &rsaquo; Performance), which sets the <code>Cache-Control: max-age</code> browsers hold and which nothing can purge. Recommended shape: a short browser TTL (a few minutes) alongside a longer, purge-managed server TTL here. Set to 0 to omit the header and defer to Drupal's own caching directives."),
       '#min' => 0,
       '#config_target' => 'lscache.settings:default_ttl',
     ];

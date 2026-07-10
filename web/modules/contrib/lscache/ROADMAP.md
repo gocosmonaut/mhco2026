@@ -272,7 +272,45 @@ because the per-user variation is pushed out to the fragment.
 - Fragments carry an `lscache_esi` cache tag so a single tag
   invalidation can purge every ESI fragment site-wide.
 
-## 1.3.4 (in progress)
+## 1.3.5 (in progress)
+
+Status report gains a browser-vs-server page-cache TTL check
+(`_lscache_check_page_cache_ttl` in lscache.install, wired into
+`lscache_requirements`). Operators routinely conflate two separate
+TTLs: `system.performance:cache.page.max_age` is the browser
+`Cache-Control` max-age (browsers honour it, nothing can purge it),
+while `lscache.settings:default_ttl` is the LSWS server TTL the purger
+can evict. The row warns in both misconfiguration directions:
+
+- Browser TTL of 0: Drupal marks pages `no-cache, private`, so the
+  module emits no public headers and LSWS caches nothing despite being
+  enabled (one root of the "on but nothing cached" report).
+- Browser TTL over a day: the purger clears the server copy instantly
+  but cannot purge browsers, so returning visitors stay pinned to a
+  stale page for up to that long. Recommends a short browser TTL.
+
+When healthy the row stays quiet, to avoid cluttering the status report.
+The two TTLs are documented where operators set them instead: the
+Default TTL field help on the LSCache settings form, plus a section in
+docs/htaccess-gotchas.md. Gated on `enabled`. Came out of a real
+incident (a 1-year browser TTL set to silence Purge's nudge, hiding a
+content update until a hard refresh).
+
+Also de-alarms the listing-coverage row
+(`_lscache_purger_check_unpinned_list_tags`). It used to WARN whenever a
+listing was not pinned, counting affinity-only listings (warm from
+traffic, already evicting) as "needing pinning", which read as an
+alarming and non-obviously-actionable "N listing(s) need pinning" to
+users (issue #3607997: a reporter saw "14 listing(s) need pinning (0
+uncovered, 14 affinity-only)" after upgrading and asked whether they had
+to pin all 14 by hand). Now the row warns only when a listing is
+genuinely uncovered (no pin and no affinity, so it cannot evict at all)
+and stays silent for affinity-only and pinned listings. The full
+coverage picture, including affinity-only listings worth pinning for
+durability, remains available on demand via
+`drush lscache:list-tag-coverage`.
+
+## 1.3.4 (shipped)
 
 Two fixes, both aimed at the failure the field kept hitting: edits that
 return HTTP 200 but never evict.

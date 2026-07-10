@@ -156,7 +156,7 @@ function lscache_purger_requirements(string $phase): array {
 }
 
 /**
- * Status report row: warn on listing pages with no durable eviction map.
+ * Status report row: warn on listing pages that cannot evict at all.
  *
  * Under the URL-purge strategy an aggregate tag (node_list) has no
  * canonical URL, so a listing page only evicts when the resolver can
@@ -166,29 +166,34 @@ function lscache_purger_requirements(string $phase): array {
  * The /help portal incident was exactly this: a new controller-rendered
  * Help Centre listing shipped with no pin and no signal anywhere.
  *
- * This row converts that invisible gap into a self-surfacing WARNING. It
- * delegates enumeration + classification to the lscache_purger.list_tag_
- * coverage service (which mirrors the resolver's own lookups, so the row
- * can never disagree with runtime), then reports:
+ * This row converts that invisible gap into a self-surfacing WARNING,
+ * but only for the case that is actually actionable. It delegates
+ * enumeration + classification to the lscache_purger.list_tag_coverage
+ * service (which mirrors the resolver's own lookups, so the row can never
+ * disagree with runtime), then:
  *
- *   - OK: every Views page listing and every observed list tag is
- *     pinned in static_url_map (durable).
- *   - WARNING: at least one listing is uncovered (no pin, no affinity)
- *     or affinity-only (warm now, will lapse). The description names
- *     each tag, distinguishes uncovered from affinity-only, and carries
- *     a copy-pasteable `drush config:set … --input-format=yaml` pin.
+ *   - WARNING when a listing is uncovered (no static_url_map pin and no
+ *     affinity row): it genuinely cannot evict and can serve stale. The
+ *     description names each uncovered tag and points at
+ *     `drush lscache:list-tag-coverage` for a copy-pasteable pin.
+ *   - Silent otherwise. Affinity-only listings (warm from traffic) and
+ *     pinned listings both evict, so surfacing them would only alarm the
+ *     operator without giving them anything to do. Anyone who wants the
+ *     full picture, including affinity-only listings worth pinning for
+ *     extra durability, runs `drush lscache:list-tag-coverage`.
  *
- * Gated on the active purge strategy resolving to `url` (computed the
- * same way the purger and _lscache_purger_check_strategy() do): on
- * builds where tag-PURGE works the static map is not load-bearing, so
- * the row stays silent rather than nagging.
+ * Gated on the active purge strategy resolving to `url` (via
+ * StrategyResolver, the same path the purger uses): on builds where
+ * tag-PURGE works the static map is not load-bearing, so the row stays
+ * silent rather than nagging.
  *
  * @param \Drupal\Core\Config\ImmutableConfig $config
  *   The lscache_purger.settings config object.
  *
  * @return array
  *   A single-key requirements array, or an empty array when the active
- *   strategy is not `url` or the coverage service is unavailable.
+ *   strategy is not `url`, the coverage service is unavailable, or no
+ *   listing is uncovered.
  */
 function _lscache_purger_check_unpinned_list_tags(ImmutableConfig $config): array {
   // Resolve the active strategy exactly as the purger does at runtime.
@@ -207,35 +212,32 @@ function _lscache_purger_check_unpinned_list_tags(ImmutableConfig $config): arra
     return [];
   }
 
-  $problems = array_values(array_filter($report, static fn(array $r): bool => $r['status'] !== 'pinned'));
-  if ($problems === []) {
-    // Quiet when healthy: only surface this row when a listing needs
-    // pinning, so the status report stays uncluttered on a clean site.
+  // Only the genuinely-uncovered listings are actionable: no
+  // static_url_map pin and no observed-traffic affinity row, so they
+  // cannot evict under the URL strategy and can serve stale. Affinity-only
+  // listings (learned from traffic) and pinned listings both evict, so
+  // they are not surfaced here; they would only alarm without giving the
+  // operator anything to do. The full coverage picture, including
+  // affinity-only listings that could be pinned for extra durability, is
+  // available on demand via `drush lscache:list-tag-coverage`.
+  $uncovered_rows = array_values(array_filter($report, static fn(array $r): bool => $r['status'] === 'uncovered'));
+  if ($uncovered_rows === []) {
     return [];
   }
 
-  $uncovered = count(array_filter($problems, static fn(array $r): bool => $r['status'] === 'uncovered'));
-  $affinity_only = count($problems) - $uncovered;
-
-  // Keep this row concise: name the affected tags (capped) and point at
-  // `drush lscache:list-tag-coverage` for the full per-tag pin commands,
-  // rather than dumping a drush command per listing inline, which floods
-  // the status report on sites with many listings.
+  // Name the uncovered tags (capped) and point at the drush command for a
+  // copy-pasteable pin, rather than dumping a command per listing inline.
   $cap = 8;
-  $tags = array_map(static fn(array $r): string => $r['tag'], $problems);
+  $tags = array_map(static fn(array $r): string => $r['tag'], $uncovered_rows);
   $more = max(0, count($tags) - $cap);
   $tag_list = implode(', ', array_slice($tags, 0, $cap));
 
   return [
     'lscache_purger_list_coverage' => [
       'title' => t('LSCache purger listing coverage'),
-      'value' => t('@n listing(s) need pinning (@u uncovered, @a affinity-only)', [
-        '@n' => count($problems),
-        '@u' => $uncovered,
-        '@a' => $affinity_only,
-      ]),
+      'value' => t('@n listing(s) not evicting under the URL strategy', ['@n' => count($uncovered_rows)]),
       'severity' => REQUIREMENT_WARNING,
-      'description' => t('These listing tags have no durable <code>static_url_map</code> entry, so under the URL-purge strategy their aggregate-tag invalidation is not guaranteed to evict: uncovered listings serve stale until a manual PURGE; affinity-only listings evict only until the affinity row ages out. Affected: <code>@tags</code>@more. Run <code>drush lscache:list-tag-coverage</code> to see each one with a copy-pasteable pin, then add the durable entry to <code>config/sync/lscache_purger.settings.yml</code> and deploy.', [
+      'description' => t('These listing tags have no way to evict under the URL-purge strategy: no <code>static_url_map</code> pin, and no observed traffic to learn a mapping from, so their pages can serve stale after a content change until a manual PURGE. Affected: <code>@tags</code>@more. Run <code>drush lscache:list-tag-coverage</code> for a copy-pasteable pin for each, then add it to <code>config/sync/lscache_purger.settings.yml</code> and deploy.', [
         '@tags' => $tag_list,
         '@more' => $more > 0 ? ' and ' . $more . ' more' : '',
       ]),

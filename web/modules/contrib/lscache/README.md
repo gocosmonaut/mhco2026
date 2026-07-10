@@ -413,13 +413,15 @@ The resolver unions canonical, static-map, and affinity URLs, so a
 single invalidation evicts the entity's own page plus every listing
 that carries it.
 
-Run `drush lscache:list-tag-coverage` (or check the **LSCache purger
-listing coverage** status report row) to see which listing tags are
+Run `drush lscache:list-tag-coverage` to see which listing tags are
 pinned, affinity-covered, or uncovered, with a suggested
-`static_url_map` pin command for any gaps. Cron also auto-seeds Views
-page listings into the affinity table as protected rows, so a
-low-traffic Views listing still evicts even before a visitor warms
-it.
+`static_url_map` pin command for any gaps. The **LSCache purger listing
+coverage** status report row stays quiet unless a listing is genuinely
+uncovered (no pin and no affinity), since affinity-covered listings
+already evict; it is a warning you can act on, not routine noise. Cron
+also auto-seeds Views page listings into the affinity table as protected
+rows, so a low-traffic Views listing still evicts even before a visitor
+warms it.
 
 ### ESI fragments (1.2.x and later)
 

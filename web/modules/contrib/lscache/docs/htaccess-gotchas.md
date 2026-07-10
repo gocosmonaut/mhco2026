@@ -403,6 +403,44 @@ $build['cart_count'] = [
 The callback class must implement `\Drupal\Core\Security\TrustedCallbackInterface`
 (see README's ESI section). All other code stays the same.
 
+## Browser vs server page-cache TTL
+
+Two separate TTLs govern how long a page is considered fresh, and
+operators routinely collapse them into one "cache TTL":
+
+- `system.performance:cache.page.max_age` sets the **browser**-facing
+  `Cache-Control: max-age`. Browsers honour it, and it cannot be
+  purged: nothing can reach out and evict a page a visitor's browser
+  already holds.
+- `lscache.settings:default_ttl` sets the `X-LiteSpeed-Cache-Control`
+  max-age that LSWS caches by. The purger evicts this the instant
+  content changes.
+
+This bites in both directions:
+
+- **Browser TTL of 0.** Drupal marks anonymous responses
+  `no-cache, private`, so the module never emits public LSCache headers
+  and LSWS caches nothing, despite the module being enabled. This is one
+  root of the "module is on but nothing is cached" report; the other is
+  a missing `CacheLookup` directive (above).
+- **Browser TTL set very high** (often to silence Purge's own "page
+  cache maximum age" nudge). The purger evicts the LSWS copy the instant
+  content changes, but it cannot purge browsers, so a returning visitor
+  stays pinned to the stale page for up to that long. A content update
+  can look "stuck" until a hard refresh.
+
+The recommended shape is a **short browser TTL alongside a longer,
+purge-managed server TTL**: LSWS serves everyone fast from RAM, the
+purger keeps the server copy fresh on every edit, and returning visitors
+pick up changes on their next request rather than waiting out a long
+browser max-age. Five minutes for the browser TTL is plenty.
+
+The **Default TTL** field on the LSCache settings form documents this
+distinction where you set it, and the `/admin/reports/status` row
+**LSCache page-cache TTL (browser vs server)** warns if the browser TTL
+is 0 or longer than a day. When the TTLs are in a sensible shape the row
+stays quiet.
+
 ## Common failure modes
 
 ### 1. Module emits headers but no caching

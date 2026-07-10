@@ -38,7 +38,93 @@ function lscache_requirements(string $phase): array {
   if ($vary_check !== []) {
     $requirements['lscache_vary_cookies'] = $vary_check;
   }
+
+  $ttl_check = _lscache_check_page_cache_ttl();
+  if ($ttl_check !== []) {
+    $requirements['lscache_page_cache_ttl'] = $ttl_check;
+  }
   return $requirements;
+}
+
+/**
+ * Surfaces the browser-vs-server page-cache TTL split.
+ *
+ * Two TTLs are in play, and operators routinely conflate them into one
+ * "the cache TTL":
+ *
+ *   - system.performance:cache.page.max_age drives the *browser*-facing
+ *     Cache-Control max-age. Browsers honour it, and it cannot be purged;
+ *     nothing can reach out and evict a page a visitor's browser is
+ *     already holding.
+ *   - lscache.settings:default_ttl drives the X-LiteSpeed-Cache-Control
+ *     max-age that LSWS caches by. The purger *can* evict that the moment
+ *     content changes.
+ *
+ * The consequence catches people out in both directions:
+ *
+ *   - Set the browser TTL to 0 and Drupal marks anonymous responses
+ *     `no-cache, private`; the module then never emits public LSCache
+ *     headers, so LSWS caches nothing despite being "enabled". The
+ *     classic "module is on but nothing is cached" report.
+ *   - Set the browser TTL very high (to silence Purge's own "page cache
+ *     max age" nudge, say) and returning visitors stay pinned to a stale
+ *     page for up to that long after content changes. The server copy
+ *     was purged instantly, but their browser's copy was not.
+ *
+ * The recommended shape is a *short* browser TTL with a longer,
+ * purge-managed server TTL: fast for everyone (LSWS serves from RAM),
+ * fresh for returning visitors (their next request picks up the
+ * purged-and-rebuilt server copy).
+ *
+ * Only meaningful while the module is emitting cache headers, so the
+ * check returns the empty array when LSCache is disabled.
+ *
+ * @return array
+ *   Either an empty array, or a hook_requirements() entry.
+ */
+function _lscache_check_page_cache_ttl(): array {
+  if (!\Drupal::config('lscache.settings')->get('enabled')) {
+    return [];
+  }
+
+  $browser_ttl = (int) \Drupal::config('system.performance')->get('cache.page.max_age');
+  $server_ttl = (int) (\Drupal::config('lscache.settings')->get('default_ttl') ?? 3600);
+  $formatter = \Drupal::service('date.formatter');
+  $perf_url = '/admin/config/development/performance';
+
+  $entry = ['title' => t('LSCache page-cache TTL (browser vs server)')];
+
+  // Browser TTL of 0: Drupal marks pages non-cacheable, so the module
+  // never emits public LSCache headers and LSWS caches nothing.
+  if ($browser_ttl === 0) {
+    $entry['value'] = t('Browser TTL is 0, so LSWS caches nothing');
+    $entry['severity'] = REQUIREMENT_WARNING;
+    $entry['description'] = t('<code>system.performance:cache.page.max_age</code> is 0, so Drupal marks anonymous responses <code>no-cache, private</code> and LSCache never emits public cache headers, so LSWS caches nothing despite the module being enabled. Set a non-zero page cache max age on the <a href=":perf">Performance</a> page. A short value such as 5 minutes is plenty: LSWS still caches for the module\'s own TTL (@server) and the purger keeps it fresh.', [
+      ':perf' => $perf_url,
+      '@server' => $formatter->formatInterval($server_ttl),
+    ]);
+    return $entry;
+  }
+
+  // Browser TTL longer than a day: LSWS is purge-managed but browsers are
+  // not, so returning visitors stay on a stale copy for up to this long.
+  if ($browser_ttl > 86400) {
+    $entry['value'] = t('Browser TTL is @b, so returning visitors may see stale pages', ['@b' => $formatter->formatInterval($browser_ttl)]);
+    $entry['severity'] = REQUIREMENT_WARNING;
+    $entry['description'] = t('<code>system.performance:cache.page.max_age</code> is @b, which becomes the browser <code>Cache-Control: max-age</code>. The purger evicts the LSWS (server) copy the instant content changes, but it cannot purge browsers, so a returning visitor keeps the stale page for up to @b. Because LSWS does the heavy caching (its own TTL is @server and is purge-managed), the browser TTL can safely be short. Consider lowering it to a few minutes on the <a href=":perf">Performance</a> page so returning visitors pick up changes quickly.', [
+      '@b' => $formatter->formatInterval($browser_ttl),
+      '@server' => $formatter->formatInterval($server_ttl),
+      ':perf' => $perf_url,
+    ]);
+    return $entry;
+  }
+
+  // Healthy: quiet, to keep the status report uncluttered. The two TTLs
+  // and their relationship are documented at the point of configuration
+  // on the LSCache settings form instead, so operators meet the
+  // distinction when they set the value rather than as a standing row.
+  // Only the two misconfiguration states above surface here.
+  return [];
 }
 
 /**

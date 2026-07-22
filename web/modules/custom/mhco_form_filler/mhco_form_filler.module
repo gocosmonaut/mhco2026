@@ -11,19 +11,22 @@ use Drupal\Core\Session\AccountInterface;
  * Implements hook_preprocess_views_view().
  * Attach the JS library to the form dashboard.
  */
-function mhco_form_filler_preprocess_views_view(&$variables)
-{
-    if ($variables['view']->id() === 'mhco_forms') {
-        $variables['#attached']['library'][] = 'mhco_form_filler/form-filler-js';
-    }
+function mhco_form_filler_preprocess_views_view(&$variables) {
+  if ($variables['view']->id() === 'mhco_forms') {
+    $variables['#attached']['library'][] = 'mhco_form_filler/form-filler-js';
+  }
 }
 
-function mhco_form_filler_park_download_stats(AccountInterface $account)
-{
-    // Logic here if needed.
+/**
+ *
+ */
+function mhco_form_filler_park_download_stats(AccountInterface $account) {
+  // Logic here if needed.
 }
 
-function mhco_form_filler_downloader($url)
-{
-    return $url;
+/**
+ *
+ */
+function mhco_form_filler_downloader($url) {
+  return $url;
 }

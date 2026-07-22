@@ -1,0 +1,4 @@
+services:
+  mhco_time_and_weather.calculator:
+    class: Drupal\mhco_time_and_weather\TimeStyleCalculator
+    arguments: ['@extension.list.module', '@datetime.time', '%app.root%']

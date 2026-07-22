@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for MHCO Time and Weather module.
+ */
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function mhco_time_and_weather_preprocess_page(array &$variables): void {
+  // Only execute this logic on the front page.
+  if (\Drupal::service('path.matcher')->isFrontPage()) {
+    try {
+      /** @var \Drupal\mhco_time_and_weather\TimeStyleCalculator $calculator */
+      $calculator = \Drupal::service('mhco_time_and_weather.calculator');
+
+      // Pass the calculated class directly to the page template as a new variable.
+      $variables['mhco_time_style'] = 'time-style-' . $calculator->getCurrentStyle();
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('mhco_time_and_weather')->error('Failed to calculate time style: @message', [
+        '@message' => $e->getMessage(),
+      ]);
+    }
+  }
+}

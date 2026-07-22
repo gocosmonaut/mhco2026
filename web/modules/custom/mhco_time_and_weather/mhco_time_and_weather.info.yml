@@ -1,0 +1,5 @@
+name: 'MHCO Time and Weather'
+type: module
+description: 'Adjusts the home page styling class based on time of day and year.'
+core_version_requirement: ^10
+package: Custom

@@ -5,7 +5,7 @@ package: Performance and scalability
 core_version_requirement: ^10.3 || ^11
 configure: lscache.settings
 
-# Information added by Drupal.org packaging script on 2026-06-29
-version: '1.3.4'
+# Information added by Drupal.org packaging script on 2026-07-06
+version: '1.3.5'
 project: 'lscache'
-datestamp: 1782773203
+datestamp: 1783339549

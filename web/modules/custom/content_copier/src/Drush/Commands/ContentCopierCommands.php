@@ -3,29 +3,28 @@
 namespace Drupal\content_copier\Drush\Commands;
 
 use Drush\Commands\DrushCommands;
-use Drush\Attributes as CLI; // 1. ADD THIS IMPORT
+// 1. ADD THIS IMPORT
+use Drush\Attributes as CLI;
 use Drupal\node\Entity\Node;
-use Drupal\Core\Entity\Query\QueryFactory;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\path_alias\Entity\PathAlias;
 
 /**
  * Drush commands for copying content.
  */
-class ContentCopierCommands extends DrushCommands
-{
+class ContentCopierCommands extends DrushCommands {
 
   /**
    * Copies nodes from two source content types to a new content type.
    */
-  // 2. REPLACE ANNOTATIONS WITH PHP 8 ATTRIBUTES
+
+  /**
+ * 2. REPLACE ANNOTATIONS WITH PHP 8 ATTRIBUTES.
+ */
   #[CLI\Command(name: 'content:copy', aliases: ['ccop'])]
   #[CLI\Argument(name: 'type1', description: 'Machine name of the first source content type.')]
   #[CLI\Argument(name: 'type2', description: 'Machine name of the second source content type.')]
   #[CLI\Argument(name: 'new_type', description: 'Machine name of the target content type.')]
   #[CLI\Usage(name: 'drush content:copy old_type1 old_type2 new_type', description: 'Copies all nodes from old_type1 and old_type2 to new_type.')]
-  public function copyContent($type1, $type2, $new_type)
-  {
+  public function copyContent($type1, $type2, $new_type) {
     $source_types = [$type1, $type2];
     $total_copied = 0;
 
@@ -141,4 +140,5 @@ class ContentCopierCommands extends DrushCommands
 
     $this->logger()->success(dt('Copy completed. @count nodes copied.', ['@count' => $total_copied]));
   }
+
 }

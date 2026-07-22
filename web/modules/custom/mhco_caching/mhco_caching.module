@@ -5,20 +5,19 @@
  * MHCO Caching Fixes.
  */
 
-use Drupal\Core\Session\AccountInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\user\UserInterface;
 
 /**
  * Implements hook_user_login().
  */
-function mhco_caching_user_login(UserInterface $account)
-{
+function mhco_caching_user_login(UserInterface $account) {
   // 1. Clear the specific cache tags for the user
   $uid = $account->id();
   \Drupal::service('cache_tags.invalidator')->invalidateTags([
     "user:$uid",
     'user_list',
-    'route_match'
+    'route_match',
   ]);
 
   // 2. Log the event for debugging
@@ -30,7 +29,7 @@ function mhco_caching_user_login(UserInterface $account)
   // 3. Optional: Trigger a redirect
   // If you want to force a redirect to the clean profile path,
   // do it using a session response or a simple redirect logic.
-  $response = new \Symfony\Component\HttpFoundation\RedirectResponse('/users/' . $uid);
+  $response = new RedirectResponse('/users/' . $uid);
   $response->send();
   exit;
 }

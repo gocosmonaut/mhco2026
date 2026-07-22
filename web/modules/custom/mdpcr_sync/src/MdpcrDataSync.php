@@ -8,8 +8,10 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
-class MdpcrDataSync
-{
+/**
+ *
+ */
+class MdpcrDataSync {
 
   protected $httpClient;
   protected $fileRepository;
@@ -18,39 +20,43 @@ class MdpcrDataSync
   const MAIN_URL = 'https://mdpcr.hcs.oregon.gov/parks';
   const TARGET_URI = 'public://mdpcr_parks.json';
 
-  public function __construct(ClientInterface $http_client, FileRepositoryInterface $file_repository, LoggerChannelFactoryInterface $logger_factory)
-  {
+  public function __construct(ClientInterface $http_client, FileRepositoryInterface $file_repository, LoggerChannelFactoryInterface $logger_factory) {
     $this->httpClient = $http_client;
     $this->fileRepository = $file_repository;
     $this->logger = $logger_factory->get('mdpcr_sync');
   }
 
-  public function runSync(): bool
-  {
+  /**
+   *
+   */
+  public function runSync(): bool {
     $this->logger->info('Starting remote registry pagination sync.');
 
-    $build_token = '1jhgprt'; // Keep your current known-good token as a fallback
+    // Keep your current known-good token as a fallback.
+    $build_token = '1jhgprt';
 
     try {
       $response = $this->httpClient->request('GET', self::MAIN_URL, [
-        'headers' => ['User-Agent' => 'Mozilla/5.0']
+        'headers' => ['User-Agent' => 'Mozilla/5.0'],
       ]);
       $html = (string) $response->getBody();
 
       // Look for the specific SvelteKit pattern: /_app/immutable/entry/start...
-      // The token we need is the folder name immediately after /_app/remote/
+      // The token we need is the folder name immediately after /_app/remote/.
       if (preg_match('/\/_app\/remote\/([a-zA-Z0-9]+)\//', $html, $matches)) {
         $build_token = $matches[1];
         $this->logger->info('Successfully scraped new build token: @token', ['@token' => $build_token]);
-      } else {
-        // Fallback to searching the HTML for the SvelteKit start script if remote path isn't explicit
+      }
+      else {
+        // Fallback to searching the HTML for the SvelteKit start script if remote path isn't explicit.
         if (preg_match('/\/_app\/immutable\/entry\/start\.([a-zA-Z0-9]+)\.js/', $html, $matches)) {
-          // Sometimes the build token is embedded in the JS file hashes
+          // Sometimes the build token is embedded in the JS file hashes.
           $this->logger->notice('Scraped via JS hash: @token', ['@token' => $matches[1]]);
-          // Logic to update $build_token if needed
+          // Logic to update $build_token if needed.
         }
       }
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       $this->logger->warning('Failed to scrape token. Falling back to: @token', ['@token' => $build_token]);
     }
 
@@ -65,24 +71,32 @@ class MdpcrDataSync
         $payload_data = [
           [
             "searchText" => 1,
-            "parkStatusId" => 2, // Points to Index 2 (Value: 1)
+        // Points to Index 2 (Value: 1)
+            "parkStatusId" => 2,
             "countyCode" => 1,
             "hasVacancies" => 3,
-            "pageNumber" => 5,   // NEW: Points to Index 5
-            "pageSize" => 4      // Points to Index 4 (Value: 50)
+        // NEW: Points to Index 5.
+            "pageNumber" => 5,
+        // Points to Index 4 (Value: 50)
+            "pageSize" => 4,
           ],
-          "",     // Index 1
-          1,      // Index 2 (Strictly for parkStatusId now)
-          FALSE,  // Index 3
-          50,     // Index 4
-          $current_page // Index 5: Our isolated, dynamic page number!
+          // Index 1.
+          "",
+          // Index 2 (Strictly for parkStatusId now)
+          1,
+          // Index 3.
+          FALSE,
+          // Index 4.
+          50,
+          // Index 5: Our isolated, dynamic page number!
+          $current_page,
         ];
 
         $base64_payload = base64_encode(json_encode($payload_data));
         $api_url = "https://mdpcr.hcs.oregon.gov/_app/remote/{$build_token}/getParkSearchResults?payload={$base64_payload}";
 
         $response = $this->httpClient->request('GET', $api_url, [
-          'headers' => ['User-Agent' => 'Mozilla/5.0']
+          'headers' => ['User-Agent' => 'Mozilla/5.0'],
         ]);
 
         $data = json_decode((string) $response->getBody(), TRUE);
@@ -102,7 +116,8 @@ class MdpcrDataSync
         // 2. CHECK PAGINATION
         if (count($clean_rows) < $page_size) {
           $has_more_pages = FALSE;
-        } else {
+        }
+        else {
           $current_page++;
           usleep(500000);
         }
@@ -113,27 +128,31 @@ class MdpcrDataSync
       // =================================================================
       foreach ($all_clean_rows as &$row) {
 
-        // Total Spaces Range
+        // Total Spaces Range.
         $total = (int) ($row['totalNumberOfSpaces'] ?? 0);
         $vacant = (int) ($row['numberOfVacantSpaces'] ?? 0);
         if ($total > 0) {
-          $row['vacancyPercentage'] = round(($vacant  / $total) * 100, 1);
-        } else {
+          $row['vacancyPercentage'] = round(($vacant / $total) * 100, 1);
+        }
+        else {
           $row['vacancyPercentage'] = 0.0;
         }
 
-        // Park Status
-        $status_id = isset($row['parkStatusId']) ? (int)$row['parkStatusId'] : 1;
+        // Park Status.
+        $status_id = isset($row['parkStatusId']) ? (int) $row['parkStatusId'] : 1;
         $row['parkStatusText'] = ($status_id === 1) ? 'Open' : 'Closed';
 
-        // Total Spaces Range Label
+        // Total Spaces Range Label.
         if ($total > 120) {
           $row['totalSpacesRange'] = '121 and up';
-        } elseif ($total >= 81) {
+        }
+        elseif ($total >= 81) {
           $row['totalSpacesRange'] = '81-120';
-        } elseif ($total >= 41) {
+        }
+        elseif ($total >= 41) {
           $row['totalSpacesRange'] = '41-80';
-        } else {
+        }
+        else {
           $row['totalSpacesRange'] = '1-40';
         }
 
@@ -143,15 +162,18 @@ class MdpcrDataSync
         // Vacant Spaces Range Label (Combined tokens for "Contains" matching)
         if ($vacant >= 11) {
           $row['vacantSpacesRange'] = 'Has vacancy 11+';
-        } elseif ($vacant >= 4) {
+        }
+        elseif ($vacant >= 4) {
           $row['vacantSpacesRange'] = 'Has vacancy 4-10';
-        } elseif ($vacant >= 1) {
+        }
+        elseif ($vacant >= 1) {
           $row['vacantSpacesRange'] = 'Has vacancy 1-3';
-        } else {
+        }
+        else {
           $row['vacantSpacesRange'] = 'No vacancy';
         }
 
-        // Assign the array to the row
+        // Assign the array to the row.
         $row['vacantSpacesRange'] = $vacant_tags;
 
         // =================================================================
@@ -165,7 +187,7 @@ class MdpcrDataSync
         $contact_last = $row['contact']['lastName'] ?? '';
         $contact_full = trim(($row['contact']['name'] ?? '') . ' ' . $contact_first . ' ' . $contact_last);
 
-        // Combine them into one big searchable string
+        // Combine them into one big searchable string.
         $row['searchIndex'] = trim($name . ' ' . $street . ' ' . $contact_full);
       }
 
@@ -218,17 +240,20 @@ class MdpcrDataSync
       $total_count = count($all_clean_rows);
       $this->logger->info("Success! Downloaded $total_count parks and saved to public://mdpcr_parks.json.");
       return TRUE;
-    } catch (GuzzleException | \Exception $e) {
+    }
+    catch (GuzzleException | \Exception $e) {
       $this->logger->error('API Sync breakdown on page @page: @msg', [
         '@page' => $current_page,
-        '@msg' => $e->getMessage()
+        '@msg' => $e->getMessage(),
       ]);
       return FALSE;
     }
   }
 
-  private function normalizeRegistry(array $root): array
-  {
+  /**
+   *
+   */
+  private function normalizeRegistry(array $root): array {
     if (!isset($root[1]) || !is_array($root[1])) {
       return [];
     }
@@ -242,8 +267,10 @@ class MdpcrDataSync
     return $flat_parks;
   }
 
-  private function resolveReferences($item, array $root)
-  {
+  /**
+   *
+   */
+  private function resolveReferences($item, array $root) {
     if (is_array($item)) {
       $resolved = [];
       foreach ($item as $key => $pointer) {
@@ -255,7 +282,7 @@ class MdpcrDataSync
           $value = html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
           if ($key === 'phone') {
-            // Strip any existing dashes, spaces, or parentheses just in case
+            // Strip any existing dashes, spaces, or parentheses just in case.
             $digits = preg_replace('/[^0-9]/', '', $value);
 
             if (strlen($digits) === 10) {
@@ -268,7 +295,7 @@ class MdpcrDataSync
           if ($key === 'city' || $key === 'countyName') {
             $value = ucwords(strtolower($value));
 
-            // Define normalization map
+            // Define normalization map.
             $map = [
               'Mc Minnville' => 'McMinnville',
               'Milwalkie' => 'Milwaukie',
@@ -286,7 +313,7 @@ class MdpcrDataSync
             }
           }
 
-          // NEW: State Abbreviation Normalization
+          // NEW: State Abbreviation Normalization.
           if ($key === 'state') {
             $state_map = [
               'AZ' => 'Arizona',
@@ -299,7 +326,7 @@ class MdpcrDataSync
               'NV' => 'Nevada',
             ];
 
-            // Clean the incoming value just in case it is lowercase or has spaces
+            // Clean the incoming value just in case it is lowercase or has spaces.
             $clean_state = strtoupper(trim($value));
 
             if (isset($state_map[$clean_state])) {
@@ -316,4 +343,5 @@ class MdpcrDataSync
     }
     return $item;
   }
+
 }

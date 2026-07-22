@@ -9,13 +9,28 @@
 }
 
 .path-frontpage #main-wrapper {
-    background: #d7cf91 url('../images/sheep_rock.jpg') top no-repeat;
-    background-size: 100%;
     padding: 2rem 0;
     box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.5);
-    // clip-path: ellipse(50% 30% at 50% 100%); /* Creates an elliptical curve at the bottom */
-    // height: 300px;
-    // width: 100%;
+
+    &.time-style {
+    
+        &-daytime {
+            background: #d7cf91 url('../images/daytime.jpg') top no-repeat;
+                    background-size: 100%;
+        }
+        &-sunrise {
+                            background: #5f5125 url('../images/sunrise.jpg') top no-repeat;
+                    background-size: 100%;
+        }
+        &-sunset {
+                       background: #3d4638 url('../images/sunset.jpg') top no-repeat;
+                    background-size: 100%;
+        }
+        &-night {
+                                 background: #1c2426 url('../images/night.jpg') top no-repeat;
+                    background-size: 100%;
+        }
+    }
 }
 
 #home-col-1 {

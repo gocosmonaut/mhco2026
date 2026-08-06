@@ -4,7 +4,7 @@ namespace Drupal\field_defaults\Service;
 
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\SynchronizableInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\field\FieldConfigInterface;
@@ -16,16 +16,8 @@ class FieldDefaultsProcessor {
 
   use StringTranslationTrait;
 
-  /**
-   * Constructs a new FieldDefaultsProcessor object.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
-   *   The entity type manager.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The config factory.
-   */
   public function __construct(
-    protected readonly EntityTypeManager $entityTypeManager,
+    protected readonly EntityTypeManagerInterface $entityTypeManager,
     protected readonly ConfigFactoryInterface $configFactory,
   ) {}
 
@@ -78,6 +70,7 @@ class FieldDefaultsProcessor {
         $no_overwrite,
         $preserve,
       ]);
+
     $batch->setFinishCallback([
       FieldDefaultsProcessor::class,
       'processEntityBatchFinished',
@@ -116,10 +109,10 @@ class FieldDefaultsProcessor {
     // @todo allow setting this limit per batch.
     $baseQuery->range($context['sandbox']['progress'], 10);
     $entityIds = $baseQuery->execute();
-    $hasChanged = FALSE;
     foreach ($entityIds as $entityId) {
       $context['sandbox']['progress']++;
       $context['sandbox']['current_entity'] = $entityId;
+      $hasChanged = FALSE;
 
       if ($entity = \Drupal::entityTypeManager()->getStorage($entityType)->load($entityId)) {
 
@@ -135,28 +128,29 @@ class FieldDefaultsProcessor {
           if ($languageValue) {
             // @todo should this add a translation if not exists?
             if ($entity->hasTranslation($languageId)) {
-              $entity = $entity->getTranslation($languageId);
+              $translation = $entity->getTranslation($languageId);
 
-              if (!$noOverwrite || $entity->get($fieldName)->isEmpty()) {
-                $entity->{$fieldName} = $fieldValues;
+              if (!$noOverwrite || $translation->get($fieldName)->isEmpty()) {
+                $translation->{$fieldName} = $fieldValues;
                 $hasChanged = TRUE;
               }
             }
           }
         }
-      }
-      // Save the entity and update batch.
-      if ($hasChanged) {
-        // Preserve changed date.
-        if ($preserve && $entity->hasField('changed')) {
-          // @todo D11 will only need syncing.
-          if ($entity instanceof SynchronizableInterface) {
-            $entity->setSyncing(TRUE);
+
+        // Save the entity and update batch.
+        if ($hasChanged) {
+          // Preserve changed date.
+          if ($preserve && $entity->hasField('changed')) {
+            // @todo D11 will only need syncing.
+            if ($entity instanceof SynchronizableInterface) {
+              $entity->setSyncing(TRUE);
+            }
+            $entity->changed->preserve = TRUE;
           }
-          $entity->changed->preserve = TRUE;
+          $context['results'][] = $entity->save();
+          $context['message'] = t("Setting Default Values on entity id: @id", ["@id" => $entityId]);
         }
-        $context['results'][] = $entity->save();
-        $context['message'] = t("Setting Default Values on entity id: @id", ["@id" => $entityId]);
       }
     }
 

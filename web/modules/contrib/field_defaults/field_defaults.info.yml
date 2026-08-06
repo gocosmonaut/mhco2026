@@ -6,7 +6,7 @@ configure: field_defaults.field_defaults_settings_form
 dependencies:
   - drupal:field_ui
 
-# Information added by Drupal.org packaging script on 2025-04-24
-version: '2.1.0'
+# Information added by Drupal.org packaging script on 2026-07-24
+version: '2.1.1'
 project: 'field_defaults'
-datestamp: 1745506970
+datestamp: 1784908400

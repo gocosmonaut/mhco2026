@@ -480,4 +480,43 @@ class BetterExposedFiltersConfigUpdater {
     return $changed;
   }
 
+  /**
+   * Add soft_limit_include_children param to views.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function updateSoftLimitIncludeChildrenParam(ViewEntityInterface $view): bool {
+    $changed = FALSE;
+    $displays = $view->get('display');
+    foreach ($displays as &$display) {
+      if (isset($display['display_options']['exposed_form']['type'])) {
+        if ($display['display_options']['exposed_form']['type'] == 'bef') {
+          $exposed_form = $display['display_options']['exposed_form'];
+
+          $bef_settings = $exposed_form['options']['bef'];
+          if (isset($bef_settings['filter'])) {
+            foreach ($bef_settings['filter'] as $filter_id => $settings) {
+              if (!in_array($settings['plugin_id'], ['bef_links', 'bef'])) {
+                continue;
+              }
+              if (isset($settings['soft_limit_include_children'])) {
+                continue;
+              }
+              $display['display_options']['exposed_form']['options']['bef']['filter'][$filter_id]['soft_limit_include_children'] = FALSE;
+              $changed = TRUE;
+            }
+          }
+        }
+      }
+    }
+    if ($changed) {
+      $view->set('display', $displays);
+    }
+    return $changed;
+  }
+
 }

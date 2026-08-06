@@ -842,14 +842,17 @@ class BetterExposedFilters extends InputRequired {
       }
 
       if (!empty($bef_options['general']['autosubmit_hide'])) {
-        $children = Element::children($form['actions']);
-        $children = array_diff($children, ['submit']);
+        // Always hide the submit button itself. The actions container is
+        // not always a rendered, attribute-honoring wrapper (e.g. inline
+        // exposed forms render the button with no form-actions div), so
+        // hiding only the container can leave the button visible.
+        $form['actions']['submit']['#attributes']['class'][] = 'js-hide';
 
+        // When submit is the only action, also hide the container so it
+        // does not leave an empty block (the intent of #3568944).
+        $children = array_diff(Element::children($form['actions']), ['submit']);
         if (empty($children)) {
           $form['actions']['#attributes']['class'][] = 'js-hide';
-        }
-        else {
-          $form['actions']['submit']['#attributes']['class'][] = 'js-hide';
         }
       }
     }

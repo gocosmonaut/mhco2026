@@ -86,6 +86,12 @@ function _field_defaults_ui_submit(&$form, FormStateInterface $form_state) {
     $fieldValues = $form_state->getValue(['default_value_input', $fieldConfig->getName()]);
     if ($fieldValues !== NULL) {
       \Drupal::service('field_defaults.processor')->processFieldForm($fieldConfig, $fieldDefaults, $fieldValues);
+
+      $batch =& batch_get();
+      if ($batch) {
+        $batch['progressive'] = FALSE;
+        batch_process();
+      }
     }
   }
 }

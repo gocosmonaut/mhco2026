@@ -10,7 +10,7 @@ use Drupal\Tests\node\Traits\NodeCreationTrait;
 /**
  * Base class for testing better exposed filters.
  */
-class BetterExposedFiltersTestBase extends WebDriverTestBase {
+abstract class BetterExposedFiltersTestBase extends WebDriverTestBase {
 
   use BetterExposedFiltersTrait;
   use ContentTypeCreationTrait;

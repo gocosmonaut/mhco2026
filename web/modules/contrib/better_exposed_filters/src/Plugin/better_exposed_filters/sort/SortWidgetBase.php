@@ -306,7 +306,7 @@ Title Desc|Z -> A</pre> Leave the replacement text blank to remove an option alt
   public function sortCombineSubmitForm(array $form, FormStateInterface $form_state): void {
     $sort_by = $sort_order = '';
     $combined = $form_state->getValue($this->getCombineSortKey());
-    if (!empty($combined)) {
+    if (is_string($combined) && strlen($combined) > 0) {
       $parts = explode('_', $combined);
       $sort_order = trim(array_pop($parts));
       $sort_by = trim(implode('_', $parts));

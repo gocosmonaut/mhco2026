@@ -237,6 +237,82 @@ class BetterExposedFiltersAutoSubmitTest extends BetterExposedFiltersTestBase {
   }
 
   /**
+   * Tests data-bef-auto-submit-exclude persists after AJAX with block form.
+   *
+   * When the exposed form is rendered as a block, the 'bef-exposed-form' class
+   * is on the block wrapper, not the form element. After AJAX updates, the
+   * behavior must reapply the data-bef-auto-submit-exclude attribute to text
+   * fields.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testAutoSubmitExcludeTextfieldPersistsAfterAjaxWithBlock(): void {
+    $this->turnAjaxOn();
+    $view = Views::getView('bef_test');
+    $this->drupalPlaceBlock('views_exposed_filter_block:bef_test-page_2');
+
+    $this->setBetterExposedOptions($view, [
+      'general' => [
+        'autosubmit' => TRUE,
+        'autosubmit_exclude_textfield' => TRUE,
+      ],
+    ]);
+
+    $this->drupalGet('bef-test-with-block');
+
+    $session = $this->getSession();
+    $page = $session->getPage();
+
+    // Verify both nodes are visible.
+    $html = $page->getHtml();
+    $this->assertStringContainsString('Page One', $html);
+    $this->assertStringContainsString('Page Two', $html);
+
+    // Assert data-bef-auto-submit-exclude is present on text fields on
+    // initial page load. Use JavaScript to check the actual DOM attribute
+    // as Mink may cache stale element references.
+    $has_attr_before = $session->evaluateScript(
+      "document.querySelector('.form-item-field-bef-email-value input[type=\"text\"]')?.hasAttribute('data-bef-auto-submit-exclude') ?? false"
+    );
+    $this->assertTrue($has_attr_before);
+
+    // Trigger an AJAX refresh by changing a non-text filter (integer select).
+    $field_bef_integer = $page->findField('field_bef_integer_value');
+    $field_bef_integer->setValue('1');
+    $field_bef_integer->blur();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+
+    // Verify the view filtered correctly.
+    $html = $page->getHtml();
+    $this->assertStringContainsString('Page One', $html);
+    $this->assertStringNotContainsString('Page Two', $html);
+
+    // After AJAX, simulate the exact condition that triggers the bug: call
+    // Drupal.attachBehaviors with the FORM element as context, mimicking what
+    // happens during AJAX form replacement in a block. The once() on the
+    // .bef-exposed-form wrapper prevents re-processing when context is the
+    // form, because the wrapper (not the form) has the once data attribute.
+    $session->evaluateScript(
+      "document.querySelectorAll('.form-item-field-bef-email-value input[type=\"text\"]').forEach(el => { el.removeAttribute('data-bef-auto-submit-exclude'); el.removeAttribute('data-once'); })"
+    );
+
+    // Verify removal worked.
+    $has_attr_removed = $session->evaluateScript(
+      "document.querySelector('.form-item-field-bef-email-value input[type=\"text\"]')?.hasAttribute('data-bef-auto-submit-exclude') ?? false"
+    );
+    $this->assertFalse($has_attr_removed);
+
+    $session->evaluateScript(
+      "(function() { const form = document.querySelector('form[id*=\"views-exposed-form\"]'); if (form) { Drupal.attachBehaviors(form, drupalSettings); } })()"
+    );
+
+    $has_attr_after = $session->evaluateScript(
+      "document.querySelector('.form-item-field-bef-email-value input[type=\"text\"]')?.hasAttribute('data-bef-auto-submit-exclude') ?? false"
+    );
+    $this->assertTrue($has_attr_after);
+  }
+
+  /**
    * Tests auto submit with checkboxes.
    *
    * @throws \Behat\Mink\Exception\ElementNotFoundException

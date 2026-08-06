@@ -21,6 +21,10 @@ class BetterExposedFiltersKernelTest extends BetterExposedFiltersKernelTestBase 
   /**
    * Tests hiding the submit button when auto-submit is enabled.
    *
+   * Checks the submit button is hidden both when the exposed form has a
+   * reset button (the actions element has more than one child) and when it
+   * does not (the actions element contains only the submit button).
+   *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function testHideSubmitButtonOnAutoSubmit() {
@@ -42,6 +46,25 @@ class BetterExposedFiltersKernelTest extends BetterExposedFiltersKernelTestBase 
     $this->assertCount(1, $actual);
 
     $view->destroy();
+
+    // Repeat with the reset button disabled, so the actions element holds
+    // only the submit button.
+    $view = Views::getView('bef_test');
+    $display = &$view->storage->getDisplay('default');
+    $display['display_options']['exposed_form']['options']['reset_button'] = FALSE;
+    $this->setBetterExposedOptions($view, [
+      'general' => [
+        'autosubmit' => TRUE,
+        'autosubmit_hide' => TRUE,
+      ],
+    ]);
+
+    // Render the exposed form.
+    $this->renderExposedForm($view);
+
+    // Check our "submit" button is hidden.
+    $actual = $this->xpath("//form//input[@type='submit'][contains(concat(' ',normalize-space(@class),' '),' js-hide ')]");
+    $this->assertCount(1, $actual);
   }
 
   /**
@@ -110,7 +133,7 @@ class BetterExposedFiltersKernelTest extends BetterExposedFiltersKernelTestBase 
     $actual = $this->xpath("//form//details[@data-drupal-selector='edit-secondary']//select[@name='sort_by']");
     $this->assertCount(1, $actual);
 
-    // Assert pager option was placed in secondary details.
+    // Assert a pager option was placed in secondary details.
     $actual = $this->xpath("//form//details[@data-drupal-selector='edit-secondary']//select[@name='items_per_page']");
     $this->assertCount(1, $actual);
 

@@ -71,7 +71,7 @@ class BetterExposedFiltersLinksTest extends BetterExposedFiltersTestBase {
 
     $this->drupalGet('/bef-test');
 
-    $session->elementNotExists('css', 'a[name="field_bef_integer_value[All]"]');
+    $session->elementNotExists('css', '.bef-links a[data-bef-value="All"]');
 
     // Check the option links are still rendered.
     $session->linkExists('Zero');

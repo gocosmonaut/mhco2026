@@ -25,6 +25,7 @@ class Links extends FilterWidgetBase {
       'soft_limit' => 0,
       'soft_limit_label_less' => '',
       'soft_limit_label_more' => '',
+      'soft_limit_include_children' => FALSE,
       'scrollable' => FALSE,
       'scrollable_height' => 300,
     ];
@@ -106,6 +107,20 @@ class Links extends FilterWidgetBase {
         ],
       ],
     ];
+    $form['soft_limit_include_children'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Apply soft limit to children'),
+      '#default_value' => !empty($this->configuration['soft_limit_include_children']),
+      '#description' => $this->t('When enabled, the soft limit counts all items including nested children. When disabled, only top-level items are counted.'),
+      '#states' => [
+        'invisible' => [
+          ':input[name="exposed_form_options[bef][filter][' . $filter->field . '][configuration][soft_limit]"]' =>
+            [
+              'value' => 0,
+            ],
+        ],
+      ],
+    ];
 
     return $form;
   }
@@ -146,8 +161,9 @@ class Links extends FilterWidgetBase {
     if ($soft_limit !== 0) {
       $form['#attached']['library'][] = 'better_exposed_filters/soft_limit';
       $form['#attached']['drupalSettings']['better_exposed_filters']['soft_limit'][$field_id]['limit'] = $soft_limit;
+      $include_children = !empty($this->configuration['soft_limit_include_children']);
       $form['#attached']['drupalSettings']['better_exposed_filters']['soft_limit'][$field_id]['list_selector'] = '> ul';
-      $form['#attached']['drupalSettings']['better_exposed_filters']['soft_limit'][$field_id]['item_selector'] = '> li';
+      $form['#attached']['drupalSettings']['better_exposed_filters']['soft_limit'][$field_id]['item_selector'] = $include_children ? 'li' : '> li';
       $form['#attached']['drupalSettings']['better_exposed_filters']['soft_limit'][$field_id]['show_less'] = $this->configuration['soft_limit_label_less'];
       $form['#attached']['drupalSettings']['better_exposed_filters']['soft_limit'][$field_id]['show_more'] = $this->configuration['soft_limit_label_more'];
     }

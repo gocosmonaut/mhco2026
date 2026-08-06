@@ -125,6 +125,42 @@ class BetterExposedFiltersHelperUnitTest extends UnitTestCase {
       TRUE,
     ];
 
+    // A malformed line with no pipe separator is skipped.
+    $data[] = [
+      ['test' => 'test'],
+      'without_pipe',
+      ['test' => 'test'],
+    ];
+
+    // An empty rewrite settings string leaves options untouched.
+    $data[] = [
+      ['foo' => '1', 'bar' => '2'],
+      '',
+      ['foo' => '1', 'bar' => '2'],
+    ];
+
+    // Blank lines mixed between real rewrites are skipped.
+    $data[] = [
+      ['a' => 'a', 'c' => 'c'],
+      "a|A\n\nc|C",
+      ['a' => 'A', 'c' => 'C'],
+    ];
+
+    // Whitespace-only lines are treated the same as blank lines.
+    $data[] = [
+      ['a' => 'a', 'c' => 'c'],
+      "a|A\n   \nc|C",
+      ['a' => 'A', 'c' => 'C'],
+    ];
+
+    // A label containing a pipe survives because explode() is bounded to 2
+    // splits.
+    $data[] = [
+      ['answer' => 'answer'],
+      'answer|Yes | No',
+      ['answer' => 'Yes | No'],
+    ];
+
     return $data;
   }
 

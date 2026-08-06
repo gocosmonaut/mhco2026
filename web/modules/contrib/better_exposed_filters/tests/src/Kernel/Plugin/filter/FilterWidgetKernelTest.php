@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\better_exposed_filters\Kernel\Plugin\filter;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\better_exposed_filters\Kernel\BetterExposedFiltersKernelTestBase;
 use Drupal\views\Views;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Tests the advanced options of a filter widget.
@@ -25,9 +27,8 @@ class FilterWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function testSortFilterOptions() {
+  public function testSortFilterOptions(): void {
     $view = Views::getView('bef_test');
-    $display = &$view->storage->getDisplay('default');
 
     // Get the exposed form render array.
     $output = $this->getExposedFormRenderArray($view);
@@ -71,9 +72,8 @@ class FilterWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function testCollapsibleOption() {
+  public function testCollapsibleOption(): void {
     $view = Views::getView('bef_test');
-    $display = &$view->storage->getDisplay('default');
 
     // Enable collapsible options.
     $this->setBetterExposedOptions($view, [
@@ -109,7 +109,7 @@ class FilterWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function testFirstNonAnyOptionIsSortedWithMultipleSelections() {
+  public function testFirstNonAnyOptionIsSortedWithMultipleSelections(): void {
     $view_id = 'bef_test';
     $display_id = 'default';
     $filter_id = 'field_bef_letters_value';
@@ -182,7 +182,7 @@ class FilterWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function testRewrittenAnyOptionIsPreservedWithSorting() {
+  public function testRewrittenAnyOptionIsPreservedWithSorting(): void {
     $view_id = 'bef_test';
     $display_id = 'default';
     $filter_id = 'field_bef_letters_value';
@@ -216,7 +216,7 @@ class FilterWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
       ],
     ]);
 
-    $output = $this->getExposedFormRenderArray($view, $display_id);
+    $output = $this->getExposedFormRenderArray($view);
 
     $this->assertArrayHasKey($filter_id, $output, "Filter '$filter_id' not found in the rendered form.");
     if (!isset($output[$filter_id]['#options'])) {

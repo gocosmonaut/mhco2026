@@ -43,7 +43,7 @@ class LinksPagerWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
     $this->renderExposedForm($view);
 
     // Check our pager item "items_per_page" is rendered as links.
-    $actual = $this->xpath('//form//a[starts-with(@name, "items_per_page")]');
+    $actual = $this->xpath('//form//div[contains(@id, "items-per-page")]//a[@data-bef-value]');
     $this->assertCount(4, $actual);
 
     $view->destroy();

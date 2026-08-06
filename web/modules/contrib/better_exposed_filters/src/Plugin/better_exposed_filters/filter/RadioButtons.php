@@ -27,6 +27,7 @@ class RadioButtons extends FilterWidgetBase {
       'soft_limit' => 0,
       'soft_limit_label_less' => '',
       'soft_limit_label_more' => '',
+      'soft_limit_include_children' => FALSE,
       'scrollable' => FALSE,
       'scrollable_height' => 300,
     ];
@@ -125,6 +126,21 @@ class RadioButtons extends FilterWidgetBase {
         ],
       ],
     ];
+    $form['soft_limit_include_children'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Apply soft limit to children'),
+      '#default_value' => !empty($this->configuration['soft_limit_include_children']),
+      '#description' => $this->t('When enabled, the soft limit counts all items including nested children. When disabled, only top-level items are counted.'),
+      '#disabled' => !isset($filter->options['hierarchy']) || !$filter->options['hierarchy'],
+      '#states' => [
+        'invisible' => [
+          ':input[name="exposed_form_options[bef][filter][' . $filter->field . '][configuration][soft_limit]"]' =>
+            [
+              'value' => 0,
+            ],
+        ],
+      ],
+    ];
 
     return $form;
   }
@@ -143,7 +159,7 @@ class RadioButtons extends FilterWidgetBase {
     foreach ($input as $key => $value) {
       if (is_array($value)) {
         $value = array_filter($value, function ($item) {
-          return !($item === '' || $item === NULL || is_int($item));
+          return !($item === '' || $item === NULL || $item === 0);
         });
 
         if (empty($value)) {
@@ -255,7 +271,8 @@ class RadioButtons extends FilterWidgetBase {
       $item_selector = $is_checkboxes ? '.js-form-type-checkbox' : '.js-form-type-radio';
       if ($is_hierarchical) {
         $list_selector = $list_selector . ' > ul';
-        $item_selector = ' > li';
+        $include_children = !empty($this->configuration['soft_limit_include_children']);
+        $item_selector = $include_children ? ' li' : ' > li';
       }
       $form['#attached']['drupalSettings']['better_exposed_filters']['soft_limit'][$field_id]['list_selector'] = $list_selector;
       $form['#attached']['drupalSettings']['better_exposed_filters']['soft_limit'][$field_id]['item_selector'] = $item_selector;

@@ -40,8 +40,8 @@
       if (!settings.better_exposed_filters?.autosubmit_exclude_textfield) {
         return;
       }
-      $(once('autosubmit-exclude-textfield', '.bef-exposed-form', context)).each(function () {
-        $(this).find('*[type="text"]').attr('data-bef-auto-submit-exclude', '');
+      $(once('autosubmit-exclude-textfield', '.bef-exposed-form *[type="text"]', context)).each(function () {
+        $(this).attr('data-bef-auto-submit-exclude', '');
       });
     }
   };

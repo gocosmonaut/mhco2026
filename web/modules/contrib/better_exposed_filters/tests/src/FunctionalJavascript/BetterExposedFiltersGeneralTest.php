@@ -313,6 +313,45 @@ class BetterExposedFiltersGeneralTest extends BetterExposedFiltersTestBase {
   }
 
   /**
+   * Tests collapsible filter stays closed with zero-keyed options.
+   *
+   * Simulates the scenario where a processor (like Facets Granularity)
+   * generates options with numeric keys starting at 0. Without a fix,
+   * BEF incorrectly interprets the presence of a 0-keyed option as an
+   * active selection, causing the details element to open.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testFilterCollapsibleWithZeroKeyedOptions(): void {
+    $view = Views::getView('bef_test');
+
+    // Enable multiple so checkboxes produce a #multiple form element.
+    $view->storage->getDisplay('default')['display_options']['filters']['field_bef_integer_value']['expose']['multiple'] = TRUE;
+    $view->storage->save();
+
+    // Use checkboxes (multiple) for the integer filter which has a "0" (Zero)
+    // option, and make it collapsible.
+    $this->setBetterExposedOptions($view, [
+      'filter' => [
+        'field_bef_integer_value' => [
+          'plugin_id' => 'bef',
+          'advanced' => [
+            'collapsible' => TRUE,
+          ],
+        ],
+      ],
+    ]);
+
+    $this->drupalGet('bef-test');
+    $page = $this->getSession()->getPage();
+
+    // The collapsible should be closed since no user selection was made.
+    $details = $page->find('css', '#edit-field-bef-integer-value-collapsible');
+    $this->assertNotNull($details, 'Collapsible details element exists.');
+    $this->assertFalse($details->hasAttribute('open'), 'Collapsible should be closed when no selection is active.');
+  }
+
+  /**
    * Tests replacement setting.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException

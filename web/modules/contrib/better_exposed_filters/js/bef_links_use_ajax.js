@@ -21,10 +21,11 @@
 
           const target = event.currentTarget;
 
-          const link_name = links_multiple ? target.name : links_name;
-          const link_value = target.name.substring(links_multiple ? links_name.length - 1 : links_name.length).replace(/^\[|\]$/g, '');
+          const link_value = target.getAttribute('data-bef-value');
+          const base_name = links_name.replace(/\[]$/, '');
+          const link_name = links_multiple ? base_name + '[' + link_value + ']' : links_name;
           const filter = form.querySelector('input[name="' + link_name + '"]');
-          const filters = form.querySelectorAll('input[name^="' + links_name + '"]');
+          const filters = form.querySelectorAll('input[name^="' + base_name + '"]');
 
           if (target.classList.contains('bef-link--selected')) {
             // The previously selected link is selected again. Deselect it.

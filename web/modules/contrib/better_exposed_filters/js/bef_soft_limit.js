@@ -41,34 +41,50 @@
     var onceKeyItems = 'applySoftLimit-items-' + filter_id;
     var onceKeyLinks = 'applySoftLimit-links-' + filter_id;
 
-    // Hide befs over the limit.
-    bef_list.each(function () {
-      var allLiElements = $(this).find(settings.item_selector);
-      $(once(onceKeyItems, allLiElements.slice(zero_based_limit + 1))).hide();
-    });
-
     // Capture settings values in local variables for the closure.
     var itemSelector = settings.item_selector;
     var showLessLabel = settings.show_less;
     var showMoreLabel = settings.show_more;
 
+    var isActiveItem = function () {
+      var item = $(this);
+      return item.is('.bef-link--selected, input:checked') ||
+        item.find('.bef-link--selected, input:checked').length > 0;
+    };
+
+    var getSoftLimitedItems = function (bef) {
+      return bef.find(itemSelector).slice(zero_based_limit + 1).filter(function () {
+        return !isActiveItem.call(this);
+      });
+    };
+
+    // Hide inactive befs over the limit.
+    bef_list.each(function () {
+      $(once(onceKeyItems, getSoftLimitedItems($(this)))).hide();
+    });
+
     // Add "Show more" / "Show less" links.
     $(once(onceKeyLinks, bef_list.filter(function () {
-      return $(this).find(itemSelector).length > settings.limit;
+      return getSoftLimitedItems($(this)).length > 0;
     }))).each(function () {
-      var bef = $(this);
+      let bef = $(this);
       $('<a href="#" class="bef-soft-limit-link"></a>')
         .text(showMoreLabel)
-        .on('click', function () {
-          if (bef.find(itemSelector + ':hidden').length > 0) {
+        .on('click', function (e) {
+          e.preventDefault();
+          let scrollTop = $(window).scrollTop();
+          if (getSoftLimitedItems(bef).filter(':hidden').length > 0) {
             bef.find(itemSelector + ':gt(' + zero_based_limit + ')').slideDown();
             bef.find(itemSelector + ':lt(' + (zero_based_limit + 2) + ') a, ' + itemSelector +':lt(' + (zero_based_limit + 2) + ') input').focus();
             $(this).addClass('open').text(showLessLabel);
           }
           else {
-            bef.find(itemSelector + ':gt(' + zero_based_limit + ')').slideUp();
+            getSoftLimitedItems(bef).slideUp();
             $(this).removeClass('open').text(showMoreLabel);
           }
+          setTimeout(function () {
+            $(window).scrollTop(scrollTop);
+          }, 0);
           return false;
         }).insertAfter($(this));
     });

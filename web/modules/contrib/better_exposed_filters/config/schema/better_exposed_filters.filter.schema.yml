@@ -82,6 +82,9 @@ better_exposed_filters.filter.bef:
     soft_limit_label_more:
       type: label
       label: 'Soft limit label show more'
+    soft_limit_include_children:
+      type: boolean
+      label: 'Apply soft limit to children'
     scrollable:
       type: boolean
       label: 'Use scrollable container'
@@ -111,6 +114,9 @@ better_exposed_filters.filter.bef_links:
     soft_limit_label_more:
       type: label
       label: 'Soft limit label show more'
+    soft_limit_include_children:
+      type: boolean
+      label: 'Apply soft limit to children'
     scrollable:
       type: boolean
       label: 'Use scrollable container'

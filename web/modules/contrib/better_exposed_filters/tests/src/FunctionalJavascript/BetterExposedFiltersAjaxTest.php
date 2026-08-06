@@ -169,7 +169,7 @@ class BetterExposedFiltersAjaxTest extends BetterExposedFiltersTestBase {
       $this->assertSession()->assertWaitOnAjaxRequest();
 
       // Verify that the link got the selected class.
-      $session->elementAttributeContains('css', '.bef-links a[name="field_bef_letters_value[a]"]', 'class', 'bef-link--selected');
+      $session->elementAttributeContains('css', '.bef-links a[data-bef-value="a"]', 'class', 'bef-link--selected');
 
       // Verify that only the "Page One" Node is present.
       $session->pageTextContains('Page One');
@@ -180,7 +180,7 @@ class BetterExposedFiltersAjaxTest extends BetterExposedFiltersTestBase {
       $session->assertWaitOnAjaxRequest();
 
       // Verify that the link doesn't have the selected class.
-      $session->elementAttributeNotContains('css', '.bef-links a[name="field_bef_letters_value[a]"]', 'class', 'bef-link--selected');
+      $session->elementAttributeNotContains('css', '.bef-links a[data-bef-value="a"]', 'class', 'bef-link--selected');
 
       // Verify that both nodes are now present.
       $session->pageTextContains('Page One');
@@ -238,7 +238,7 @@ class BetterExposedFiltersAjaxTest extends BetterExposedFiltersTestBase {
       $this->assertSession()->assertWaitOnAjaxRequest();
 
       // Verify that the link got the selected class.
-      $session->elementAttributeContains('css', '.bef-links a[name="field_bef_letters_value[a]"]', 'class', 'bef-link--selected');
+      $session->elementAttributeContains('css', '.bef-links a[data-bef-value="a"]', 'class', 'bef-link--selected');
 
       // Verify that only the "Page One" Node is present.
       $session->pageTextContains('Page One');
@@ -249,8 +249,8 @@ class BetterExposedFiltersAjaxTest extends BetterExposedFiltersTestBase {
       $session->assertWaitOnAjaxRequest();
 
       // Verify that both links have the selected class.
-      $session->elementAttributeContains('css', '.bef-links a[name="field_bef_letters_value[a]"]', 'class', 'bef-link--selected');
-      $session->elementAttributeContains('css', '.bef-links a[name="field_bef_letters_value[b]"]', 'class', 'bef-link--selected');
+      $session->elementAttributeContains('css', '.bef-links a[data-bef-value="a"]', 'class', 'bef-link--selected');
+      $session->elementAttributeContains('css', '.bef-links a[data-bef-value="b"]', 'class', 'bef-link--selected');
 
       // Verify that both nodes are now present.
       $session->pageTextContains('Page One');

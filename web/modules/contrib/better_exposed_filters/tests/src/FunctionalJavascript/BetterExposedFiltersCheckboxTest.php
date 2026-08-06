@@ -138,6 +138,25 @@ class BetterExposedFiltersCheckboxTest extends BetterExposedFiltersTestBase {
     $session->pageTextContains('Donkey');
     $session->pageTextContains('Elephant');
     $session->elementTextEquals('css', '.bef-soft-limit-link', 'Less test');
+    $this->clickLink('Less test');
+    $session->elementTextEquals('css', '.bef-soft-limit-link', 'More test');
+
+    // The selected option is beyond the soft limit and must stay visible.
+    $this->drupalGet('/bef-test', [
+      'query' => [
+        'field_bef_letters_value' => [
+          'd' => 'd',
+        ],
+      ],
+    ]);
+    $session->checkboxChecked('field_bef_letters_value[d]');
+    $session->pageTextContains('Donkey');
+    $session->pageTextNotContains('Elephant');
+    $this->clickLink('More test');
+    $session->elementTextEquals('css', '.bef-soft-limit-link', 'Less test');
+    $this->clickLink('Less test');
+    $session->pageTextContains('Donkey');
+    $session->pageTextNotContains('Elephant');
 
     // Now lets test soft limit on links.
     $this->setBetterExposedOptions($view, [
@@ -165,6 +184,27 @@ class BetterExposedFiltersCheckboxTest extends BetterExposedFiltersTestBase {
     $session->pageTextContains('Donkey');
     $session->pageTextContains('Elephant');
     $session->elementTextEquals('css', '.bef-soft-limit-link', 'Less test');
+    $this->clickLink('Less test');
+    $session->elementTextEquals('css', '.bef-soft-limit-link', 'More test');
+
+    // The selected option is beyond the soft limit and must stay visible.
+    $this->drupalGet('/bef-test', [
+      'query' => [
+        'field_bef_letters_value' => [
+          'd' => 'd',
+        ],
+      ],
+    ]);
+    $selected_donkey_link = '//a[contains(@class, "bef-link--selected")]'
+      . '[normalize-space() = "Donkey"]';
+    $session->elementExists('xpath', $selected_donkey_link);
+    $session->pageTextContains('Donkey');
+    $session->pageTextNotContains('Elephant');
+    $this->clickLink('More test');
+    $session->elementTextEquals('css', '.bef-soft-limit-link', 'Less test');
+    $this->clickLink('Less test');
+    $session->pageTextContains('Donkey');
+    $session->pageTextNotContains('Elephant');
   }
 
   /**

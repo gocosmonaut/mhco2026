@@ -327,7 +327,7 @@ function template_preprocess_bef_links(array &$variables): void {
     $variables['links'][$optionValue] = [
       '#attributes' => [
         'id' => Html::getUniqueId('edit-' . implode('-', [$name, $optionValue])),
-        'name' => $name . '[' . $optionValue . ']',
+        'data-bef-value' => $optionValue,
         'class' => [
           'bef-link',
           Html::getUniqueId('edit-' . $name),

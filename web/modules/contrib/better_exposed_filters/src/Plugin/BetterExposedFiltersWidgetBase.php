@@ -173,18 +173,20 @@ abstract class BetterExposedFiltersWidgetBase extends PluginBase implements Bett
     // Persist state of collapsible field-sets with active elements.
     if (empty($form[$group]['#open'])) {
       // Use raw user input to determine if field-set should be open or closed.
-      $user_input = $form_state->getUserInput()[$element] ?? [0];
-      // Take multiple values into account.
-      if (!is_array($user_input)) {
-        $user_input = [$user_input];
-      }
+      $raw_input = $form_state->getUserInput()[$element] ?? NULL;
 
-      // Check if one or more values are set for our current element.
-      $default_value = $form[$element]['#default_value'] ?? key($form[$element]['#options'] ?? []);
-      $has_values_selected = array_reduce($user_input, function (bool $carry, mixed $value) use ($default_value, $form, $element) {
-        return $carry ||
-          ($form[$element]['#multiple'] ?? FALSE ? ($value === $default_value || isset($form[$element]['#options'][$value])) : !($value === $default_value) && ($value || $default_value === 0));
-      }, FALSE);
+      // If no user input exists for this element, nothing is selected.
+      $has_values_selected = FALSE;
+      if ($raw_input !== NULL) {
+        $user_input = is_array($raw_input) ? $raw_input : [$raw_input];
+
+        // Check if one or more values are set for our current element.
+        $default_value = $form[$element]['#default_value'] ?? key($form[$element]['#options'] ?? []);
+        $has_values_selected = array_reduce($user_input, function (bool $carry, mixed $value) use ($default_value, $form, $element) {
+          return $carry ||
+            ($form[$element]['#multiple'] ?? FALSE ? ($value === $default_value || isset($form[$element]['#options'][$value])) : !($value === $default_value) && ($value || $default_value === 0));
+        }, FALSE);
+      }
 
       $collapsible_disable_automatic_open = FALSE;
       if (isset($form[$element]['#collapsible_disable_automatic_open'])) {

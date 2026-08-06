@@ -6,32 +6,24 @@
   Drupal.behaviors.mhcoFormFiller = {
     attach: function (context, settings) {
       
-      // DEBUG 1: Is the file actually loading?
-      console.log("MHCO Form Filler script initialized.");
-      
-      // 1. Simplify the selector to catch anything with the form-button class
-      var downloadButtons = once('mhcoFormFillerAction', '.form-button', context);
-      
-      // DEBUG 2: Did it find the buttons?
-      if (downloadButtons.length > 0) {
-        console.log("Success: Found " + downloadButtons.length + " buttons ready for download.");
-      }
-
-      // 2. Wrap the resulting elements in jQuery to bind the click event
-      $(downloadButtons).on('click', function (e) {
+      // We bind this event to the 'body' element just ONE time.
+      // It now listens for clicks on the download div OR the most-downloaded-forms list item
+      $(once('mhcoFormGlobalBinder', 'body', context)).on('click', '.form-download-div', function (e) {
         e.preventDefault(); 
         
-        // DEBUG 3: Did the click register?
-        console.log("Download button clicked!");
+        console.log("Row clicked!");
 
-        var $btn = $(this);
+        var $row = $(this);
+        var $btn = $row.find('.form-button');
+        
+        // Extract variables
         var formFID = $btn.attr("id");
         var formNID = $btn.attr("nid");
         var formDL = $btn.attr("dl");
         var formTitle = $btn.attr("title");
         var formNumber = formFID ? formFID.slice(1) : 'Unknown';
 
-        // 3. Find the Admin Selector using the input name (safest method in Drupal)
+        // Check for Admin override
         var targetUid = null;
         var targetUserInput = $('input[name="target_user"]').val();
         
@@ -39,15 +31,16 @@
           var match = targetUserInput.match(/\((\d+)\)$/);
           if (match && match[1]) {
             targetUid = match[1];
-            console.log("Admin override active. Target UID:", targetUid);
           }
         }
 
-        // 4. Add loading state UI
-        $btn.css('opacity', '0.5');
-        $btn.text('...'); 
+        // Add loading state UI using the correct object syntax for multiple CSS properties
+        $btn.css({
+          'opacity': '0.5', 
+          'font-size': '18px',
+        }).text('Creating PDF'); 
 
-        // 5. Send the AJAX request
+        // Send the AJAX request
         $.ajax({
           method: "POST",
           url: "/mhco-forms/generate-pdf",
@@ -60,23 +53,31 @@
             target_uid: targetUid
           },
           success: function(response) {
-            $btn.css('opacity', '1');
-            $btn.text(formNumber); 
+            // Restore button UI and clear the inline font-size so it reverts to the stylesheet default
+            $btn.css({
+              'opacity': '1',
+              'font-size': ''
+            }).text(formNumber); 
+            
             if (response.pdf_url) {
-               console.log("PDF generated successfully.");
                window.open(response.pdf_url, '_blank');
             } else {
                alert("Error: Could not generate PDF.");
             }
           },
           error: function(xhr, status, error) {
-            $btn.css('opacity', '1');
-            $btn.text(formNumber);
+            // Restore button UI on error
+            $btn.css({
+              'opacity': '1',
+              'font-size': ''
+            }).text(formNumber);
+            
             console.error("AJAX Error:", error);
             alert("A server error occurred while processing your request.");
           }
         });
       });
+      
     }
   };
 })(jQuery, Drupal, once);

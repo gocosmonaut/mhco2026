@@ -31,7 +31,7 @@ use Drupal\Core\Plugin\PluginFormInterface;
  *   }
  * )
  */
-class LayoutExampleTest extends LayoutDefault implements PluginFormInterface {
+class LayoutExample extends LayoutDefault implements PluginFormInterface {
 
   /**
    * {@inheritdoc}

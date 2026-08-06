@@ -4,6 +4,7 @@ namespace SlevomatCodingStandard\Sniffs\Classes;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
+use SlevomatCodingStandard\Helpers\AttributeHelper;
 use SlevomatCodingStandard\Helpers\ClassHelper;
 use SlevomatCodingStandard\Helpers\FunctionHelper;
 use SlevomatCodingStandard\Helpers\PropertyHelper;
@@ -34,6 +35,10 @@ class ReadonlyClassSniff implements Sniff
 		= 'PromotedPropertyCannotBeReadonlyInReadonlyClass';
 
 	public ?bool $enable = null;
+
+	public bool $allowNonFinalClasses = false;
+
+	public bool $ignoreTraits = false;
 
 	/**
 	 * @return array<int, (int|string)>
@@ -125,7 +130,23 @@ class ReadonlyClassSniff implements Sniff
 			}
 		}
 
+		if ($this->isAbstractClass($phpcsFile, $classPointer)) {
+			return;
+		}
+
+		if (!$this->allowNonFinalClasses && !ClassHelper::isFinal($phpcsFile, $classPointer)) {
+			return;
+		}
+
 		if ($this->classExtendsAnotherClass($phpcsFile, $classPointer)) {
+			return;
+		}
+
+		if (!$this->ignoreTraits && count(ClassHelper::getTraitUsePointers($phpcsFile, $classPointer)) > 0) {
+			return;
+		}
+
+		if (AttributeHelper::hasAttribute($phpcsFile, $classPointer, '\AllowDynamicProperties')) {
 			return;
 		}
 
@@ -187,6 +208,24 @@ class ReadonlyClassSniff implements Sniff
 			&& in_array($tokens[$modifierPointer]['code'], [T_FINAL, T_ABSTRACT, T_READONLY], true)
 		) {
 			if ($tokens[$modifierPointer]['code'] === T_READONLY) {
+				return true;
+			}
+
+			$modifierPointer = TokenHelper::findPreviousEffective($phpcsFile, $modifierPointer - 1);
+		}
+
+		return false;
+	}
+
+	private function isAbstractClass(File $phpcsFile, int $classPointer): bool
+	{
+		$tokens = $phpcsFile->getTokens();
+		$modifierPointer = TokenHelper::findPreviousEffective($phpcsFile, $classPointer - 1);
+		while (
+			$modifierPointer !== null
+			&& in_array($tokens[$modifierPointer]['code'], [T_FINAL, T_ABSTRACT, T_READONLY], true)
+		) {
+			if ($tokens[$modifierPointer]['code'] === T_ABSTRACT) {
 				return true;
 			}
 

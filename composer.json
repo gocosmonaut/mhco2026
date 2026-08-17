@@ -29,6 +29,7 @@
         "drupal/ctools": "^4.1",
         "drupal/entity": "^1.4",
         "drupal/entity_reference_revisions": "^1.12",
+        "drupal/facets": "^3.0",
         "drupal/field_defaults": "^2.1",
         "drupal/field_group": "^4.0",
         "drupal/field_permissions": "^1.4",

@@ -181,18 +181,6 @@
           $('#waitMessage').remove();
         }, 5000);
       });
-
-      $('.form-download-div').each(function (index, value) {
-        var formID = $(this).find('.form-button.badge').attr("id");
-        var formNID = $(this).find('.form-button.badge').attr("nid");
-        var formDL = $(this).find('.form-button.badge').attr("dl");
-        var formTitle = $(this).find('.form-button.badge').attr("title");
-        //  console.log(formID + formNID + formDL + formTitle);
-        $(this).attr("id", formID);
-        $(this).attr("nid", formNID);
-        $(this).attr("dl", formDL);
-        $(this).attr("title", formTitle);
-      })
     },
 
     TermBodyTrim: function () {

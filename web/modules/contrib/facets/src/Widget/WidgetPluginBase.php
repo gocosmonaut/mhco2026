@@ -6,15 +6,18 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Result\Result;
 use Drupal\facets\Result\ResultInterface;
+use Drupal\facets\UrlProcessor\UrlProcessorPluginManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * A base class for widgets that implements most of the boilerplate.
  */
-abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterface {
+abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterface, ContainerFactoryPluginInterface {
 
   /**
    * Show the amount of results next to the result.
@@ -31,11 +34,31 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
   protected $facet;
 
   /**
+   * The URL processor plugin manager.
+   *
+   * @var \Drupal\facets\UrlProcessor\UrlProcessorPluginManager
+   */
+  protected $urlProcessorManager;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, UrlProcessorPluginManager $url_processor_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->urlProcessorManager = $url_processor_manager;
     $this->setConfiguration($configuration);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('plugin.manager.facets.url_processor')
+    );
   }
 
   /**
@@ -54,9 +77,8 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
 
     $widget = $facet->getWidget();
 
-    $urlProcessorManager = \Drupal::service('plugin.manager.facets.url_processor');
     /** @var \Drupal\facets\UrlProcessor\UrlProcessorInterface $url_processor */
-    $url_processor = $urlProcessorManager->createInstance($facet->getFacetSourceConfig()->getUrlProcessorName(), ['facet' => $facet]);
+    $url_processor = $this->urlProcessorManager->createInstance($facet->getFacetSourceConfig()->getUrlProcessorName(), ['facet' => $facet]);
 
     return [
       '#theme' => $this->getFacetItemListThemeHook($facet),
@@ -186,9 +208,8 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
       $items['#attributes']['class'][] = 'is-active';
     }
 
-    $urlProcessorManager = \Drupal::service('plugin.manager.facets.url_processor');
     /** @var \Drupal\facets\UrlProcessor\UrlProcessorInterface $url_processor */
-    $url_processor = $urlProcessorManager->createInstance($facet->getFacetSourceConfig()->getUrlProcessorName(), ['facet' => $facet]);
+    $url_processor = $this->urlProcessorManager->createInstance($facet->getFacetSourceConfig()->getUrlProcessorName(), ['facet' => $facet]);
 
     $items['#wrapper_attributes'] = ['class' => $classes];
     $items['#attributes']['data-drupal-facet-item-id'] = Html::getClass($facet->getUrlAlias() . '-' . strtr($result->getRawValue(), ' \'\"', '---'));

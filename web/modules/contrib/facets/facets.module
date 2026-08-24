@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Theme\ThemePreprocess;
 use Drupal\Core\Url;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Entity\FacetSource;
@@ -229,7 +230,7 @@ function facets_preprocess_facets_item_list(array &$variables) {
       $variables['cache_max_age'] = $facet->getCacheMaxAge() . ' seconds';
     }
   }
-  template_preprocess_item_list($variables);
+  \Drupal::service(ThemePreprocess::class)->preprocessItemList($variables);
 }
 
 /**

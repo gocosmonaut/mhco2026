@@ -7,6 +7,7 @@
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Theme\ThemePreprocess;
 use Drupal\facets_summary\Entity\FacetsSummary;
 use Drupal\search_api\Entity\Index;
 
@@ -101,7 +102,7 @@ function facets_summary_theme_suggestions_facets_summary_item_list(array $variab
  * @see https://www.drupal.org/node/1842756
  */
 function facets_summary_preprocess_facets_summary_item_list(array &$variables) {
-  template_preprocess_item_list($variables);
+  \Drupal::service(ThemePreprocess::class)->preprocessItemList($variables);
 
   if (Settings::get('facets_debug_cacheable_metadata', FALSE)) {
     if ($facetsSummary = FacetsSummary::load($variables['facet_summary_id'])) {

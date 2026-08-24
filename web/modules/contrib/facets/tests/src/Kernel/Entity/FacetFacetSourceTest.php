@@ -9,6 +9,7 @@ use Drupal\facets\FacetSourceInterface;
 use Drupal\facets\Plugin\facets\facet_source\SearchApiDisplay;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\facets\Exception\Exception;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Class FacetFacetSourceTest.
@@ -18,6 +19,7 @@ use Drupal\facets\Exception\Exception;
  * @group facets
  * @coversDefaultClass \Drupal\facets\Entity\Facet
  */
+#[RunTestsInSeparateProcesses]
 class FacetFacetSourceTest extends EntityKernelTestBase {
 
   /**

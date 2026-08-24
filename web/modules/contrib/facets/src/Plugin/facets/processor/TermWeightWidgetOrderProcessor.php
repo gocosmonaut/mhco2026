@@ -73,6 +73,8 @@ class TermWeightWidgetOrderProcessor extends SortProcessorPluginBase implements 
     // Get the term weight once.
     if ($a->getTermWeight() === NULL || $b->getTermWeight() === NULL) {
       $ids = [];
+      $a_raw = NULL;
+      $b_raw = NULL;
       if ($a->getTermWeight() === NULL) {
         $a_raw = $a->getRawValue();
         $ids[] = $a_raw;
